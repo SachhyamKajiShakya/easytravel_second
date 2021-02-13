@@ -1,3 +1,4 @@
+import 'package:easy_travel/screens/bookings/payment.dart';
 import 'package:easy_travel/screens/userauthentication/login.dart';
 import 'package:easy_travel/screens/userauthentication/signup.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: MainPage(),
+      home: PaymentGateway(),
     );
   }
 }
