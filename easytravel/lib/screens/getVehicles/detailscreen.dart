@@ -15,23 +15,7 @@ class DetailScreenPage extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color.fromRGBO(250, 232, 232, 1),
-          elevation: 0,
-          centerTitle: true,
-          title: Text(
-            'Vehicle Details',
-            style: TextStyle(
-                color: Colors.black, fontFamily: 'Cambria', fontSize: 22),
-          ),
-          leading: IconButton(
-              icon: Icon(Icons.arrow_back_outlined,
-                  size: 24, color: Colors.black),
-              onPressed: () {
-                Navigator.pop(context);
-              }),
-        ),
-        backgroundColor: Color.fromRGBO(250, 232, 232, 1),
+        backgroundColor: Colors.white,
         resizeToAvoidBottomPadding: true,
         resizeToAvoidBottomInset: true,
         body: FutureBuilder(
@@ -47,12 +31,34 @@ class DetailScreenPage extends StatelessWidget {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [_buildImage(size, snapshot, index)],
+                        children: [
+                          Stack(
+                            children: [
+                              _buildImage(size, snapshot, index),
+                              Row(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(left: 10, top: 10),
+                                    height: 40,
+                                    width: 40,
+                                    color: Colors.white60,
+                                    child: IconButton(
+                                        icon: Icon(Icons.arrow_back_outlined,
+                                            size: 24, color: Colors.black),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        }),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                       Stack(
                         children: [
                           Container(
-                            margin: EdgeInsets.only(top: 30),
+                            margin: EdgeInsets.only(top: 10),
                             height: size.height * 0.55,
                             width: size.width,
                             decoration: BoxDecoration(
@@ -63,19 +69,25 @@ class DetailScreenPage extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                                top: 65, left: 25, right: 25),
+                                top: 30, left: 20, right: 20),
                             child: Column(
                               children: [
                                 _buildFirstRow(snapshot, index, context),
-                                SizedBox(height: 20),
+                                SizedBox(height: 25),
                                 _buildSecondRow(context),
-                                SizedBox(height: 8),
+                                SizedBox(height: 10),
                                 _buildThirdRow(snapshot, index, context, size),
-                                SizedBox(height: 28),
+                                SizedBox(height: 25),
                                 _buildFourthRow(
                                     datasnapshot, dataindex, context),
+                                SizedBox(height: 25),
+                                _buildFifthRow(context),
+                                SizedBox(height: 10),
+                                _buildSixthRow(
+                                    snapshot, dataindex, context, size),
                                 SizedBox(height: 40),
-                                _buildBookingButton(snapshot, index, context),
+                                _buildBookingButton(snapshot, index, context,
+                                    datasnapshot, dataindex),
                               ],
                             ),
                           ),
@@ -108,25 +120,29 @@ Widget _driverDetails(String title, String value, context) {
 // function to build image
 Widget _buildImage(size, snapshot, index) {
   return Container(
-    margin: EdgeInsets.only(top: 20),
-    height: 270,
-    width: size.width * 0.9,
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Image.network(
-          'http://192.168.100.67:8000${snapshot.data[index]["vehicleImage"]}',
-          fit: BoxFit.fill),
-    ),
+    height: 310,
+    width: size.width,
+    child: Image.network(
+        'http://192.168.100.67:8000${snapshot.data[index]["vehicleImage"]}',
+        fit: BoxFit.fill),
   );
 }
 
 // function to build brand model and price
 Widget _buildFirstRow(snapshot, index, context) {
+  print(snapshot.data[index]['category']);
   return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
     Text(snapshot.data[index]["brand"] + ' ' + snapshot.data[index]["model"],
         style: Theme.of(context).textTheme.headline1),
-    Text('Rs ' + snapshot.data[index]["price"].toString() + '/km',
-        style: TextStyle(fontFamily: 'Cambria', fontSize: 25)),
+    Text(
+        snapshot.data[index]["category"] == 'Short Travel'
+            ? 'Rs ' + snapshot.data[index]["price"].toString() + '/km'
+            : 'Rs ' + snapshot.data[index]["price"].toString() + '/day',
+        style: TextStyle(
+            fontFamily: 'Roboto',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black54)),
   ]);
 }
 
@@ -170,21 +186,60 @@ Widget _buildFourthRow(datasnapshot, dataindex, context) {
   );
 }
 
-Widget _buildBookingButton(snapshot, index, context) {
+// function to build description title
+Widget _buildFifthRow(context) {
+  return Row(
+    children: [
+      Text('Available For', style: Theme.of(context).textTheme.bodyText1)
+    ],
+  );
+}
+
+// function to build vehicle description
+Widget _buildSixthRow(snapshot, index, context, size) {
+  return Row(
+    children: [
+      Expanded(
+        child: Container(
+          width: size.width,
+          child: Text(
+            snapshot.data[index]['category'],
+            style: Theme.of(context).textTheme.bodyText2,
+            textAlign: TextAlign.justify,
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _buildBookingButton(snapshot, index, context, datasnapshot, dataindex) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       FlatButton(
         onPressed: () {
           if (snapshot.data[index]['category'] == 'Short Travel') {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => BookShortTravel()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => BookShortTravel(
+                        snapshot: snapshot,
+                        datasnapshot: datasnapshot,
+                        index: index,
+                        dataindex: dataindex)));
           } else if (snapshot.data[index]['category'] == 'Long Travel') {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => BookLongTravel()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => BookLongTravel(
+                        snapshot: snapshot,
+                        datasnapshot: datasnapshot,
+                        index: index,
+                        dataindex: dataindex)));
           }
         },
-        child: buildButton('Book'),
+        child: buildButton('Book', 300),
       ),
     ],
   );

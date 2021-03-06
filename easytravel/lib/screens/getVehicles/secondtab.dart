@@ -12,12 +12,12 @@ class _SecondTabPageState extends State<SecondTabPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color.fromRGBO(254, 254, 254, 100),
       body: FutureBuilder(
           future: getLongVehicles(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.data == null) {
-              return Center(child: Text('loading'));
+              return CircularProgressIndicator();
             } else {
               return GridView.builder(
                 itemCount: snapshot.data.length,

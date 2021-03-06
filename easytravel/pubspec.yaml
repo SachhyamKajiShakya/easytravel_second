@@ -35,6 +35,7 @@ dependencies:
   webview_flutter: ^1.0.7
   path_provider: ^1.6.24
   flutter_khalti: ^1.0.0
+  intl: ^0.16.1
   
 
 dev_dependencies:
@@ -75,6 +76,9 @@ flutter:
     - family: Calibri
       fonts:
         - asset: fonts/Calibri.ttf
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto-Regular.ttf
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

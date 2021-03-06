@@ -149,7 +149,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
                 FlatButton(
                   onPressed: null,
-                  child: buildButton('CHANGE PASSWORD'),
+                  child: buildButton('CHANGE PASSWORD', 300),
                 ),
               ],
             ),

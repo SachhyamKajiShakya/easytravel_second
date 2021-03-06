@@ -24,10 +24,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               child: Text(
                 'Book Your Ride',
                 style: TextStyle(
-                    color: Colors.black, fontFamily: 'Cambria', fontSize: 35),
+                    color: Colors.black, fontFamily: 'Cambria', fontSize: 28),
               ),
             ),
-            backgroundColor: Colors.white,
+            backgroundColor: Color.fromRGBO(254, 254, 254, 100),
             elevation: 0,
             bottom: PreferredSize(
               preferredSize: Size(100, 80),
@@ -35,32 +35,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 height: 36,
                 margin: EdgeInsets.only(top: 15, bottom: 10),
                 child: TabBar(
+                  labelColor: Colors.white,
                   //adding tabs in the app bar
                   indicatorPadding: EdgeInsets.symmetric(horizontal: 10),
                   unselectedLabelColor: Colors.black,
                   indicatorSize: TabBarIndicatorSize.label,
                   indicator: BoxDecoration(
-                    color: Color.fromRGBO(250, 232, 232, 1),
-                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.redAccent,
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   tabs: [
                     //seeting the tabs
-                    Tab(
-                      child: Container(
-                        child: Align(
-                            alignment: Alignment.center,
-                            child: Text('Short Travel',
-                                style: Theme.of(context).textTheme.headline2)),
-                      ),
-                    ),
-                    Tab(
-                      child: Container(
-                        child: Align(
-                            alignment: Alignment.center,
-                            child: Text('Long Travel',
-                                style: Theme.of(context).textTheme.headline2)),
-                      ),
-                    ),
+                    Tab(child: _buildTab('Short Travel')),
+                    Tab(child: _buildTab('Long Travel')),
                   ],
                 ),
               ),
@@ -78,5 +65,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+// widget method to build tab items
+  Widget _buildTab(String text) {
+    return Container(
+        child: Align(
+      alignment: Alignment.center,
+      child:
+          Text('$text', style: TextStyle(fontSize: 16, fontFamily: 'Roboto')),
+    ));
   }
 }

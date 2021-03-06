@@ -114,7 +114,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 _buildConfirmPasswordfield(),
                 SizedBox(height: 50),
 
-                buildButton('RESET PASSWORD')
+                buildButton('RESET PASSWORD', 300)
               ],
             ),
           ),

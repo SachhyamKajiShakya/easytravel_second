@@ -1,6 +1,6 @@
+import 'package:easy_travel/screens/getVehicles/homepage.dart';
 import 'package:easy_travel/screens/registervehicles/registervehicle.dart';
 import 'package:flutter/material.dart';
-import 'package:easy_travel/screens/getvehicles/homepage.dart';
 import 'package:easy_travel/screens/userprofile.dart';
 
 class NavBarPage extends StatefulWidget {
@@ -30,26 +30,50 @@ class _NavBarPageState extends State<NavBarPage> {
       child: Scaffold(
         body: _children[_currentIndex],
         bottomNavigationBar: BottomNavigationBar(
-            iconSize: 32,
-            backgroundColor: Colors.white,
+            iconSize: 26,
+            backgroundColor: Color.fromRGBO(254, 254, 254, 1),
             onTap: onBarTapped,
             currentIndex: _currentIndex,
             elevation: 5,
-            selectedItemColor: Color.fromRGBO(255, 180, 180, 1),
+            selectedItemColor: Colors.white,
             unselectedItemColor: Color.fromRGBO(190, 190, 190, 1),
             //setting the items of bottom navigation bar
             type: BottomNavigationBarType.fixed,
             items: [
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
+                icon: Container(
+                    height: 45,
+                    width: 45,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: _currentIndex == 0
+                            ? Colors.redAccent
+                            : Colors.white),
+                    child: Icon(Icons.home)),
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.car_rental),
+                icon: Container(
+                    height: 45,
+                    width: 45,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: _currentIndex == 1
+                            ? Colors.redAccent
+                            : Colors.white),
+                    child: Icon(Icons.car_rental)),
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.person),
+                icon: Container(
+                    height: 45,
+                    width: 45,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: _currentIndex == 2
+                            ? Colors.redAccent
+                            : Colors.white),
+                    child: Icon(Icons.person)),
                 label: '',
               ),
             ]),

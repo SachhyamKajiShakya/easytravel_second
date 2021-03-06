@@ -1,98 +1,174 @@
-// // https://stackoverflow.com/questions/50818770/passing-data-to-a-stateful-widget
-// import 'package:easy_travel/constants.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_otp/flutter_otp.dart';
+import 'package:easy_travel/constants.dart';
+import 'package:easy_travel/screens/userAuthentication/signup.dart';
+import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-// class OTPSection extends StatefulWidget {
-//   final String phoneNumber;
+class OTP extends StatefulWidget {
+  final String phoneNumber;
 
-//   const OTPSection({this.phoneNumber});
-//   @override
-//   _OTPSectionState createState() => _OTPSectionState();
-// }
+  const OTP({Key key, this.phoneNumber}) : super(key: key);
+  @override
+  _OTPState createState() => _OTPState();
+}
 
-// class _OTPSectionState extends State<OTPSection> {
-//   FlutterOtp otp = FlutterOtp();
-//   TextEditingController _otpController;
-//   int enteredOtpCode;
+class _OTPState extends State<OTP> {
+  final _formkey = GlobalKey<FormState>();
+  bool _autovalidate = false;
 
-//   // void generateOtp([int min = 1000, int max = 9999]) {
-//   //   _minOtpValue = min;
-//   //   _maxOtpValue = max;
-//   //   generatedOtp = _minOtpValue + Random().nextInt(_maxOtpValue - _minOtpValue);
-//   // }
+  _enterOtp(String otp, String phoneNumber) async {
+    final http.Response response = await http.post(
+      'http://192.168.100.67:8000/api/otp/',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'otp': otp,
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SignupPage(phoneNumber: phoneNumber)));
+    } else {
+      throw Exception('Process Failed');
+    }
+  }
 
-//   // void resultChecker(enteredOtpCode) {
-//   //   if (enteredOtpCode == generatedOtp) {
-//   //     print('true');
-//   //   } else {
-//   //     print('false');
-//   //   }
-//   // }
+  TextEditingController _otp = TextEditingController();
 
-//   void initState() {
-//     // otp.sendOtp(widget.phoneNumber);
-//     otp.sendOtp(widget.phoneNumber);
-//     super.initState();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return SafeArea(
-//       child: Scaffold(
-//         backgroundColor: Colors.white,
-//         resizeToAvoidBottomInset: false,
-//         resizeToAvoidBottomPadding: false,
-//         body: SingleChildScrollView(
-//           child: Column(
-//             children: [
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: [
-//                   Container(
-//                     height: 45,
-//                     width: 350,
-//                     decoration: BoxDecoration(
-//                       color: Color.fromRGBO(244, 244, 244, 100),
-//                       borderRadius: BorderRadius.all(Radius.circular(29)),
-//                     ),
-//                     child: TextFormField(
-//                       onChanged: (value) {
-//                         enteredOtpCode = int.parse(value);
-//                       },
-//                       textAlign: TextAlign.center,
-//                       cursorColor: Colors.black,
-//                       controller: _otpController,
-//                       decoration: InputDecoration(
-//                         border: InputBorder.none,
-//                         contentPadding: EdgeInsets.symmetric(horizontal: 20),
-//                         hintText: 'OTP',
-//                         hintStyle: TextStyle(
-//                             fontFamily: 'Cambria',
-//                             fontSize: 15,
-//                             color: Color.fromRGBO(125, 125, 125, 1)),
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: [
-//                   FlatButton(
-//                     onPressed: () {
-//                       print(widget.phoneNumber);
-//                       print(otp.resultChecker(enteredOtpCode));
-//                       print('entered otp code' + enteredOtpCode.toString());
-//                     },
-//                     child: buildButton('Submit'),
-//                   ),
-//                 ],
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    String phone = widget.phoneNumber;
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back_outlined,
+                  size: 22, color: Colors.black),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          centerTitle: true,
+          title: Text(
+            'OTP Verification',
+            style: TextStyle(
+                color: Colors.black, fontFamily: 'Roboto', fontSize: 20),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        body: Padding(
+          padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(child: buildSubHeader('Account Activation'))
+                ],
+              ),
+              SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Enter the 6 digit code send to this number',
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 18,
+                      color: Colors.black45,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '$phone',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Roboto',
+                      fontSize: 18,
+                      color: Colors.black54,
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(height: 40),
+              Form(
+                autovalidate: _autovalidate,
+                key: _formkey,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 45,
+                      width: 320,
+                      decoration: boxDecoration,
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        onTap: () {
+                          setState(() {
+                            _autovalidate = false;
+                          });
+                        },
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return '*Required';
+                          } else if (value.length < 6) {
+                            return 'OTP must be 6 digit long';
+                          }
+                          return null;
+                        },
+                        textAlign: TextAlign.center,
+                        cursorColor: Colors.black,
+                        controller: _otp,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 20),
+                            hintText: 'Your 6 digit code',
+                            hintStyle: fieldtext),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Row(children: [Text(_errorText)],),
+              SizedBox(height: 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FlatButton(
+                    onPressed: () {
+                      if (_formkey.currentState.validate()) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SignupPage(
+                                    phoneNumber: widget.phoneNumber)));
+                        // _enterOtp(_otp.text, widget.phoneNumber);
+                      } else {
+                        setState(() {
+                          _autovalidate = true;
+                        });
+                      }
+                    },
+                    child: buildButton('Continue', 150),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

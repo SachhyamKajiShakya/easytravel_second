@@ -14,18 +14,20 @@ class VehicleRegistrationPage extends StatefulWidget {
 }
 
 class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
-  File _image;
-  File _vehicleImg;
+  final _formkey = GlobalKey<FormState>();
+  bool _autovalidate = false;
+  _onTap() {
+    setState(() {
+      _autovalidate = false;
+    });
+  }
+
+  File _image, _vehicleImg;
   String token;
   Dio _dio = Dio();
 
-  FocusNode brandNode;
-  FocusNode modelNode;
-  FocusNode licenseNumberNode;
-  FocusNode categoryNode;
-  FocusNode serviceNode;
-  FocusNode descriptionNode;
-  FocusNode priceNode;
+  FocusNode brandNode, modelNode, licenseNumberNode, categoryNode, serviceNode;
+  FocusNode descriptionNode, priceNode;
 
 //api to upload data
   uploadPhoto(
@@ -97,11 +99,11 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
     });
   }
 
-  final _brandController = TextEditingController();
-  final _modelController = TextEditingController();
-  final _licenseController = TextEditingController();
-  final _priceController = TextEditingController();
-  final _descriptionController = TextEditingController();
+  TextEditingController _brandController = TextEditingController();
+  TextEditingController _modelController = TextEditingController();
+  TextEditingController _licenseController = TextEditingController();
+  TextEditingController _priceController = TextEditingController();
+  TextEditingController _descriptionController = TextEditingController();
 
   // setting default drop down value
   String _categoryValue = 'Short Travel';
@@ -156,20 +158,14 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
     return Container(
       width: 360,
       padding: EdgeInsets.only(left: 82, right: 15),
-      decoration: BoxDecoration(
-        color: Color.fromRGBO(244, 244, 244, 100),
-        borderRadius: BorderRadius.circular(29),
-      ),
+      decoration: boxDecoration,
       child: DropdownButtonFormField(
           focusNode: serviceNode,
           decoration: InputDecoration(
             border: InputBorder.none,
           ),
           value: _serviceValue,
-          style: TextStyle(
-              fontFamily: 'Cambria',
-              fontSize: 15,
-              color: Color.fromRGBO(125, 125, 125, 1)),
+          style: fieldtext,
           items: <String>['Driver Service', 'Self Driving and Driver Service']
               .map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
@@ -193,20 +189,14 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
     return Container(
       width: 350,
       padding: EdgeInsets.only(left: 140, right: 15),
-      decoration: BoxDecoration(
-        color: Color.fromRGBO(244, 244, 244, 100),
-        borderRadius: BorderRadius.circular(29),
-      ),
+      decoration: boxDecoration,
       child: DropdownButtonFormField(
           focusNode: categoryNode,
           decoration: InputDecoration(
             border: InputBorder.none,
           ),
           value: _categoryValue,
-          style: TextStyle(
-              fontFamily: 'Cambria',
-              fontSize: 15,
-              color: Color.fromRGBO(125, 125, 125, 1)),
+          style: fieldtext,
           items: <String>['Short Travel', 'Long Travel']
               .map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(value: value, child: Text(value));
@@ -224,11 +214,14 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
     return Container(
       height: 120,
       width: 350,
-      decoration: BoxDecoration(
-        color: Color.fromRGBO(244, 244, 244, 100),
-        borderRadius: BorderRadius.circular(10),
-      ),
+      decoration: boxDecoration,
       child: TextFormField(
+        validator: (value) {
+          if (value.isEmpty) {
+            return '*required';
+          }
+          return null;
+        },
         onFieldSubmitted: (term) {
           descriptionNode.unfocus();
           FocusScope.of(context).requestFocus(priceNode);
@@ -244,10 +237,76 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
           border: InputBorder.none,
           contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
           hintText: '$hintText',
-          hintStyle: TextStyle(
-              fontFamily: 'Cambria',
-              fontSize: 15,
-              color: Color.fromRGBO(125, 125, 125, 1)),
+          hintStyle: fieldtext,
+        ),
+      ),
+    );
+  }
+
+// widget method to build brand text fields
+  Widget _buildBrandTextField(FocusNode node, FocusNode nextNode,
+      String hintText, TextEditingController _controller, context) {
+    return Container(
+      height: 45,
+      width: 350,
+      decoration: boxDecoration,
+      child: TextFormField(
+        validator: (value) {
+          if (value.isEmpty) {
+            return '*required';
+          } else if (value.contains(new RegExp(r'[1-9]'))) {
+            return 'invalid input';
+          }
+          return null;
+        },
+        onTap: _onTap,
+        onFieldSubmitted: (term) {
+          node.unfocus();
+          FocusScope.of(context).requestFocus(nextNode);
+        },
+        focusNode: node,
+        textAlign: TextAlign.center,
+        cursorColor: Colors.black,
+        controller: _controller,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 20),
+          hintText: '$hintText',
+          hintStyle: fieldtext,
+        ),
+      ),
+    );
+  }
+
+  // widget method to build brand text fields
+  Widget _buildPriceTextField(FocusNode node, FocusNode nextNode,
+      String hintText, TextEditingController _controller, context) {
+    return Container(
+      height: 45,
+      width: 350,
+      decoration: boxDecoration,
+      child: TextFormField(
+        keyboardType: TextInputType.number,
+        validator: (value) {
+          if (value.isEmpty) {
+            return '*required';
+          }
+          return null;
+        },
+        onTap: _onTap,
+        onFieldSubmitted: (term) {
+          node.unfocus();
+          FocusScope.of(context).requestFocus(nextNode);
+        },
+        focusNode: node,
+        textAlign: TextAlign.center,
+        cursorColor: Colors.black,
+        controller: _controller,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 20),
+          hintText: '$hintText',
+          hintStyle: fieldtext,
         ),
       ),
     );
@@ -285,8 +344,7 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
           backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
-              icon: Icon(Icons.arrow_back_outlined,
-                  size: 22, color: Colors.black),
+              icon: headerIcon,
               onPressed: () {
                 Navigator.pop(context);
               }),
@@ -298,9 +356,7 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
               },
               child: Text('Skip',
                   style: TextStyle(
-                      fontFamily: 'Cambria',
-                      fontSize: 18,
-                      color: Colors.black)),
+                      fontFamily: 'Roboto', fontSize: 17, color: Colors.black)),
             ),
           ],
         ),
@@ -308,109 +364,118 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
         resizeToAvoidBottomPadding: true,
         resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [buildSubHeader('Register Vehicle')],
-              ),
-              SizedBox(height: 50),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  buildTextField(
-                      brandNode, modelNode, 'Brand', _brandController, context)
-                ],
-              ),
-              // calling widget method to set brand text field
-              SizedBox(height: 25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  buildTextField(modelNode, licenseNumberNode, 'Model',
-                      _modelController, context)
-                ],
-              ),
-              // calling widget method to set model text field
-              SizedBox(height: 25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  buildTextField(licenseNumberNode, descriptionNode,
-                      'License Plate Number', _licenseController, context)
-                ],
-              ),
-              // calling widget method to set license number text field
-              SizedBox(height: 25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildTextBox(_descriptionController, 'Description')
-                ],
-              ),
+          child: Form(
+            autovalidate: _autovalidate,
+            key: _formkey,
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [buildSubHeader('Register Vehicle')],
+                ),
+                SizedBox(height: 50),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildBrandTextField(brandNode, modelNode, 'Brand',
+                        _brandController, context)
+                  ],
+                ),
+                // calling widget method to set brand text field
+                SizedBox(height: 25),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    buildTextField(_onTap, modelNode, licenseNumberNode,
+                        'Model', _modelController, context)
+                  ],
+                ),
+                // calling widget method to set model text field
+                SizedBox(height: 25),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    buildTextField(_onTap, licenseNumberNode, descriptionNode,
+                        'License Plate Number', _licenseController, context)
+                  ],
+                ),
+                // calling widget method to set license number text field
+                SizedBox(height: 25),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildTextBox(_descriptionController, 'Description')
+                  ],
+                ),
 
-              SizedBox(height: 25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  buildTextField(priceNode, serviceNode, 'Price',
-                      _priceController, context)
-                ],
-              ),
-              // calling widget method to set date of registration text field
-              SizedBox(height: 25),
+                SizedBox(height: 25),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildPriceTextField(priceNode, serviceNode, 'Price',
+                        _priceController, context)
+                  ],
+                ),
+                // calling widget method to set date of registration text field
+                SizedBox(height: 25),
 
-              // widget method to build service drop down
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [_buildServiceDropDown()],
-              ),
+                // widget method to build service drop down
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [_buildServiceDropDown()],
+                ),
 
-              SizedBox(height: 25),
+                SizedBox(height: 25),
 
-              // widget method to build category drop down
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [_buildCategoryDropDown()],
-              ),
+                // widget method to build category drop down
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [_buildCategoryDropDown()],
+                ),
 
-              SizedBox(height: 25),
-              // row deefined to display the vehicle image selected
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FlatButton(
-                      onPressed: () {
-                        _showVehiclePicker(context);
-                      },
-                      child: buildImageContainer(_vehicleImg, 'Vehicle Image')),
-                  FlatButton(
-                      onPressed: () {
-                        _showPicker(context);
-                      },
-                      child: buildImageContainer(_image, 'Bluebook Image')),
-                ],
-              ),
-              SizedBox(height: 50),
-              // register vehicle button
-              FlatButton(
-                  onPressed: () {
-                    uploadPhoto(
-                        _brandController.text,
-                        _modelController.text,
-                        _licenseController.text,
-                        _categoryValue,
-                        _serviceValue,
-                        _descriptionController.text,
-                        int.parse(_priceController.text),
-                        _vehicleImg,
-                        _image,
-                        token);
-                  },
-                  child: buildButton('Register Vehicle')),
-              SizedBox(height: 30)
-            ],
+                SizedBox(height: 25),
+                // row deefined to display the vehicle image selected
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FlatButton(
+                        onPressed: () {
+                          _showVehiclePicker(context);
+                        },
+                        child:
+                            buildImageContainer(_vehicleImg, 'Vehicle Image')),
+                    FlatButton(
+                        onPressed: () {
+                          _showPicker(context);
+                        },
+                        child: buildImageContainer(_image, 'Bluebook Image')),
+                  ],
+                ),
+                SizedBox(height: 50),
+                // register vehicle button
+                FlatButton(
+                    onPressed: () {
+                      if (_formkey.currentState.validate()) {
+                        uploadPhoto(
+                            _brandController.text,
+                            _modelController.text,
+                            _licenseController.text,
+                            _categoryValue,
+                            _serviceValue,
+                            _descriptionController.text,
+                            int.parse(_priceController.text),
+                            _vehicleImg,
+                            _image,
+                            token);
+                      } else {
+                        _onTap();
+                      }
+                    },
+                    child: buildButton('Register Vehicle', 300)),
+                SizedBox(height: 30)
+              ],
+            ),
           ),
         ),
       ),

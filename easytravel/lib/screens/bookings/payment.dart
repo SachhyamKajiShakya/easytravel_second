@@ -26,23 +26,16 @@ class PaymentGateway extends StatelessWidget {
                   Container(
                     height: 45,
                     width: 350,
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(244, 244, 244, 100),
-                      borderRadius: BorderRadius.all(Radius.circular(29)),
-                    ),
+                    decoration: boxDecoration,
                     child: TextFormField(
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
                       cursorColor: Colors.black,
                       decoration: InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                        hintText: '800',
-                        hintStyle: TextStyle(
-                            fontFamily: 'Cambria',
-                            fontSize: 15,
-                            color: Color.fromRGBO(125, 125, 125, 1)),
-                      ),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                          hintText: '800',
+                          hintStyle: fieldtext),
                     ),
                   ),
                 ],
@@ -53,7 +46,7 @@ class PaymentGateway extends StatelessWidget {
                 children: [
                   FlatButton(
                     onPressed: null,
-                    child: buildButton('Pay via cash'),
+                    child: buildButton('Pay via cash', 150),
                   ),
                 ],
               ),
@@ -63,7 +56,7 @@ class PaymentGateway extends StatelessWidget {
                 children: [
                   FlatButton(
                     onPressed: _payviaKhalti,
-                    child: buildButton('Pay via khalti'),
+                    child: buildButton('Pay via khalti', 150),
                   ),
                 ],
               ),
@@ -75,6 +68,7 @@ class PaymentGateway extends StatelessWidget {
   }
 }
 
+// future method to build the khalti payment system
 _payviaKhalti() async {
   FlutterKhalti _flutterKhalti = FlutterKhalti.configure(
     publicKey: 'test_public_key_eff1b04846c54304a510d20a9a7d589a',

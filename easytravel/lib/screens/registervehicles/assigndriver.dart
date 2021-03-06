@@ -13,13 +13,23 @@ class AssignDriver extends StatefulWidget {
 }
 
 class _AssignDriverState extends State<AssignDriver> {
-  FocusNode nameNode;
-  FocusNode addressNode;
-  FocusNode contactNode;
+  // defining variable for form
+  final _formKey = GlobalKey<FormState>();
+  bool _autovalidate = false;
+  _onTap() {
+    setState(() {
+      _autovalidate = false;
+    });
+  }
 
-  TextEditingController _nameController = new TextEditingController();
-  TextEditingController _contactController = new TextEditingController();
-  TextEditingController _addressController = new TextEditingController();
+// defining focus nodes
+  FocusNode nameNode, addressNode, contactNode;
+
+// defining text editing controllers
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _contactController = TextEditingController();
+  TextEditingController _addressController = TextEditingController();
+
   File _licenseImage;
   Dio _dio = new Dio();
   String token;
@@ -116,8 +126,7 @@ class _AssignDriverState extends State<AssignDriver> {
           backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
-              icon: Icon(Icons.arrow_back_outlined,
-                  size: 30, color: Colors.black),
+              icon: headerIcon,
               onPressed: () {
                 Navigator.push(
                     context,
@@ -128,85 +137,146 @@ class _AssignDriverState extends State<AssignDriver> {
         resizeToAvoidBottomInset: false,
         resizeToAvoidBottomPadding: false,
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [buildSubHeader('Assign Driver')],
-              ),
-              SizedBox(height: 50),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  buildTextField(nameNode, addressNode, 'Driver Name',
-                      _nameController, context)
-                ],
-              ),
-              SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  buildTextField(addressNode, contactNode, 'Driver Address',
-                      _addressController, context)
-                ],
-              ),
-              SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 45,
-                    width: 350,
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(244, 244, 244, 100),
-                      borderRadius: BorderRadius.all(Radius.circular(29)),
-                    ),
-                    child: TextFormField(
-                      focusNode: contactNode,
-                      textAlign: TextAlign.center,
-                      cursorColor: Colors.black,
-                      controller: _contactController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                        hintText: 'Driver Contact',
-                        hintStyle: TextStyle(
-                            fontFamily: 'Cambria',
-                            fontSize: 15,
-                            color: Color.fromRGBO(125, 125, 125, 1)),
+          child: Form(
+            autovalidate: _autovalidate,
+            key: _formKey,
+            child: Column(
+              children: [
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [buildSubHeader('Assign Driver')],
+                ),
+                SizedBox(height: 50),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildNameTextField(_onTap, nameNode, addressNode,
+                        'Driver Name', _nameController, context)
+                  ],
+                ),
+                SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    buildTextField(_onTap, addressNode, contactNode,
+                        'Driver Address', _addressController, context)
+                  ],
+                ),
+                SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 45,
+                      width: 350,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(244, 244, 244, 100),
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        onTap: _onTap,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return '*required';
+                          } else if (value.length < 10) {
+                            return 'number must be 10 digit long';
+                          }
+                          return null;
+                        },
+                        focusNode: contactNode,
+                        textAlign: TextAlign.center,
+                        cursorColor: Colors.black,
+                        controller: _contactController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                          hintText: 'Driver Contact',
+                          hintStyle: TextStyle(
+                              fontFamily: 'Cambria',
+                              fontSize: 15,
+                              color: Color.fromRGBO(125, 125, 125, 1)),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FlatButton(
-                    child: buildImageContainer(_licenseImage, 'License Image'),
-                    onPressed: () {
-                      _showLicensePicker(context);
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 50),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FlatButton(
-                    onPressed: () {
-                      _uploadData(_nameController.text, _contactController.text,
-                          _addressController.text, _licenseImage, token);
-                    },
-                    child: buildButton('Assign Driver'),
-                  )
-                ],
-              ),
-            ],
+                  ],
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FlatButton(
+                      child:
+                          buildImageContainer(_licenseImage, 'License Image'),
+                      onPressed: () {
+                        _showLicensePicker(context);
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(height: 50),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FlatButton(
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) {
+                          _uploadData(
+                              _nameController.text,
+                              _contactController.text,
+                              _addressController.text,
+                              _licenseImage,
+                              token);
+                        } else {
+                          _onTap();
+                        }
+                      },
+                      child: buildButton('Assign Driver', 300),
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
+        ),
+      ),
+    );
+  }
+
+  // widget method to build name text fields
+  Widget _buildNameTextField(Function onTap, FocusNode node, FocusNode nextNode,
+      String hintText, TextEditingController _controller, context) {
+    return Container(
+      height: 45,
+      width: 350,
+      decoration: boxDecoration,
+      child: TextFormField(
+        onTap: onTap,
+        validator: (value) {
+          if (value.isEmpty) {
+            return '*required';
+          } else if (value.contains(RegExp(r'[0-9]'))) {
+            return 'invalid input';
+          }
+          return null;
+        },
+        onFieldSubmitted: (term) {
+          node.unfocus();
+          FocusScope.of(context).requestFocus(nextNode);
+        },
+        focusNode: node,
+        textAlign: TextAlign.center,
+        cursorColor: Colors.black,
+        controller: _controller,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 20),
+          hintText: '$hintText',
+          hintStyle: TextStyle(
+              fontFamily: 'Roboto',
+              fontSize: 15,
+              color: Color.fromRGBO(125, 125, 125, 1)),
         ),
       ),
     );

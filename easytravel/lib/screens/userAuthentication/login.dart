@@ -12,12 +12,14 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  String webToken;
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
-  FocusNode usernameNode;
-  FocusNode pwNode;
+  String webToken;
+  bool _autovalidate = false;
+  final _formKey = GlobalKey<FormState>();
+
+  FocusNode usernameNode, pwNode;
 
 // future method to login user
   Future<String> loginUser(String email, String password) async {
@@ -56,11 +58,18 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       height: 45,
       width: 350,
-      decoration: BoxDecoration(
-        color: Color.fromRGBO(244, 244, 244, 100),
-        borderRadius: BorderRadius.all(Radius.circular(29)),
-      ),
+      decoration: boxDecoration,
       child: TextFormField(
+        onTap: _onTap,
+        validator: (value) {
+          if (value.isEmpty) {
+            return '*required';
+          } else if (value.length < 8) {
+            return 'must have atleast 8 characters';
+          } else {
+            return null;
+          }
+        },
         focusNode: pwNode,
         textAlign: TextAlign.center,
         cursorColor: Colors.black,
@@ -68,12 +77,9 @@ class _LoginPageState extends State<LoginPage> {
         controller: _passwordController,
         decoration: InputDecoration(
           border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          hintText: 'Password',
-          hintStyle: TextStyle(
-              fontFamily: 'Cambria',
-              fontSize: 15,
-              color: Color.fromRGBO(125, 125, 125, 1)),
+          contentPadding: EdgeInsets.symmetric(horizontal: 20),
+          hintText: 'password',
+          hintStyle: fieldtext,
         ),
       ),
     );
@@ -101,93 +107,136 @@ class _LoginPageState extends State<LoginPage> {
       resizeToAvoidBottomPadding: false,
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
-        child: Column(children: <Widget>[
-          SizedBox(height: 50),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              buildSubHeader('Sign In'),
-            ],
-          ),
-          // calling widget method to set sub title
-          SizedBox(height: 50),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              buildTextField(
-                  usernameNode, pwNode, 'Username', _emailController, context),
-            ],
-          ),
-          // calling widget method to set username text field
-          SizedBox(height: 25),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              buildPasswordfield(),
-            ],
-          ),
-          // calling widget method to set password text field
-          SizedBox(height: 50),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              FlatButton(
-                  // calling widget method to build sign in button
+        child: Form(
+          key: _formKey,
+          child: Column(children: <Widget>[
+            SizedBox(height: 50),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                buildSubHeader('Sign In'),
+              ],
+            ),
+            // calling widget method to set sub title
+            SizedBox(height: 50),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildUsernameTextField(usernameNode, pwNode, 'username',
+                    _emailController, context),
+              ],
+            ),
+            // calling widget method to set username text field
+            SizedBox(height: 25),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                buildPasswordfield(),
+              ],
+            ),
+            // calling widget method to set password text field
+            SizedBox(height: 50),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FlatButton(
+                    // calling widget method to build sign in button
+                    onPressed: () {
+                      if (_formKey.currentState.validate()) {
+                        getToken();
+                        //writeContent(webToken);
+                      } else {
+                        _onTap();
+                      }
+                    },
+                    child: buildButton('Sign In', 300)),
+              ],
+            ),
+            SizedBox(height: 20),
+            // flatbutton to set forgot password and navigate to reset password section
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FlatButton(
                   onPressed: () {
-                    getToken();
-                    //writeContent(webToken);
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (context) => null));
                   },
-                  child: buildButton('Sign In')),
-            ],
-          ),
-          SizedBox(height: 20),
-          // flatbutton to set forgot password and navigate to reset password section
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              FlatButton(
-                onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => null));
-                },
-                child: Text(
-                  'Forgot password?',
-                  style: TextStyle(
-                      fontFamily: 'Cambria',
-                      fontSize: 16,
-                      color: Color.fromRGBO(125, 125, 125, 1)),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Don't have an account?",
-                style: TextStyle(
-                    fontFamily: 'Cambria',
-                    fontSize: 18,
-                    color: Color.fromRGBO(125, 125, 125, 1)),
-              ),
-              FlatButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SignupPage()));
-                },
-                child: Text(
-                  'Create one',
-                  style: TextStyle(
-                    fontFamily: 'Cambria',
-                    fontSize: 18,
-                    color: Colors.blue,
+                  child: Text(
+                    'Forgot password?',
+                    style: textSpan,
                   ),
                 ),
-              ),
-            ],
-          ),
-        ]),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Don't have an account?",
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 17,
+                      color: Color.fromRGBO(100, 100, 100, 1)),
+                ),
+                FlatButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SignupPage()));
+                  },
+                  child: Text(
+                    'Create one',
+                    style: textSpan,
+                  ),
+                ),
+              ],
+            ),
+          ]),
+        ),
       ),
     ));
+  }
+
+  // widget method to build text fields
+  Widget _buildUsernameTextField(FocusNode node, FocusNode nextNode,
+      String hintText, TextEditingController _controller, context) {
+    return Container(
+      height: 45,
+      width: 350,
+      decoration: boxDecoration,
+      child: TextFormField(
+        onTap: _onTap,
+        validator: (value) {
+          if (value.isEmpty) {
+            return '*required';
+          } else if (value.length > 50) {
+            return 'username limit extended';
+          } else {
+            return null;
+          }
+        },
+        onFieldSubmitted: (term) {
+          node.unfocus();
+          FocusScope.of(context).requestFocus(nextNode);
+        },
+        focusNode: node,
+        textAlign: TextAlign.center,
+        cursorColor: Colors.black,
+        controller: _controller,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 20),
+          hintText: '$hintText',
+          hintStyle: fieldtext,
+        ),
+      ),
+    );
+  }
+
+  // on tap function to set validation to false
+  _onTap() {
+    setState(() {
+      _autovalidate = false;
+    });
   }
 }
