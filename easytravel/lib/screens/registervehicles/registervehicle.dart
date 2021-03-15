@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:dio/dio.dart';
 
+
 class VehicleRegistrationPage extends StatefulWidget {
   @override
   _VehicleRegistrationPageState createState() =>
@@ -14,6 +15,8 @@ class VehicleRegistrationPage extends StatefulWidget {
 }
 
 class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
+  
+
   final _formkey = GlobalKey<FormState>();
   bool _autovalidate = false;
   _onTap() {
