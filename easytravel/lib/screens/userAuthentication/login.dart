@@ -108,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Form(
+          autovalidate: _autovalidate,
           key: _formKey,
           child: Column(children: <Widget>[
             SizedBox(height: 50),

@@ -36,6 +36,8 @@ dependencies:
   path_provider: ^1.6.24
   flutter_khalti: ^1.0.0
   intl: ^0.16.1
+  firebase_messaging: ^6.0.13
+  firebase_core: ^0.7.0
   
 
 dev_dependencies:
