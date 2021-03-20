@@ -1,12 +1,14 @@
 import 'package:easy_travel/screens/bookings/payment.dart';
+import 'package:easy_travel/screens/profile/editprofile.dart';
+import 'package:easy_travel/screens/registervehicles/assigndriver.dart';
+import 'package:easy_travel/screens/registervehicles/registervehicle.dart';
 import 'package:easy_travel/screens/userAuthentication/login.dart';
 import 'package:easy_travel/screens/userAuthentication/phoneNumber.dart';
-import 'package:easy_travel/screens/userprofile.dart';
+import 'package:easy_travel/screens/profile/userprofile.dart';
+import 'package:easy_travel/screens/userAuthentication/signup.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
-
-// import 'com.pusher.pushnotifications.PushNotifications';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,7 +48,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: UserProfile(),
+      home: EditProfilePage(),
     );
   }
 }

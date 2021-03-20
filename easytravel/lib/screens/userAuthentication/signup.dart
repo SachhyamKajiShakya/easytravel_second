@@ -1,5 +1,6 @@
 import 'package:easy_travel/screens/userAuthentication/login.dart';
 import 'package:easy_travel/screens/registervehicles/registerVehicle.dart';
+import 'package:easy_travel/services/fcmservices.dart';
 import 'package:easy_travel/services/tokenStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_travel/constants.dart';
@@ -17,6 +18,7 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   final _formkey = GlobalKey<FormState>();
   bool _autovalidate = false;
+  bool showPassword = false;
 
   FocusNode emailNode, usernameNode, pwNode, confirmpwNode, nameNode, phoneNode;
 
@@ -29,7 +31,7 @@ class _SignupPageState extends State<SignupPage> {
   String webToken;
 
   // future method to create user
-  createUser(String email, String username, String password, String password2,
+  _createUser(String email, String username, String password, String password2,
       String name, String phone) async {
     final http.Response response = await http.post(
       'http://192.168.100.67:8000/api/register/', //making http post call to api set through this url
@@ -50,6 +52,7 @@ class _SignupPageState extends State<SignupPage> {
     );
     //if new user is created then navigate user to home page else throw exception
     if (response.statusCode == 200) {
+      getDeviceToken();
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => VehicleRegistrationPage()));
       String token = jsonDecode(response.body)['token'].toString();
@@ -143,13 +146,8 @@ class _SignupPageState extends State<SignupPage> {
                       FlatButton(
                         child: buildButton('Sign Up', 300),
                         onPressed: () {
-                          print(_emailController.text);
-                          print(_usernameController.text);
-                          print(_passwordController.text);
-                          print(_confirmpwController.text);
-                          print(_nameController.text);
                           if (_formkey.currentState.validate()) {
-                            createUser(
+                            _createUser(
                                 _emailController.text,
                                 _usernameController.text,
                                 _passwordController.text,
@@ -256,7 +254,7 @@ class _SignupPageState extends State<SignupPage> {
         decoration: InputDecoration(
           border: InputBorder.none,
           contentPadding: EdgeInsets.symmetric(horizontal: 20),
-          hintText: 'rewrite password',
+          hintText: 'password',
           hintStyle: fieldtext,
         ),
       ),
@@ -375,5 +373,41 @@ class _SignupPageState extends State<SignupPage> {
     setState(() {
       _autovalidate = false;
     });
+  }
+
+  // method to build the text fields
+  TextFormField textfields(String label, String hint, bool isPassword) {
+    return TextFormField(
+      cursorColor: Color.fromRGBO(255, 230, 232, 1),
+      obscureText: isPassword ? (showPassword ? true : false) : false,
+      decoration: InputDecoration(
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+        suffixIcon: isPassword
+            ? IconButton(
+                icon: Icon(Icons.remove_red_eye, color: Colors.blueGrey),
+                onPressed: () {
+                  setState(() {
+                    showPassword = !showPassword;
+                  });
+                },
+              )
+            : null,
+        contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
+        labelText: label,
+        labelStyle: TextStyle(
+            fontFamily: 'Roboto',
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0.6,
+            color: Colors.black),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        hintText: hint,
+        hintStyle: TextStyle(
+          fontSize: 16,
+          color: Colors.blueGrey,
+        ),
+      ),
+    );
   }
 }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-class UserProfile extends StatefulWidget {
+class ConfirmBookingPage extends StatefulWidget {
   @override
-  _UserProfileState createState() => _UserProfileState();
+  _ConfirmBookingPageState createState() => _ConfirmBookingPageState();
 }
 
-class _UserProfileState extends State<UserProfile> {
+class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   String messageTitle = "title";
   String notificationAlert = "alert";
@@ -14,9 +14,6 @@ class _UserProfileState extends State<UserProfile> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _firebaseMessaging.getToken().then((token) {
-      print(token);
-    });
     _firebaseMessaging.configure(
       onMessage: (message) async {
         setState(() {

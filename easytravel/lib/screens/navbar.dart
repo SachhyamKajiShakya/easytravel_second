@@ -1,7 +1,7 @@
 import 'package:easy_travel/screens/getVehicles/homepage.dart';
 import 'package:easy_travel/screens/registervehicles/registervehicle.dart';
 import 'package:flutter/material.dart';
-import 'package:easy_travel/screens/userprofile.dart';
+import 'package:easy_travel/screens/profile/userprofile.dart';
 
 class NavBarPage extends StatefulWidget {
   @override

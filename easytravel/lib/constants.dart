@@ -7,8 +7,34 @@ const fieldtext = TextStyle(
     color: Color.fromRGBO(125, 125, 125, 1));
 
 const boxDecoration = BoxDecoration(
-  color: Color.fromRGBO(244, 244, 244, 100),
+  color: Color.fromRGBO(230, 230, 230, 100),
   borderRadius: BorderRadius.all(Radius.circular(8)),
+);
+
+BoxDecoration iconBoxDecoration = BoxDecoration(
+  shape: BoxShape.circle,
+  border: Border.all(
+    width: 2,
+    color: Colors.white,
+  ),
+  color: Colors.redAccent,
+);
+
+BoxDecoration ppDecoration = BoxDecoration(
+  border: Border.all(
+    width: 2,
+    color: Colors.white,
+  ),
+  boxShadow: [
+    BoxShadow(
+        spreadRadius: 2,
+        blurRadius: 10,
+        color: Colors.black.withOpacity(0.1),
+        offset: Offset(0, 10))
+  ],
+  shape: BoxShape.circle,
+  image: DecorationImage(
+      fit: BoxFit.cover, image: AssetImage('images/avatar.png')),
 );
 
 const headerIcon = Icon(
@@ -298,4 +324,93 @@ Widget formRow(String title, Widget function) {
       children: [function],
     ),
   ]);
+}
+
+Widget profilePicture(String alternateText, File image, Function function) {
+  return image != null
+      ? Stack(
+          children: [
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 2,
+                  color: Colors.white,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                      spreadRadius: 2,
+                      blurRadius: 10,
+                      color: Colors.black.withOpacity(0.1),
+                      offset: Offset(0, 10))
+                ],
+                shape: BoxShape.circle,
+              ),
+              child: Image.file(image),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                height: 35,
+                width: 35,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    width: 2,
+                    color: Colors.white,
+                  ),
+                  color: Colors.redAccent,
+                ),
+                child: Icon(Icons.edit, color: Colors.white),
+              ),
+            ),
+          ],
+        )
+      : Stack(
+          children: [
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 2,
+                  color: Colors.white,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                      spreadRadius: 2,
+                      blurRadius: 10,
+                      color: Colors.black.withOpacity(0.1),
+                      offset: Offset(0, 10))
+                ],
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                    fit: BoxFit.cover, image: AssetImage('images/avatar.png')),
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                height: 35,
+                width: 35,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    width: 2,
+                    color: Colors.white,
+                  ),
+                  color: Colors.redAccent,
+                ),
+                child: IconButton(
+                    icon: Icon(Icons.edit, color: Colors.white),
+                    onPressed: () {
+                      function();
+                    }),
+              ),
+            ),
+          ],
+        );
 }

@@ -7,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:dio/dio.dart';
 
-
 class VehicleRegistrationPage extends StatefulWidget {
   @override
   _VehicleRegistrationPageState createState() =>
@@ -15,69 +14,35 @@ class VehicleRegistrationPage extends StatefulWidget {
 }
 
 class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
-  
+// creating file type variable
+  File _image, _vehicleImg;
 
-  final _formkey = GlobalKey<FormState>();
+// creating instance of dio package
+  Dio _dio = Dio();
+
+  final _formKey = GlobalKey<FormState>();
+
+  // defining field nodes
+  FocusNode brandNode, modelNode, licenseNumberNode, categoryNode, serviceNode;
+  FocusNode descriptionNode, priceNode;
+
+  // defining field controller
+  TextEditingController _brandController = TextEditingController();
+  TextEditingController _modelController = TextEditingController();
+  TextEditingController _licenseController = TextEditingController();
+  TextEditingController _priceController = TextEditingController();
+  TextEditingController _descriptionController = TextEditingController();
+
+  // defining value for drop downs
+  String _categoryValue = 'Short Travel';
+  String _serviceValue = 'Driver Service';
+
+  // validation values
   bool _autovalidate = false;
   _onTap() {
     setState(() {
       _autovalidate = false;
     });
-  }
-
-  File _image, _vehicleImg;
-  String token;
-  Dio _dio = Dio();
-
-  FocusNode brandNode, modelNode, licenseNumberNode, categoryNode, serviceNode;
-  FocusNode descriptionNode, priceNode;
-
-//api to upload data
-  uploadPhoto(
-      String brand,
-      String model,
-      String licenseNumber,
-      String category,
-      String service,
-      String description,
-      int price,
-      File vehicleImage,
-      File bluebookImage,
-      String token) async {
-    try {
-      token = await readContent();
-      String vehicleFileName = vehicleImage.path.split('/').last;
-      String bluebookFileName = bluebookImage.path.split('/').last;
-
-      FormData formData = FormData.fromMap({
-        'brand': brand,
-        'model': model,
-        'licenseNumber': licenseNumber,
-        'category': category,
-        'service': service,
-        'description': description,
-        'price': price,
-        'vehicleImage': await MultipartFile.fromFile(vehicleImage.path,
-            filename: vehicleFileName),
-        'bluebookImage': await MultipartFile.fromFile(bluebookImage.path,
-            filename: bluebookFileName),
-      });
-
-      final response = await _dio.post(
-          'http://192.168.100.67:8000/api/vehicle/',
-          data: formData,
-          options: Options(
-              contentType: 'multipart/form-data',
-              headers: {'Authorization': 'Token $token'}));
-      if (response.statusCode == 200) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => AssignDriver()));
-      } else {
-        print('error file uploading to server');
-      }
-    } catch (e) {
-      print(e + 'error file uploading to server');
-    }
   }
 
   // method to get blue book image from gallery
@@ -102,17 +67,7 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
     });
   }
 
-  TextEditingController _brandController = TextEditingController();
-  TextEditingController _modelController = TextEditingController();
-  TextEditingController _licenseController = TextEditingController();
-  TextEditingController _priceController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
-
-  // setting default drop down value
-  String _categoryValue = 'Short Travel';
-  String _serviceValue = 'Driver Service';
-
-// show picker for blue book
+  // show picker for blue book
   void _showPicker(context) {
     showModalBottomSheet(
         context: context,
@@ -156,68 +111,225 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
         });
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          actions: [
+            FlatButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AssignDriver()));
+              },
+              child: Text('Skip',
+                  style: TextStyle(
+                      fontFamily: 'Roboto', fontSize: 17, color: Colors.black)),
+            )
+          ],
+        ),
+        body: Container(
+          padding: EdgeInsets.only(left: 20, top: 30, right: 20),
+          child: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: ListView(
+              children: [
+                Center(
+                  child: buildSubHeader('Register vehicle'),
+                ),
+                SizedBox(height: 50),
+                Form(
+                  autovalidate: _autovalidate,
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      _textFields('Brand', 'Honda', brandNode, modelNode,
+                          _brandController),
+                      SizedBox(height: 30),
+                      _textFields('Model', 'Civic', modelNode,
+                          licenseNumberNode, _modelController),
+                      SizedBox(height: 30),
+                      _textFields('License Plate Number', 'NSS 567',
+                          licenseNumberNode, categoryNode, _licenseController),
+                      SizedBox(height: 30),
+                      _textFields('Price', '1200', priceNode, serviceNode,
+                          _priceController),
+                      SizedBox(height: 30),
+                      _buildServiceDropDown(),
+                      SizedBox(height: 30),
+                      _buildCategoryDropDown(),
+                      SizedBox(height: 30),
+                      _buildTextBox(_descriptionController, 'Description'),
+                      SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FlatButton(
+                              onPressed: () {
+                                _showVehiclePicker(context);
+                              },
+                              child: buildImageContainer(
+                                  _vehicleImg, 'Vehicle Image')),
+                          SizedBox(width: 20),
+                          FlatButton(
+                              onPressed: () {
+                                _showPicker(context);
+                              },
+                              child: buildImageContainer(
+                                  _image, 'Bluebook Image')),
+                        ],
+                      ),
+                      SizedBox(height: 50),
+                      FlatButton(
+                        child: buildButton('Register Vehicle', 250),
+                        onPressed: () {
+                          _uploadVehicleData(
+                              _brandController.text,
+                              _modelController.text,
+                              _licenseController.text,
+                              _categoryValue,
+                              _serviceValue,
+                              _descriptionController.text,
+                              int.parse(_priceController.text),
+                              _vehicleImg,
+                              _image);
+                        },
+                      ),
+                      SizedBox(height: 30),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+// text fields
+  Widget _textFields(String label, String hint, FocusNode node,
+      FocusNode nextNode, TextEditingController controller) {
+    return TextFormField(
+      controller: controller,
+      focusNode: node,
+      onFieldSubmitted: (term) {
+        node.unfocus();
+        FocusScope.of(context).requestFocus(nextNode);
+      },
+      cursorColor: Color.fromRGBO(255, 230, 232, 1),
+      decoration: InputDecoration(
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+        contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
+        labelText: label,
+        labelStyle: TextStyle(
+            fontFamily: 'Roboto',
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0.6,
+            color: Colors.black),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        hintText: hint,
+        hintStyle: TextStyle(
+          fontSize: 16,
+          color: Colors.blueGrey,
+        ),
+      ),
+    );
+  }
+
 // widget methid to build service drop down
   Widget _buildServiceDropDown() {
-    return Container(
-      width: 360,
-      padding: EdgeInsets.only(left: 82, right: 15),
-      decoration: boxDecoration,
-      child: DropdownButtonFormField(
-          focusNode: serviceNode,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-          ),
-          value: _serviceValue,
-          style: fieldtext,
-          items: <String>['Driver Service', 'Self Driving and Driver Service']
-              .map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-                value: value,
-                child: Container(
-                  width: 200,
-                  alignment: Alignment.center,
-                  child: Text(value),
-                ));
-          }).toList(),
-          onChanged: (value) {
-            setState(() {
-              _serviceValue = value;
-            });
-          }),
-    );
+    return DropdownButtonFormField(
+        focusNode: serviceNode,
+        decoration: InputDecoration(
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+          contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
+          labelText: 'Service',
+          labelStyle: TextStyle(
+              fontFamily: 'Roboto',
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.6,
+              color: Colors.black),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+        ),
+        value: _serviceValue,
+        style: fieldtext,
+        items: <String>['Driver Service', 'Self Driving and Driver Service']
+            .map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+              value: value,
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.blueGrey,
+                ),
+              ));
+        }).toList(),
+        onChanged: (value) {
+          setState(() {
+            _serviceValue = value;
+          });
+        });
   }
 
 // widget method to build cateogry drop down
   Widget _buildCategoryDropDown() {
-    return Container(
-      width: 350,
-      padding: EdgeInsets.only(left: 140, right: 15),
-      decoration: boxDecoration,
-      child: DropdownButtonFormField(
-          focusNode: categoryNode,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-          ),
-          value: _categoryValue,
-          style: fieldtext,
-          items: <String>['Short Travel', 'Long Travel']
-              .map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(value: value, child: Text(value));
-          }).toList(),
-          onChanged: (value) {
-            setState(() {
-              _categoryValue = value;
-            });
-          }),
-    );
+    return DropdownButtonFormField(
+        focusNode: categoryNode,
+        decoration: InputDecoration(
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+          contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
+          labelText: 'Service',
+          labelStyle: TextStyle(
+              fontFamily: 'Roboto',
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.6,
+              color: Colors.black),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+        ),
+        value: _categoryValue,
+        style: fieldtext,
+        items: <String>['Short Travel', 'Long Travel']
+            .map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+              value: value,
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.blueGrey,
+                ),
+              ));
+        }).toList(),
+        onChanged: (value) {
+          setState(() {
+            _categoryValue = value;
+          });
+        });
   }
 
 // Widget method to build multiline text field
   Widget _buildTextBox(TextEditingController _controller, String hintText) {
     return Container(
       height: 120,
-      width: 350,
-      decoration: boxDecoration,
+      width: 370,
+      decoration: BoxDecoration(
+        border: Border.all(width: 1, color: Colors.black),
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(2)),
+      ),
       child: TextFormField(
         validator: (value) {
           if (value.isEmpty) {
@@ -230,7 +342,6 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
           FocusScope.of(context).requestFocus(priceNode);
         },
         focusNode: descriptionNode,
-        textAlign: TextAlign.center,
         textInputAction: TextInputAction.newline,
         keyboardType: TextInputType.multiline,
         maxLines: null,
@@ -238,250 +349,62 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
         controller: _controller,
         decoration: InputDecoration(
           border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           hintText: '$hintText',
-          hintStyle: fieldtext,
-        ),
-      ),
-    );
-  }
-
-// widget method to build brand text fields
-  Widget _buildBrandTextField(FocusNode node, FocusNode nextNode,
-      String hintText, TextEditingController _controller, context) {
-    return Container(
-      height: 45,
-      width: 350,
-      decoration: boxDecoration,
-      child: TextFormField(
-        validator: (value) {
-          if (value.isEmpty) {
-            return '*required';
-          } else if (value.contains(new RegExp(r'[1-9]'))) {
-            return 'invalid input';
-          }
-          return null;
-        },
-        onTap: _onTap,
-        onFieldSubmitted: (term) {
-          node.unfocus();
-          FocusScope.of(context).requestFocus(nextNode);
-        },
-        focusNode: node,
-        textAlign: TextAlign.center,
-        cursorColor: Colors.black,
-        controller: _controller,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 20),
-          hintText: '$hintText',
-          hintStyle: fieldtext,
-        ),
-      ),
-    );
-  }
-
-  // widget method to build brand text fields
-  Widget _buildPriceTextField(FocusNode node, FocusNode nextNode,
-      String hintText, TextEditingController _controller, context) {
-    return Container(
-      height: 45,
-      width: 350,
-      decoration: boxDecoration,
-      child: TextFormField(
-        keyboardType: TextInputType.number,
-        validator: (value) {
-          if (value.isEmpty) {
-            return '*required';
-          }
-          return null;
-        },
-        onTap: _onTap,
-        onFieldSubmitted: (term) {
-          node.unfocus();
-          FocusScope.of(context).requestFocus(nextNode);
-        },
-        focusNode: node,
-        textAlign: TextAlign.center,
-        cursorColor: Colors.black,
-        controller: _controller,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 20),
-          hintText: '$hintText',
-          hintStyle: fieldtext,
-        ),
-      ),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    brandNode = FocusNode();
-    modelNode = FocusNode();
-    licenseNumberNode = FocusNode();
-    categoryNode = FocusNode();
-    serviceNode = FocusNode();
-    descriptionNode = FocusNode();
-    priceNode = FocusNode();
-  }
-
-  @override
-  void dispose() {
-    brandNode.dispose();
-    modelNode.dispose();
-    licenseNumberNode.dispose();
-    categoryNode.dispose();
-    serviceNode.dispose();
-    descriptionNode.dispose();
-    priceNode.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-              icon: headerIcon,
-              onPressed: () {
-                Navigator.pop(context);
-              }),
-          actions: [
-            FlatButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => NavBarPage()));
-              },
-              child: Text('Skip',
-                  style: TextStyle(
-                      fontFamily: 'Roboto', fontSize: 17, color: Colors.black)),
-            ),
-          ],
-        ),
-        backgroundColor: Colors.white,
-        resizeToAvoidBottomPadding: true,
-        resizeToAvoidBottomInset: true,
-        body: SingleChildScrollView(
-          child: Form(
-            autovalidate: _autovalidate,
-            key: _formkey,
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [buildSubHeader('Register Vehicle')],
-                ),
-                SizedBox(height: 50),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildBrandTextField(brandNode, modelNode, 'Brand',
-                        _brandController, context)
-                  ],
-                ),
-                // calling widget method to set brand text field
-                SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    buildTextField(_onTap, modelNode, licenseNumberNode,
-                        'Model', _modelController, context)
-                  ],
-                ),
-                // calling widget method to set model text field
-                SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    buildTextField(_onTap, licenseNumberNode, descriptionNode,
-                        'License Plate Number', _licenseController, context)
-                  ],
-                ),
-                // calling widget method to set license number text field
-                SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildTextBox(_descriptionController, 'Description')
-                  ],
-                ),
-
-                SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildPriceTextField(priceNode, serviceNode, 'Price',
-                        _priceController, context)
-                  ],
-                ),
-                // calling widget method to set date of registration text field
-                SizedBox(height: 25),
-
-                // widget method to build service drop down
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [_buildServiceDropDown()],
-                ),
-
-                SizedBox(height: 25),
-
-                // widget method to build category drop down
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [_buildCategoryDropDown()],
-                ),
-
-                SizedBox(height: 25),
-                // row deefined to display the vehicle image selected
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FlatButton(
-                        onPressed: () {
-                          _showVehiclePicker(context);
-                        },
-                        child:
-                            buildImageContainer(_vehicleImg, 'Vehicle Image')),
-                    FlatButton(
-                        onPressed: () {
-                          _showPicker(context);
-                        },
-                        child: buildImageContainer(_image, 'Bluebook Image')),
-                  ],
-                ),
-                SizedBox(height: 50),
-                // register vehicle button
-                FlatButton(
-                    onPressed: () {
-                      if (_formkey.currentState.validate()) {
-                        uploadPhoto(
-                            _brandController.text,
-                            _modelController.text,
-                            _licenseController.text,
-                            _categoryValue,
-                            _serviceValue,
-                            _descriptionController.text,
-                            int.parse(_priceController.text),
-                            _vehicleImg,
-                            _image,
-                            token);
-                      } else {
-                        _onTap();
-                      }
-                    },
-                    child: buildButton('Register Vehicle', 300)),
-                SizedBox(height: 30)
-              ],
-            ),
+          hintStyle: TextStyle(
+            fontSize: 16,
+            color: Colors.blueGrey,
           ),
         ),
       ),
     );
+  }
+
+  //api to upload data
+  _uploadVehicleData(
+    String brand,
+    String model,
+    String licenseNumber,
+    String category,
+    String service,
+    String description,
+    int price,
+    File vehicleImage,
+    File bluebookImage,
+  ) async {
+    try {
+      String token = await readContent();
+      String vehicleFileName = vehicleImage.path.split('/').last;
+      String bluebookFileName = bluebookImage.path.split('/').last;
+
+      FormData formData = FormData.fromMap({
+        'brand': brand,
+        'model': model,
+        'licenseNumber': licenseNumber,
+        'category': category,
+        'service': service,
+        'description': description,
+        'price': price,
+        'vehicleImage': await MultipartFile.fromFile(vehicleImage.path,
+            filename: vehicleFileName),
+        'bluebookImage': await MultipartFile.fromFile(bluebookImage.path,
+            filename: bluebookFileName),
+      });
+
+      final response = await _dio.post(
+          'http://192.168.100.67:8000/api/vehicle/',
+          data: formData,
+          options: Options(
+              contentType: 'multipart/form-data',
+              headers: {'Authorization': 'Token $token'}));
+      if (response.statusCode == 200) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => AssignDriver()));
+      } else {
+        print('error file uploading to server');
+      }
+    } catch (e) {
+      print(e + 'error file uploading to server');
+    }
   }
 }

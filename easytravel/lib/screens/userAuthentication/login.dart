@@ -1,5 +1,6 @@
 import 'package:easy_travel/screens/userauthentication/signup.dart';
 import 'package:easy_travel/screens/registervehicles/registerVehicle.dart';
+import 'package:easy_travel/services/fcmservices.dart';
 import 'package:easy_travel/services/tokenstorage.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -36,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
     if (response.statusCode == 200) {
+      getDeviceToken();
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => VehicleRegistrationPage()));
       String token = jsonDecode(response.body)['token'].toString();
