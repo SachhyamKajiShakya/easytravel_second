@@ -10,6 +10,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   String messageTitle = "title";
   String notificationAlert = "alert";
+  String messagebody = 'message body';
   @override
   void initState() {
     // TODO: implement initState
@@ -19,11 +20,13 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
         setState(() {
           messageTitle = message["notification"]["title"];
           notificationAlert = "New Notification Alert";
+          messagebody = message["notification"]["data_message"];
         });
       },
       onResume: (message) async {
         setState(() {
           messageTitle = message["notification"]["title"];
+          messagebody = message["notification"]["data_message"];
           notificationAlert = "Application opened from Notification";
         });
       },
@@ -38,7 +41,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text(messageTitle), Text(notificationAlert)],
+            children: [Text(messageTitle), Text(messagebody)],
           ),
         ),
       ),

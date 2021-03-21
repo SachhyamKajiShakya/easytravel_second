@@ -232,7 +232,7 @@ Widget _buildBookingButton(snapshot, index, context, datasnapshot, dataindex) {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => BookLongTravel(
+                    builder: (context) => BookShortTravel(
                         snapshot: snapshot,
                         datasnapshot: datasnapshot,
                         index: index,

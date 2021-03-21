@@ -129,7 +129,9 @@ class _AssignDriverState extends State<AssignDriver> {
                         _licenseImage,
                       );
                     } else {
-                      _onTap();
+                      setState(() {
+                        _autovalidate = true;
+                      });
                     }
                   },
                   child: buildButton('Assign Driver', 300),
@@ -164,14 +166,13 @@ class _AssignDriverState extends State<AssignDriver> {
       decoration: InputDecoration(
         focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+        enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+        disabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
         contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
         labelText: label,
-        labelStyle: TextStyle(
-            fontFamily: 'Roboto',
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-            letterSpacing: 0.6,
-            color: Colors.black),
+        labelStyle: labelstyle,
         floatingLabelBehavior: FloatingLabelBehavior.always,
         hintText: hint,
         hintStyle: TextStyle(
@@ -206,12 +207,7 @@ class _AssignDriverState extends State<AssignDriver> {
             borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
         contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
         labelText: label,
-        labelStyle: TextStyle(
-            fontFamily: 'Roboto',
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-            letterSpacing: 0.6,
-            color: Colors.black),
+        labelStyle: labelstyle,
         floatingLabelBehavior: FloatingLabelBehavior.always,
         hintText: hint,
         hintStyle: TextStyle(

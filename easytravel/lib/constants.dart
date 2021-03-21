@@ -48,6 +48,19 @@ const textSpan = TextStyle(
   fontSize: 17,
   color: Colors.red,
 );
+
+TextStyle labelstyle = TextStyle(
+    fontFamily: 'Roboto',
+    fontSize: 20,
+    fontWeight: FontWeight.w500,
+    letterSpacing: 0.6,
+    color: Colors.black);
+
+TextStyle hintstyle = TextStyle(
+  fontSize: 16,
+  color: Colors.blueGrey,
+);
+
 // Widget method to build header
 Widget buildHeader(BuildContext context) {
   return Text(
@@ -77,7 +90,7 @@ Widget buildButton(String text, double width) {
       child: Text(
         '$text',
         style:
-            TextStyle(fontFamily: 'Cambria', color: Colors.white, fontSize: 20),
+            TextStyle(fontFamily: 'Roboto', color: Colors.white, fontSize: 20),
       ),
     ),
   );
@@ -232,98 +245,80 @@ Widget buildBodyCard(
 
 // pick up time field
 Widget buildTimeField(
-    function, context, node, nextNode, controller, hintText, size) {
+  BuildContext context,
+  String label,
+  String hint,
+  Function function,
+  FocusNode node,
+  FocusNode nextNode,
+  TextEditingController controller,
+  double size,
+) {
   return Container(
-    height: 45,
-    width: size.width * 0.15,
-    decoration: boxDecoration,
+    width: size,
     child: TextFormField(
-      keyboardType: TextInputType.number,
-      onTap: function,
-      validator: (value) {
-        if (value.isEmpty) {
-          return '*';
-        } else if (value.length > 2) {
-          return 'invalid';
-        }
-        return null;
-      },
+      controller: controller,
+      focusNode: node,
       onFieldSubmitted: (term) {
         node.unfocus();
         FocusScope.of(context).requestFocus(nextNode);
       },
-      focusNode: node,
-      textAlign: TextAlign.center,
       cursorColor: Colors.black,
-      controller: controller,
       decoration: InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 20),
-          hintText: '$hintText',
-          hintStyle: fieldtext),
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+        enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+        disabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+        contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
+        labelText: label,
+        labelStyle: labelstyle,
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        hintText: hint,
+        hintStyle: hintstyle,
+      ),
     ),
   );
 }
 
 // build text field
 Widget buildBookingTextFields(
-    BuildContext context,
-    Function function,
-    FocusNode node,
-    FocusNode nextNode,
-    TextEditingController controller,
-    String hintText,
-    Size size,
-    double width) {
+  BuildContext context,
+  String label,
+  String hint,
+  Function function,
+  FocusNode node,
+  FocusNode nextNode,
+  TextEditingController controller,
+  double size,
+) {
   return Container(
-    height: 45,
-    width: size.width * width,
-    decoration: boxDecoration,
+    width: size,
     child: TextFormField(
+      controller: controller,
       focusNode: node,
       onFieldSubmitted: (term) {
         node.unfocus();
         FocusScope.of(context).requestFocus(nextNode);
       },
-      controller: controller,
-      onTap: function,
-      validator: (value) {
-        if (value.isEmpty) {
-          return '*required';
-        } else if (value.contains(RegExp(r'[0-9]'))) {
-          return 'invalid';
-        } else if (value.contains('-_./#!^&*,?|')) {
-          return 'invalid';
-        }
-        return null;
-      },
-      textAlign: TextAlign.center,
       cursorColor: Colors.black,
       decoration: InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 20),
-          hintText: hintText,
-          hintStyle: fieldtext),
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+        enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+        disabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+        contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
+        labelText: label,
+        labelStyle: labelstyle,
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        hintText: hint,
+        hintStyle: hintstyle,
+      ),
     ),
   );
-}
-
-// pick up booking fields rows
-Widget formRow(String title, Widget function) {
-  return Column(children: [
-    Row(
-      children: [
-        Text(
-          title,
-          style: TextStyle(fontSize: 15),
-        ),
-      ],
-    ),
-    SizedBox(height: 15),
-    Row(
-      children: [function],
-    ),
-  ]);
 }
 
 Widget profilePicture(String alternateText, File image, Function function) {

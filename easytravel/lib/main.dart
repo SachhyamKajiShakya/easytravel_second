@@ -1,4 +1,7 @@
+import 'package:easy_travel/screens/bookings/confirmbooking.dart';
+import 'package:easy_travel/screens/bookings/longtravel.dart';
 import 'package:easy_travel/screens/bookings/payment.dart';
+import 'package:easy_travel/screens/bookings/shorttravel.dart';
 import 'package:easy_travel/screens/profile/editprofile.dart';
 import 'package:easy_travel/screens/registervehicles/assigndriver.dart';
 import 'package:easy_travel/screens/registervehicles/registervehicle.dart';
@@ -26,7 +29,7 @@ class MyApp extends StatelessWidget {
           headline1: TextStyle(
               fontFamily: 'Roboto', fontSize: 23, color: Colors.black),
           headline2: TextStyle(
-              fontSize: 16, fontFamily: 'Cambria', color: Colors.black),
+              fontSize: 16, fontFamily: 'Roboto', color: Colors.black),
           headline3: TextStyle(
               fontFamily: 'Roboto',
               fontSize: 17,
@@ -48,7 +51,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: EditProfilePage(),
+      home: BookShortTravel(),
     );
   }
 }

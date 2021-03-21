@@ -25,7 +25,7 @@ class _BookShortTravelState extends State<BookShortTravel> {
   // focus node of destination text fields
   FocusNode destinationDistrict, destinationCity, destinationStreet;
 
-// text editing controller variables
+  // text editing controller variables
   TextEditingController _hour = TextEditingController();
   TextEditingController _minute = TextEditingController();
   TextEditingController _district = TextEditingController();
@@ -37,7 +37,6 @@ class _BookShortTravelState extends State<BookShortTravel> {
 
   // setting value of selected drop down menu
   String _ampmValue = 'am';
-
   // date picker attributes
   DateTime selectedDate = DateTime.now();
   String now = DateFormat("yyyy-MM-dd").format(DateTime.now());
@@ -53,7 +52,7 @@ class _BookShortTravelState extends State<BookShortTravel> {
     });
   }
 
-// date picker in flutter
+  // date picker in flutter
   _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
@@ -75,6 +74,7 @@ class _BookShortTravelState extends State<BookShortTravel> {
     }
   }
 
+// api method to post booking details
   _makeShortbookings(
       String date,
       String time,
@@ -159,211 +159,203 @@ class _BookShortTravelState extends State<BookShortTravel> {
               }),
           title: buildSubHeader('Make your bookings'),
         ),
-        body: SingleChildScrollView(
-            child: Padding(
-          padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 5),
-          child: Form(
-            key: _formkey,
-            autovalidate: _autovalidate,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Pickup Details',
-                        style: TextStyle(
-                            fontSize: 18,
-                            letterSpacing: 1,
-                            color: Colors.black))
-                  ],
-                ),
-                SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    formRow(
-                        'District',
-                        buildBookingTextFields(context, _onTap, district, city,
-                            _district, 'Kathmandu', size, 0.43)),
-                    SizedBox(width: size.width * 0.03),
-                    formRow(
-                        'City',
-                        buildBookingTextFields(context, _onTap, city, street,
-                            _city, 'Koteshwor', size, 0.43)),
-                  ],
-                ),
-                SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    formRow(
-                        'Street',
-                        buildBookingTextFields(context, _onTap, street, null,
-                            _street, 'street', size, 0.9)),
-                  ],
-                ),
-                SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    formRow('Pickup date', _buildDateTextField(now, size)),
-                    SizedBox(width: size.width * 0.03),
-                    _pickupTimeRow(size)
-                  ],
-                ),
-                SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Destination',
-                        style: TextStyle(
-                            fontSize: 18,
-                            letterSpacing: 1,
-                            color: Colors.black))
-                  ],
-                ),
-                SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    formRow(
-                        'District',
+        body: Container(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 30),
+            child: GestureDetector(
+              onTap: () {
+                FocusScope.of(context).unfocus();
+              },
+              child: ListView(
+                children: [
+                  Text('Pickup Details:',
+                      style: TextStyle(
+                          fontSize: 18, letterSpacing: 1, color: Colors.black)),
+                  SizedBox(height: 30),
+                  Form(
+                    key: _formkey,
+                    autovalidate: _autovalidate,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            buildBookingTextFields(
+                                context,
+                                'District',
+                                'Kathmandu',
+                                _onTap,
+                                district,
+                                city,
+                                _district,
+                                170),
+                            SizedBox(width: 30),
+                            buildBookingTextFields(context, 'City', 'Koteshwor',
+                                _onTap, city, street, _city, 170),
+                          ],
+                        ),
+                        SizedBox(height: 30),
                         buildBookingTextFields(
                             context,
+                            'Street',
+                            'Seti OP Margh',
                             _onTap,
-                            destinationDistrict,
-                            destinationCity,
-                            _destinationDistrict,
-                            'Kathmandu',
-                            size,
-                            0.43)),
-                    SizedBox(width: size.width * 0.03),
-                    formRow(
-                        'City',
+                            street,
+                            hour,
+                            _street,
+                            370),
+                        SizedBox(height: 30),
+                        _buildDateField(context, 'Booking Date', now, 370),
+                        SizedBox(height: 30),
+                        Row(
+                          children: [
+                            buildTimeField(context, 'Hour', '10', _onTap, hour,
+                                minute, _hour, 110),
+                            SizedBox(width: 20),
+                            buildTimeField(context, 'Minute', '00', _onTap,
+                                minute, ampm, _minute, 110),
+                            SizedBox(width: 20),
+                            _buildTimeDropDown('ampm', 110)
+                          ],
+                        ),
+                        SizedBox(height: 40),
+                        Text('Destination Details:',
+                            style: TextStyle(
+                                fontSize: 18,
+                                letterSpacing: 1,
+                                color: Colors.black)),
+                        SizedBox(height: 30),
+                        Row(
+                          children: [
+                            buildBookingTextFields(
+                                context,
+                                'District',
+                                'Kathmandu',
+                                _onTap,
+                                destinationDistrict,
+                                destinationCity,
+                                _destinationDistrict,
+                                170),
+                            SizedBox(width: 30),
+                            buildBookingTextFields(
+                                context,
+                                'City',
+                                'Kalanki',
+                                _onTap,
+                                destinationCity,
+                                destinationStreet,
+                                _destinationCity,
+                                170),
+                          ],
+                        ),
+                        SizedBox(height: 30),
                         buildBookingTextFields(
                             context,
-                            _onTap,
-                            destinationCity,
-                            destinationStreet,
-                            _destinationCity,
-                            'Koteshwor',
-                            size,
-                            0.43)),
-                  ],
-                ),
-                SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    formRow(
-                        'Street',
-                        buildBookingTextFields(
-                            context,
+                            'Street',
+                            'Om Petrol Pump Road',
                             _onTap,
                             destinationStreet,
                             null,
                             _destinationStreet,
-                            'street',
-                            size,
-                            0.9)),
-                  ],
-                ),
-                SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FlatButton(
-                      onPressed: () {
-                        if (_formkey.currentState.validate()) {
-                          _makeShortbookings(
-                              now,
-                              _hour.text + _minute.text + _ampmValue,
-                              _district.text,
-                              _city.text,
-                              _street.text,
-                              _destinationDistrict.text,
-                              _destinationCity.text,
-                              _destinationStreet.text);
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => PaymentGateway()));
-                        }
-                      },
-                      child: buildButton('Request Booking', 300),
+                            370),
+                        SizedBox(height: 40),
+                        Center(
+                          child: FlatButton(
+                            onPressed: () {
+                              if (_formkey.currentState.validate()) {
+                                _makeShortbookings(
+                                    now,
+                                    _hour.text + _minute.text + _ampmValue,
+                                    _district.text,
+                                    _city.text,
+                                    _street.text,
+                                    _destinationDistrict.text,
+                                    _destinationCity.text,
+                                    _destinationStreet.text);
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => PaymentGateway()));
+                              }
+                            },
+                            child: buildButton('Request Booking', 250),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        )),
+                  ),
+                ],
+              ),
+            )),
       ),
     );
   }
 
-// build date text field
-  Widget _buildDateTextField(String hintText, Size size) {
+  Widget _buildDateField(
+      BuildContext context, String label, String hint, double size) {
     return Container(
-      height: 45,
-      width: size.width * 0.35,
-      decoration: boxDecoration,
+      width: size,
       child: TextFormField(
         readOnly: true,
         onTap: () {
           _selectDate(context);
         },
-        textAlign: TextAlign.center,
-        cursorColor: Colors.black,
+        cursorColor: Color.fromRGBO(255, 230, 232, 1),
         decoration: InputDecoration(
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.symmetric(horizontal: 20),
-            hintText: hintText,
-            hintStyle: fieldtext),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+          contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
+          labelText: label,
+          labelStyle: TextStyle(
+              fontFamily: 'Roboto',
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.6,
+              color: Colors.black),
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          hintText: hint,
+          hintStyle: TextStyle(
+            fontSize: 16,
+            color: Colors.blueGrey,
+          ),
+        ),
       ),
     );
   }
 
-// pick up time set
-  Widget _pickupTimeRow(Size size) {
-    return Column(children: [
-      Row(
-        children: [
-          Text('Pickup time', style: TextStyle(fontSize: 14)),
-        ],
-      ),
-      SizedBox(height: 15),
-      Row(
-        children: [
-          buildTimeField(_onTap, context, hour, minute, _hour, '10', size),
-          SizedBox(width: 8),
-          buildTimeField(_onTap, context, minute, ampm, _minute, '00', size),
-          SizedBox(width: 8),
-          _buildTimeDropDown(size),
-        ],
-      ),
-    ]);
-  }
-
   // widget method to build cateogry drop down
-  Widget _buildTimeDropDown(size) {
+  Widget _buildTimeDropDown(String label, double size) {
     return Container(
-      width: size.width * 0.15,
-      padding: EdgeInsets.only(left: 12, right: 2),
-      decoration: BoxDecoration(
-        color: Color.fromRGBO(244, 244, 244, 100),
-        borderRadius: BorderRadius.circular(8),
-      ),
+      width: size,
+      // padding: EdgeInsets.only(left: 12, right: 2),
       child: DropdownButtonFormField(
           focusNode: ampm,
           decoration: InputDecoration(
-            border: InputBorder.none,
+            enabledBorder: OutlineInputBorder(
+                borderSide:
+                    BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+            contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
+            labelText: label,
+            labelStyle: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.6,
+                color: Colors.black),
+            floatingLabelBehavior: FloatingLabelBehavior.always,
           ),
           value: _ampmValue,
           style: fieldtext,
           items: <String>['am', 'pm']
               .map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(value: value, child: Text(value));
+            return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.blueGrey,
+                  ),
+                ));
           }).toList(),
           onChanged: (value) {
             setState(() {
