@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 getShortVehicles() async {
   String token = await readContent();
   final response = await http.get(
+    // 'https://fyp-easytravel.herokuapp.com/api/vehicle/short',
     'http://192.168.100.67:8000/api/vehicle/short',
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -21,6 +22,7 @@ getShortVehicles() async {
 getLongVehicles() async {
   String token = await readContent();
   final response = await http.get(
+    // 'https://fyp-easytravel.herokuapp.com/api/vehicle/long',
     'http://192.168.100.67:8000/api/vehicle/long',
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -37,6 +39,7 @@ getLongVehicles() async {
 getDriverDetails(int id) async {
   String token = await readContent();
   final response = await http.get(
+    // 'https://fyp-easytravel.herokuapp.com/api/driver/$id',
     'http://192.168.100.67:8000/api/driver/$id',
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',

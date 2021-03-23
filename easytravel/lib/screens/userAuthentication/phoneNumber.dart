@@ -13,8 +13,15 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
   TextEditingController _phoneController = TextEditingController();
   bool _autovalidate = false;
   final _formKey = GlobalKey<FormState>();
+  _onTap() {
+    setState(() {
+      _autovalidate = false;
+    });
+  }
+
   _enterPhone(String phone) async {
     final http.Response response = await http.post(
+      // 'https://fyp-easytravel.herokuapp.com/api/phoneNumber/',
       'http://192.168.100.67:8000/api/phoneNumber/',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -52,41 +59,32 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
           ),
         ),
         backgroundColor: Colors.white,
-        body: Padding(
+        body: Container(
           padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
-          child: Column(
+          child: ListView(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [buildSubHeader("What's your phone number?")],
-              ),
+              Center(child: buildSubHeader("What's your phone number?")),
               SizedBox(height: 35),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Make sure you get a SMS to this number',
-                    style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontSize: 16,
-                      color: Colors.black45,
-                    ),
+              Center(
+                child: Text(
+                  'Make sure you get a SMS to this number',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 16,
+                    color: Colors.black45,
                   ),
-                ],
+                ),
               ),
               SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'so that you receive the code sent to this number',
-                    style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontSize: 16,
-                      color: Colors.black45,
-                    ),
-                  )
-                ],
+              Center(
+                child: Text(
+                  'so that you receive the code sent to this number',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 16,
+                    color: Colors.black45,
+                  ),
+                ),
               ),
               SizedBox(height: 40),
               Form(
@@ -95,36 +93,8 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      height: 45,
-                      width: 320,
-                      decoration: boxDecoration,
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        onTap: () {
-                          setState(() {
-                            _autovalidate = false;
-                          });
-                        },
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return '*Required';
-                          } else if (value.length < 10) {
-                            return 'Number must be 10 digits long';
-                          }
-                          return null;
-                        },
-                        textAlign: TextAlign.center,
-                        cursorColor: Colors.black,
-                        controller: _phoneController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                          hintText: 'your phone number',
-                          hintStyle: fieldtext,
-                        ),
-                      ),
-                    ),
+                    contactField(context, 'Contact', 'your contact number',
+                        _onTap, null, null, _phoneController, 370),
                   ],
                 ),
               ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 
+const cursorColor = Colors.black;
 const fieldtext = TextStyle(
     fontFamily: 'Roboto',
     fontSize: 14,
@@ -11,6 +12,7 @@ const boxDecoration = BoxDecoration(
   borderRadius: BorderRadius.all(Radius.circular(8)),
 );
 
+// box decoration for navbar icons
 BoxDecoration iconBoxDecoration = BoxDecoration(
   shape: BoxShape.circle,
   border: Border.all(
@@ -20,6 +22,7 @@ BoxDecoration iconBoxDecoration = BoxDecoration(
   color: Colors.redAccent,
 );
 
+// box decoration for profile picture decoration
 BoxDecoration ppDecoration = BoxDecoration(
   border: Border.all(
     width: 2,
@@ -37,18 +40,21 @@ BoxDecoration ppDecoration = BoxDecoration(
       fit: BoxFit.cover, image: AssetImage('images/avatar.png')),
 );
 
+// icon design properties for arrow icon on navbar
 const headerIcon = Icon(
   Icons.arrow_back_outlined,
   size: 22,
   color: Colors.black,
 );
 
+// text style for span texts
 const textSpan = TextStyle(
   fontFamily: 'Roboto',
   fontSize: 17,
   color: Colors.red,
 );
 
+// text style for label text
 TextStyle labelstyle = TextStyle(
     fontFamily: 'Roboto',
     fontSize: 20,
@@ -56,10 +62,30 @@ TextStyle labelstyle = TextStyle(
     letterSpacing: 0.6,
     color: Colors.black);
 
+// text style for hint text
 TextStyle hintstyle = TextStyle(
   fontSize: 16,
-  color: Colors.blueGrey,
+  color: Color.fromRGBO(150, 150, 150, 1),
 );
+
+// input decoration for text fields
+InputDecoration fieldsInputDecoration(String hintText, String labelText) {
+  return InputDecoration(
+    focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+    enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+    disabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+    errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
+    contentPadding: EdgeInsets.only(bottom: 8, left: 15, top: 3),
+    labelText: labelText,
+    labelStyle: labelstyle,
+    floatingLabelBehavior: FloatingLabelBehavior.always,
+    hintText: hintText,
+    hintStyle: hintstyle,
+  );
+}
 
 // Widget method to build header
 Widget buildHeader(BuildContext context) {
@@ -96,39 +122,6 @@ Widget buildButton(String text, double width) {
   );
 }
 
-// widget method to build text fields
-Widget buildTextField(Function onTap, FocusNode node, FocusNode nextNode,
-    String hintText, TextEditingController _controller, context) {
-  return Container(
-    height: 45,
-    width: 350,
-    decoration: boxDecoration,
-    child: TextFormField(
-      onTap: onTap,
-      validator: (value) {
-        if (value.isEmpty) {
-          return '*required';
-        }
-        return null;
-      },
-      onFieldSubmitted: (term) {
-        node.unfocus();
-        FocusScope.of(context).requestFocus(nextNode);
-      },
-      focusNode: node,
-      textAlign: TextAlign.center,
-      cursorColor: Colors.black,
-      controller: _controller,
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        contentPadding: EdgeInsets.symmetric(horizontal: 20),
-        hintText: '$hintText',
-        hintStyle: fieldtext,
-      ),
-    ),
-  );
-}
-
 // widget method to build image button
 Widget buildImageButton(String text) {
   return Container(
@@ -160,7 +153,8 @@ Widget buildImageContainer(File img, String hintTxt) {
           height: 110,
           width: 125,
           decoration: BoxDecoration(
-              border: Border.all(color: Color.fromRGBO(125, 125, 125, 1))),
+              border: Border.all(
+                  color: Color.fromRGBO(210, 210, 210, 1), width: 1.2)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -255,35 +249,31 @@ Widget buildTimeField(
   double size,
 ) {
   return Container(
-    width: size,
-    child: TextFormField(
-      controller: controller,
-      focusNode: node,
-      onFieldSubmitted: (term) {
-        node.unfocus();
-        FocusScope.of(context).requestFocus(nextNode);
-      },
-      cursorColor: Colors.black,
-      decoration: InputDecoration(
-        focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-        enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-        disabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-        contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
-        labelText: label,
-        labelStyle: labelstyle,
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        hintText: hint,
-        hintStyle: hintstyle,
-      ),
-    ),
-  );
+      width: size,
+      child: TextFormField(
+        validator: (value) {
+          if (value.isEmpty) {
+            return '*required';
+          } else if (value.length > 2) {
+            return 'invalid input';
+          } else {
+            return null;
+          }
+        },
+        keyboardType: TextInputType.number,
+        controller: controller,
+        focusNode: node,
+        onFieldSubmitted: (term) {
+          node.unfocus();
+          FocusScope.of(context).requestFocus(nextNode);
+        },
+        cursorColor: cursorColor,
+        decoration: fieldsInputDecoration(hint, label),
+      ));
 }
 
 // build text field
-Widget buildBookingTextFields(
+Widget buildTextFields(
   BuildContext context,
   String label,
   String hint,
@@ -296,116 +286,95 @@ Widget buildBookingTextFields(
   return Container(
     width: size,
     child: TextFormField(
+      validator: (value) {
+        if (value.isEmpty) {
+          return '*required';
+        } else if (value.contains(new RegExp(r'[a-zA-z]')) == false) {
+          return 'only contains alphabets';
+        } else {
+          return null;
+        }
+      },
+      onTap: function,
       controller: controller,
       focusNode: node,
       onFieldSubmitted: (term) {
         node.unfocus();
         FocusScope.of(context).requestFocus(nextNode);
       },
-      cursorColor: Colors.black,
-      decoration: InputDecoration(
-        focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-        enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-        disabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-        contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
-        labelText: label,
-        labelStyle: labelstyle,
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        hintText: hint,
-        hintStyle: hintstyle,
-      ),
+      cursorColor: cursorColor,
+      decoration: fieldsInputDecoration(hint, label),
     ),
   );
 }
 
-Widget profilePicture(String alternateText, File image, Function function) {
-  return image != null
-      ? Stack(
-          children: [
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 2,
-                  color: Colors.white,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                      spreadRadius: 2,
-                      blurRadius: 10,
-                      color: Colors.black.withOpacity(0.1),
-                      offset: Offset(0, 10))
-                ],
-                shape: BoxShape.circle,
-              ),
-              child: Image.file(image),
-            ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: Container(
-                height: 35,
-                width: 35,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    width: 2,
-                    color: Colors.white,
-                  ),
-                  color: Colors.redAccent,
-                ),
-                child: Icon(Icons.edit, color: Colors.white),
-              ),
-            ),
-          ],
-        )
-      : Stack(
-          children: [
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 2,
-                  color: Colors.white,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                      spreadRadius: 2,
-                      blurRadius: 10,
-                      color: Colors.black.withOpacity(0.1),
-                      offset: Offset(0, 10))
-                ],
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                    fit: BoxFit.cover, image: AssetImage('images/avatar.png')),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: Container(
-                height: 35,
-                width: 35,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    width: 2,
-                    color: Colors.white,
-                  ),
-                  color: Colors.redAccent,
-                ),
-                child: IconButton(
-                    icon: Icon(Icons.edit, color: Colors.white),
-                    onPressed: () {
-                      function();
-                    }),
-              ),
-            ),
-          ],
-        );
+// text field for contact number
+Widget contactField(
+    BuildContext context,
+    String label,
+    String hint,
+    Function function,
+    FocusNode node,
+    FocusNode nextNode,
+    TextEditingController controller,
+    double size) {
+  return Container(
+    width: size,
+    child: TextFormField(
+        keyboardType: TextInputType.number,
+        onTap: function,
+        controller: controller,
+        focusNode: node,
+        validator: (value) {
+          if (value.isEmpty) {
+            return '*required';
+          } else if (value.contains(RegExp(r'[a-zA-z-_!@#]'))) {
+            return 'invalid input';
+          } else if (value.length < 10) {
+            return 'must be of 10 digits';
+          }
+          return null;
+        },
+        onFieldSubmitted: (term) {
+          node.unfocus();
+          FocusScope.of(context).requestFocus(nextNode);
+        },
+        cursorColor: cursorColor,
+        decoration: fieldsInputDecoration(hint, label)),
+  );
+}
+
+// text field for price
+Widget integerField(
+    BuildContext context,
+    String label,
+    String hint,
+    Function function,
+    FocusNode node,
+    FocusNode nextNode,
+    TextEditingController controller,
+    double size) {
+  return Container(
+    width: size,
+    child: TextFormField(
+        keyboardType: TextInputType.number,
+        onTap: function,
+        controller: controller,
+        focusNode: node,
+        validator: (value) {
+          if (value.isEmpty) {
+            return '*required';
+          } else if (value.contains(RegExp(r'[a-zA-z-_!@#]'))) {
+            return 'invalid input';
+          } else {
+            return null;
+          }
+        },
+        onFieldSubmitted: (term) {
+          node.unfocus();
+          FocusScope.of(context).requestFocus(nextNode);
+        },
+        cursorColor: cursorColor,
+        decoration: fieldsInputDecoration('800/day', 'Price')),
+  );
 }

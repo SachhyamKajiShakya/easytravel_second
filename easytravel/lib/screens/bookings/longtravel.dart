@@ -45,6 +45,7 @@ class _BookLongTravelState extends State<BookLongTravel> {
   String _destinationProvince = '1';
   DateTime selectedDate = DateTime.now();
   String now = DateFormat("yyyy-MM-dd").format(DateTime.now());
+  DateTime systemDate = DateTime.now();
 
   // date picker in flutter
   _selectDate(BuildContext context) async {
@@ -64,6 +65,7 @@ class _BookLongTravelState extends State<BookLongTravel> {
       setState(() {
         selectedDate = picked;
         now = DateFormat("yyyy-MM-dd").format(selectedDate);
+        print(now);
       });
     }
   }
@@ -128,8 +130,11 @@ class _BookLongTravelState extends State<BookLongTravel> {
       String destinationStreet) async {
     try {
       String token = await readContent();
+      print(widget.snapshot.data[widget.index]["id"]);
       final http.Response response = await http.post(
+        // 'http://fyp-easytravel.herokuapp.com/api/longbooking/${widget.snapshot.data[widget.index]["id"]}/${widget.datasnapshot.data[widget.dataindex]["id"]}/',
         'http://192.168.100.67:8000/api/longbooking/${widget.snapshot.data[widget.index]["id"]}/${widget.datasnapshot.data[widget.dataindex]["id"]}/',
+
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Token $token',
@@ -150,6 +155,7 @@ class _BookLongTravelState extends State<BookLongTravel> {
           },
         ),
       );
+
       if (response.statusCode == 200) {
         print('success');
       } else {
@@ -184,50 +190,42 @@ class _BookLongTravelState extends State<BookLongTravel> {
               },
               child: ListView(
                 children: [
-                  Text('Pickup Details:',
-                      style: TextStyle(
-                          fontSize: 18, letterSpacing: 1, color: Colors.black)),
+                  Center(
+                    child: Text('Pickup Details:',
+                        style: TextStyle(fontSize: 20, color: Colors.black)),
+                  ),
                   SizedBox(height: 30),
                   Form(
                     key: _formkey,
                     autovalidate: _autovalidate,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            buildBookingTextFields(
-                                context,
-                                'District',
-                                'Kathmandu',
-                                _onTap,
-                                district,
-                                city,
-                                _district,
-                                170),
+                            buildTextFields(context, 'District', 'Kathmandu',
+                                _onTap, district, city, _district, 170),
                             SizedBox(width: 30),
-                            buildBookingTextFields(context, 'City', 'Koteshwor',
+                            buildTextFields(context, 'City', 'Koteshwor',
                                 _onTap, city, street, _city, 170),
                           ],
                         ),
                         SizedBox(height: 30),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            buildBookingTextFields(
-                                context,
-                                'Street',
-                                'Seti OP Margh',
-                                _onTap,
-                                street,
-                                hour,
-                                _street,
-                                240),
+                            buildTextFields(context, 'Street', 'Seti OP Margh',
+                                _onTap, street, hour, _street, 240),
                             SizedBox(width: 30),
                             _provinceDropdown(_pickupProvince, 'Province', 100),
                           ],
                         ),
                         SizedBox(height: 30),
+                        _buildDateField(context, 'Book From', now, 370),
+                        SizedBox(height: 30),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             buildTimeField(context, 'Hour', '10', _onTap, hour,
                                 minute, _hour, 110),
@@ -240,14 +238,13 @@ class _BookLongTravelState extends State<BookLongTravel> {
                         ),
                         SizedBox(height: 40),
                         Text('Destination Details:',
-                            style: TextStyle(
-                                fontSize: 18,
-                                letterSpacing: 1,
-                                color: Colors.black)),
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.black)),
                         SizedBox(height: 30),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            buildBookingTextFields(
+                            buildTextFields(
                                 context,
                                 'District',
                                 'Kathmandu',
@@ -257,7 +254,7 @@ class _BookLongTravelState extends State<BookLongTravel> {
                                 _destinationDistrict,
                                 170),
                             SizedBox(width: 30),
-                            buildBookingTextFields(
+                            buildTextFields(
                                 context,
                                 'City',
                                 'Koteshwor',
@@ -270,8 +267,9 @@ class _BookLongTravelState extends State<BookLongTravel> {
                         ),
                         SizedBox(height: 30),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            buildBookingTextFields(
+                            buildTextFields(
                                 context,
                                 'Street',
                                 'Seti OP Margh',
@@ -286,19 +284,22 @@ class _BookLongTravelState extends State<BookLongTravel> {
                           ],
                         ),
                         SizedBox(height: 40),
-                        Text('Booking For:',
-                            style: TextStyle(
-                                fontSize: 18,
-                                letterSpacing: 1,
-                                color: Colors.black)),
+                        Text('Book For:',
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.black)),
                         SizedBox(height: 30),
-                        buildBookingTextFields(context, 'Number of days', '5',
-                            _onTap, days, null, _days, 170),
+                        buildTimeField(context, 'Number of days', '5', _onTap,
+                            days, null, _days, 170),
                         SizedBox(height: 40),
                         Center(
                           child: FlatButton(
                             onPressed: () {
                               if (_formkey.currentState.validate()) {
+                                // if (selectedDate.isAfter(systemDate)) {
+                                //   print('success');
+                                // } else {
+                                //   print('not success');
+                                // }
                                 _makeLongBookings(
                                   _pickupProvince,
                                   _days.text,
@@ -312,10 +313,6 @@ class _BookLongTravelState extends State<BookLongTravel> {
                                   _destinationCity.text,
                                   _destinationStreet.text,
                                 );
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => PaymentGateway()));
                               } else {
                                 setState(() {
                                   _autovalidate = true;
@@ -340,23 +337,9 @@ class _BookLongTravelState extends State<BookLongTravel> {
   Widget _buildTimeDropDown(String label, double size) {
     return Container(
       width: size,
-      // padding: EdgeInsets.only(left: 12, right: 2),
       child: DropdownButtonFormField(
           focusNode: ampm,
-          decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-                borderSide:
-                    BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-            contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
-            labelText: label,
-            labelStyle: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-                letterSpacing: 0.6,
-                color: Colors.black),
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-          ),
+          decoration: fieldsInputDecoration(null, 'Merediem'),
           value: _ampmValue,
           style: fieldtext,
           items: <String>['am', 'pm']
@@ -384,20 +367,7 @@ class _BookLongTravelState extends State<BookLongTravel> {
       width: width,
       child: DropdownButtonFormField(
           focusNode: province,
-          decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-                borderSide:
-                    BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-            contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
-            labelText: label,
-            labelStyle: TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-                letterSpacing: 0.6,
-                color: Colors.black),
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-          ),
+          decoration: fieldsInputDecoration(null, 'Province'),
           value: provinceValue,
           style: fieldtext,
           items: <String>['1', '2', '3', '4', '5', '6', '7']
@@ -409,6 +379,21 @@ class _BookLongTravelState extends State<BookLongTravel> {
               provinceValue = value;
             });
           }),
+    );
+  }
+
+  Widget _buildDateField(
+      BuildContext context, String label, String hint, double size) {
+    return Container(
+      width: size,
+      child: TextFormField(
+        readOnly: true,
+        onTap: () {
+          _selectDate(context);
+        },
+        cursorColor: Color.fromRGBO(255, 230, 232, 1),
+        decoration: fieldsInputDecoration(now, 'Pickup Date'),
+      ),
     );
   }
 }

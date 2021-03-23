@@ -6,6 +6,7 @@ import 'package:easy_travel/screens/profile/editprofile.dart';
 import 'package:easy_travel/screens/registervehicles/assigndriver.dart';
 import 'package:easy_travel/screens/registervehicles/registervehicle.dart';
 import 'package:easy_travel/screens/userAuthentication/login.dart';
+import 'package:easy_travel/screens/userAuthentication/otp.dart';
 import 'package:easy_travel/screens/userAuthentication/phoneNumber.dart';
 import 'package:easy_travel/screens/profile/userprofile.dart';
 import 'package:easy_travel/screens/userAuthentication/signup.dart';
@@ -51,7 +52,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: BookShortTravel(),
+      home: OTP(),
     );
   }
 }

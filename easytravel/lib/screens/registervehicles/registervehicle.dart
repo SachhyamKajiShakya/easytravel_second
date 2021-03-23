@@ -1,3 +1,4 @@
+import 'package:easy_travel/screens/getVehicles/homepage.dart';
 import 'package:easy_travel/screens/navbar.dart';
 import 'package:easy_travel/screens/registervehicles/assigndriver.dart';
 import 'package:easy_travel/services/tokenstorage.dart';
@@ -123,7 +124,7 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
             FlatButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AssignDriver()));
+                    MaterialPageRoute(builder: (context) => NavBarPage()));
               },
               child: Text('Skip',
                   style: TextStyle(
@@ -147,24 +148,32 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
                   autovalidate: _autovalidate,
                   key: _formKey,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      _textFields('Brand', 'Honda', brandNode, modelNode,
-                          _brandController),
+                      buildTextFields(context, 'Brand', 'Honda', _onTap,
+                          brandNode, modelNode, _brandController, 370),
                       SizedBox(height: 30),
-                      _textFields('Model', 'Civic', modelNode,
-                          licenseNumberNode, _modelController),
+                      buildTextFields(context, 'Model', 'Civic', _onTap,
+                          modelNode, licenseNumberNode, _modelController, 370),
                       SizedBox(height: 30),
-                      _textFields('License Plate Number', 'NSS 567',
-                          licenseNumberNode, categoryNode, _licenseController),
+                      buildTextFields(
+                          context,
+                          'License Plate Number',
+                          'NSS 567',
+                          _onTap,
+                          licenseNumberNode,
+                          categoryNode,
+                          _licenseController,
+                          370),
                       SizedBox(height: 30),
-                      _textFields('Price', '1200', priceNode, serviceNode,
-                          _priceController),
+                      integerField(context, 'Price', '1200', _onTap, priceNode,
+                          serviceNode, _priceController, 370),
                       SizedBox(height: 30),
                       _buildServiceDropDown(),
                       SizedBox(height: 30),
                       _buildCategoryDropDown(),
                       SizedBox(height: 30),
-                      _buildTextBox(_descriptionController, 'Description'),
+                      _buildTextBox(_descriptionController),
                       SizedBox(height: 30),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -218,120 +227,68 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
     );
   }
 
-// text fields
-  Widget _textFields(String label, String hint, FocusNode node,
-      FocusNode nextNode, TextEditingController controller) {
-    return TextFormField(
-      controller: controller,
-      focusNode: node,
-      onFieldSubmitted: (term) {
-        node.unfocus();
-        FocusScope.of(context).requestFocus(nextNode);
-      },
-      cursorColor: Color.fromRGBO(255, 230, 232, 1),
-      decoration: InputDecoration(
-        focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-        enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-        disabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-        contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
-        labelText: label,
-        labelStyle: labelstyle,
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        hintText: hint,
-        hintStyle: hintstyle,
-      ),
-    );
-  }
-
 // widget methid to build service drop down
   Widget _buildServiceDropDown() {
-    return DropdownButtonFormField(
-        focusNode: serviceNode,
-        decoration: InputDecoration(
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-          contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
-          labelText: 'Service',
-          labelStyle: TextStyle(
-              fontFamily: 'Roboto',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.6,
-              color: Colors.black),
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-        ),
-        value: _serviceValue,
-        style: fieldtext,
-        items: <String>['Driver Service', 'Self Driving and Driver Service']
-            .map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-              value: value,
-              child: Text(
-                value,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.blueGrey,
-                ),
-              ));
-        }).toList(),
-        onChanged: (value) {
-          setState(() {
-            _serviceValue = value;
-          });
-        });
+    return Container(
+      width: 370,
+      child: DropdownButtonFormField(
+          focusNode: serviceNode,
+          decoration: fieldsInputDecoration(null, 'Service'),
+          value: _serviceValue,
+          style: fieldtext,
+          items: <String>['Driver Service', 'Self Driving and Driver Service']
+              .map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.blueGrey,
+                  ),
+                ));
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              _serviceValue = value;
+            });
+          }),
+    );
   }
 
 // widget method to build cateogry drop down
   Widget _buildCategoryDropDown() {
-    return DropdownButtonFormField(
-        focusNode: categoryNode,
-        decoration: InputDecoration(
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-          contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
-          labelText: 'Service',
-          labelStyle: TextStyle(
-              fontFamily: 'Roboto',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.6,
-              color: Colors.black),
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-        ),
-        value: _categoryValue,
-        style: fieldtext,
-        items: <String>['Short Travel', 'Long Travel']
-            .map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-              value: value,
-              child: Text(
-                value,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.blueGrey,
-                ),
-              ));
-        }).toList(),
-        onChanged: (value) {
-          setState(() {
-            _categoryValue = value;
-          });
-        });
+    return Container(
+      width: 370,
+      child: DropdownButtonFormField(
+          focusNode: categoryNode,
+          decoration: fieldsInputDecoration(null, 'Category'),
+          value: _categoryValue,
+          style: fieldtext,
+          items: <String>['Short Travel', 'Long Travel']
+              .map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.blueGrey,
+                  ),
+                ));
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              _categoryValue = value;
+            });
+          }),
+    );
   }
 
 // Widget method to build multiline text field
-  Widget _buildTextBox(TextEditingController _controller, String hintText) {
+  Widget _buildTextBox(TextEditingController _controller) {
     return Container(
-      height: 120,
       width: 370,
-      decoration: BoxDecoration(
-        border: Border.all(width: 1, color: Colors.black),
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(2)),
-      ),
       child: TextFormField(
         validator: (value) {
           if (value.isEmpty) {
@@ -349,15 +306,8 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
         maxLines: null,
         cursorColor: Colors.black,
         controller: _controller,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          hintText: '$hintText',
-          hintStyle: TextStyle(
-            fontSize: 16,
-            color: Colors.blueGrey,
-          ),
-        ),
+        decoration:
+            fieldsInputDecoration('Details about vehicle', 'Description'),
       ),
     );
   }
@@ -376,6 +326,7 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
   ) async {
     try {
       String token = await readContent();
+      print(token);
       String vehicleFileName = vehicleImage.path.split('/').last;
       String bluebookFileName = bluebookImage.path.split('/').last;
 
@@ -394,6 +345,7 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
       });
 
       final response = await _dio.post(
+          // 'https://fyp-easytravel.herokuapp.com/api/vehicle/',
           'http://192.168.100.67:8000/api/vehicle/',
           data: formData,
           options: Options(

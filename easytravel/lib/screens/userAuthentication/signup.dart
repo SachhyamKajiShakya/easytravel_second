@@ -19,6 +19,7 @@ class _SignupPageState extends State<SignupPage> {
   final _formkey = GlobalKey<FormState>();
   bool _autovalidate = false;
   bool showPassword = false;
+  bool showConfirmpw = false;
 
   FocusNode emailNode, usernameNode, pwNode, confirmpwNode, nameNode, phoneNode;
 
@@ -34,7 +35,8 @@ class _SignupPageState extends State<SignupPage> {
   _createUser(String email, String username, String password, String password2,
       String name, String phone) async {
     final http.Response response = await http.post(
-      'http://192.168.100.67:8000/api/register/', //making http post call to api set through this url
+      // 'https://fyp-easytravel.herokuapp.com/api/register/', //making http post call to api set through this url
+      'http://192.168.100.67:8000/api/register/',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -87,154 +89,144 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-          backgroundColor: Colors.white,
-          resizeToAvoidBottomInset: false,
-          resizeToAvoidBottomPadding: false,
-          body: SingleChildScrollView(
-            child: Form(
-              key: _formkey,
-              autovalidate: _autovalidate,
-              child: Column(
-                children: [
-                  SizedBox(height: 50),
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    buildSubHeader('Sign Up'),
-                  ]),
-                  SizedBox(height: 50),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildNameTextField(nameNode, phoneNode, 'full name',
-                          _nameController, context)
-                    ],
-                  ),
-                  SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildEmailTextField(emailNode, usernameNode, 'email',
-                          _emailController, context)
-                    ],
-                  ),
-                  SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildUsernameTextField(usernameNode, pwNode, 'username',
-                          _usernameController, context)
-                    ],
-                  ),
-                  SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      buildPasswordfield(),
-                    ],
-                  ),
-                  SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      buildConfirmPasswordfield(),
-                    ],
-                  ),
-                  SizedBox(height: 40),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FlatButton(
-                        child: buildButton('Sign Up', 300),
-                        onPressed: () {
-                          if (_formkey.currentState.validate()) {
-                            _createUser(
-                                _emailController.text,
-                                _usernameController.text,
-                                _passwordController.text,
-                                _confirmpwController.text,
-                                _nameController.text,
-                                widget.phoneNumber);
-                          } else {
-                            setState(() {
-                              _autovalidate = true;
-                            });
-                          }
-                        },
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Aready have an account?",
-                        style: TextStyle(
-                            fontFamily: 'Cambria',
-                            fontSize: 18,
-                            color: Color.fromRGBO(125, 125, 125, 1)),
-                      ),
-                      FlatButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginPage()));
-                        },
-                        child: Text(
-                          'Sign In',
-                          style: textSpan,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+        child: Scaffold(
+      backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomPadding: false,
+      body: Container(
+        padding: EdgeInsets.only(left: 20, top: 50, right: 20),
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: ListView(
+            children: [
+              Center(
+                child: buildSubHeader('Sign Up'),
               ),
-            ),
-          )),
-    );
+              SizedBox(height: 60),
+              Form(
+                key: _formkey,
+                autovalidate: _autovalidate,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    buildTextFields(context, 'Name', 'full name', _onTap,
+                        nameNode, emailNode, _nameController, 370),
+                    SizedBox(height: 30),
+                    buildTextFields(context, 'Email', 'your email address',
+                        _onTap, emailNode, phoneNode, _emailController, 370),
+                    SizedBox(height: 30),
+                    contactField(context, 'Contact', 'your contact number',
+                        _onTap, phoneNode, usernameNode, null, 370),
+                    SizedBox(height: 30),
+                    buildTextFields(context, 'Username', 'your username',
+                        _onTap, usernameNode, pwNode, _usernameController, 370),
+                    SizedBox(height: 30),
+                    _passwordField('Password', 'enter your password', true,
+                        pwNode, confirmpwNode, _passwordController, 370),
+                    SizedBox(height: 30),
+                    _confirmpwField(
+                        'Confirm Password',
+                        're-enter your password',
+                        true,
+                        confirmpwNode,
+                        null,
+                        _confirmpwController,
+                        370),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ));
   }
 
-// widget method to build password field
-  Widget buildPasswordfield() {
+// on tap function to set validation to false
+  _onTap() {
+    setState(() {
+      _autovalidate = false;
+    });
+  }
+
+// method to build the text fields
+  Widget _passwordField(
+      String label,
+      String hint,
+      bool isPassword,
+      FocusNode node,
+      FocusNode nextNode,
+      TextEditingController controller,
+      double width) {
     return Container(
-      height: 45,
-      width: 350,
-      decoration: boxDecoration,
+      width: width,
       child: TextFormField(
-        onTap: _onTap,
+        onTap: () {
+          setState(() {
+            _autovalidate = false;
+          });
+        },
         validator: (value) {
           if (value.isEmpty) {
             return '*required';
           } else if (value.length < 8) {
-            return 'must have atleast 8 characters';
-          } else {
-            return null;
+            return 'password must have 8 characters';
+          } else if (value.contains(new RegExp(r'^[a-zA-Z0-9]+$')) == false) {
+            return 'invalid input';
           }
+          return null;
         },
-        focusNode: pwNode,
-        textAlign: TextAlign.center,
-        cursorColor: Colors.black,
-        obscureText: true,
-        controller: _passwordController,
+        focusNode: node,
+        controller: controller,
+        cursorColor: Color.fromRGBO(255, 230, 232, 1),
+        obscureText: isPassword ? (showPassword ? true : false) : false,
         decoration: InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 20),
-          hintText: 'password',
-          hintStyle: fieldtext,
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+          disabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+          suffixIcon: isPassword
+              ? IconButton(
+                  icon: Icon(Icons.remove_red_eye, color: Colors.blueGrey),
+                  onPressed: () {
+                    setState(() {
+                      showPassword = !showPassword;
+                    });
+                  },
+                )
+              : null,
+          contentPadding: EdgeInsets.only(bottom: 3, left: 15, top: 3),
+          labelText: label,
+          labelStyle: labelstyle,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          hintText: hint,
+          hintStyle: hintstyle,
         ),
       ),
     );
   }
 
-// widget method to build password field
-  Widget buildConfirmPasswordfield() {
+  // method to build the text fields
+  Widget _confirmpwField(
+      String label,
+      String hint,
+      bool isPassword,
+      FocusNode node,
+      FocusNode nextNode,
+      TextEditingController controller,
+      double width) {
     return Container(
-      height: 45,
-      width: 350,
-      decoration: boxDecoration,
+      width: width,
       child: TextFormField(
-        onTap: _onTap,
+        onTap: () {
+          setState(() {
+            _autovalidate = false;
+          });
+        },
         validator: (value) {
           if (value.isEmpty) {
             return '*required';
@@ -246,166 +238,33 @@ class _SignupPageState extends State<SignupPage> {
             return null;
           }
         },
-        focusNode: confirmpwNode,
-        textAlign: TextAlign.center,
-        cursorColor: Colors.black,
-        obscureText: true,
-        controller: _confirmpwController,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 20),
-          hintText: 'password',
-          hintStyle: fieldtext,
-        ),
-      ),
-    );
-  }
-
-  // widget method to build name text fields
-  Widget _buildNameTextField(FocusNode node, FocusNode nextNode,
-      String hintText, TextEditingController _controller, context) {
-    return Container(
-      height: 45,
-      width: 350,
-      decoration: boxDecoration,
-      child: TextFormField(
-        onTap: _onTap,
-        validator: (value) {
-          if (value.isEmpty) {
-            return '*required';
-          } else if (value.contains(new RegExp(r'[0-9]'))) {
-            return 'invalid entry';
-          }
-          return null;
-        },
-        onFieldSubmitted: (term) {
-          node.unfocus();
-          FocusScope.of(context).requestFocus(nextNode);
-        },
         focusNode: node,
-        textAlign: TextAlign.center,
-        cursorColor: Colors.black,
-        controller: _controller,
+        controller: controller,
+        cursorColor: Color.fromRGBO(255, 230, 232, 1),
+        obscureText: isPassword ? (showConfirmpw ? true : false) : false,
         decoration: InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 20),
-          hintText: '$hintText',
-          hintStyle: fieldtext,
-        ),
-      ),
-    );
-  }
-
-// widget method to build email text fields
-  Widget _buildEmailTextField(FocusNode node, FocusNode nextNode,
-      String hintText, TextEditingController _controller, context) {
-    return Container(
-      height: 45,
-      width: 350,
-      decoration: boxDecoration,
-      child: TextFormField(
-        onTap: _onTap,
-        validator: (value) {
-          if (value.isEmpty) {
-            return '*required';
-          } else if (!value.contains('@')) {
-            return 'invalid input';
-          } else {
-            return null;
-          }
-        },
-        onFieldSubmitted: (term) {
-          node.unfocus();
-          FocusScope.of(context).requestFocus(nextNode);
-        },
-        focusNode: node,
-        textAlign: TextAlign.center,
-        cursorColor: Colors.black,
-        controller: _controller,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 20),
-          hintText: '$hintText',
-          hintStyle: fieldtext,
-        ),
-      ),
-    );
-  }
-
-// widget method to build text fields
-  Widget _buildUsernameTextField(FocusNode node, FocusNode nextNode,
-      String hintText, TextEditingController _controller, context) {
-    return Container(
-      height: 45,
-      width: 350,
-      decoration: boxDecoration,
-      child: TextFormField(
-        onTap: _onTap,
-        validator: (value) {
-          if (value.isEmpty) {
-            return '*required';
-          } else if (value.length > 50) {
-            return 'username limit extended';
-          } else {
-            return null;
-          }
-        },
-        onFieldSubmitted: (term) {
-          node.unfocus();
-          FocusScope.of(context).requestFocus(nextNode);
-        },
-        focusNode: node,
-        textAlign: TextAlign.center,
-        cursorColor: Colors.black,
-        controller: _controller,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 20),
-          hintText: '$hintText',
-          hintStyle: fieldtext,
-        ),
-      ),
-    );
-  }
-
-// on tap function to set validation to false
-  _onTap() {
-    setState(() {
-      _autovalidate = false;
-    });
-  }
-
-  // method to build the text fields
-  TextFormField textfields(String label, String hint, bool isPassword) {
-    return TextFormField(
-      cursorColor: Color.fromRGBO(255, 230, 232, 1),
-      obscureText: isPassword ? (showPassword ? true : false) : false,
-      decoration: InputDecoration(
-        focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-        suffixIcon: isPassword
-            ? IconButton(
-                icon: Icon(Icons.remove_red_eye, color: Colors.blueGrey),
-                onPressed: () {
-                  setState(() {
-                    showPassword = !showPassword;
-                  });
-                },
-              )
-            : null,
-        contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
-        labelText: label,
-        labelStyle: TextStyle(
-            fontFamily: 'Roboto',
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-            letterSpacing: 0.6,
-            color: Colors.black),
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        hintText: hint,
-        hintStyle: TextStyle(
-          fontSize: 16,
-          color: Colors.blueGrey,
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+          disabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+          suffixIcon: isPassword
+              ? IconButton(
+                  icon: Icon(Icons.remove_red_eye, color: Colors.blueGrey),
+                  onPressed: () {
+                    setState(() {
+                      showConfirmpw = !showConfirmpw;
+                    });
+                  },
+                )
+              : null,
+          contentPadding: EdgeInsets.only(bottom: 3, left: 15, top: 3),
+          labelText: label,
+          labelStyle: labelstyle,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          hintText: hint,
+          hintStyle: hintstyle,
         ),
       ),
     );

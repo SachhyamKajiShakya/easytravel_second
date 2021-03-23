@@ -99,15 +99,16 @@ class _AssignDriverState extends State<AssignDriver> {
                 Form(
                   key: _formKey,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      _textFields('Name', 'Rohit Sharma', nameNode, addressNode,
-                          _nameController),
+                      buildTextFields(context, 'Name', 'Rohit Sharma', _onTap,
+                          nameNode, addressNode, _nameController, 370),
                       SizedBox(height: 30),
-                      _textFields('Address', 'Baneshwor', addressNode,
-                          contactNode, _addressController),
+                      buildTextFields(context, 'Address', 'Baneshwor', _onTap,
+                          addressNode, contactNode, _addressController, 370),
                       SizedBox(height: 30),
-                      _contactField('Contact', '9876123091', contactNode, null,
-                          _contactController)
+                      contactField(context, 'Contact', '9876123091', _onTap,
+                          contactNode, null, _contactController, 370)
                     ],
                   ),
                 ),
@@ -144,80 +145,6 @@ class _AssignDriverState extends State<AssignDriver> {
     );
   }
 
-// text field
-  Widget _textFields(String label, String hint, FocusNode node,
-      FocusNode nextNode, TextEditingController controller) {
-    return TextFormField(
-      controller: controller,
-      focusNode: node,
-      validator: (value) {
-        if (value.isEmpty) {
-          return '*required';
-        } else if (value.contains(RegExp(r'[0-9]'))) {
-          return 'invalid input';
-        }
-        return null;
-      },
-      onFieldSubmitted: (term) {
-        node.unfocus();
-        FocusScope.of(context).requestFocus(nextNode);
-      },
-      cursorColor: Color.fromRGBO(255, 230, 232, 1),
-      decoration: InputDecoration(
-        focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-        enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-        disabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-        contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
-        labelText: label,
-        labelStyle: labelstyle,
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        hintText: hint,
-        hintStyle: TextStyle(
-          fontSize: 16,
-          color: Colors.blueGrey,
-        ),
-      ),
-    );
-  }
-
-// text field for contact number
-  Widget _contactField(String label, String hint, FocusNode node,
-      FocusNode nextNode, TextEditingController controller) {
-    return TextFormField(
-      controller: controller,
-      focusNode: node,
-      validator: (value) {
-        if (value.isEmpty) {
-          return '*required';
-        } else if (value.contains(RegExp(r'[a-zA-z-_!@#]'))) {
-          return 'invalid input';
-        }
-        return null;
-      },
-      onFieldSubmitted: (term) {
-        node.unfocus();
-        FocusScope.of(context).requestFocus(nextNode);
-      },
-      cursorColor: Color.fromRGBO(255, 230, 232, 1),
-      decoration: InputDecoration(
-        focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-        contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
-        labelText: label,
-        labelStyle: labelstyle,
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        hintText: hint,
-        hintStyle: TextStyle(
-          fontSize: 16,
-          color: Colors.blueGrey,
-        ),
-      ),
-    );
-  }
-
   //api to upload data
   _uploadDriverData(
     String driverName,
@@ -235,7 +162,9 @@ class _AssignDriverState extends State<AssignDriver> {
         'licenseImage': await MultipartFile.fromFile(licenseImage.path,
             filename: licenseFileName)
       });
-      final response = await _dio.post('http://192.168.100.67:8000/api/driver/',
+      final response = await _dio.post(
+          // 'https://fyp-easytravel.herokuapp.com/api/driver/',
+          'http://192.168.100.67:8000/api/driver/',
           data: formData,
           options: Options(
               contentType: 'multipart/form-data',

@@ -19,7 +19,7 @@ class DetailScreenPage extends StatelessWidget {
         resizeToAvoidBottomPadding: true,
         resizeToAvoidBottomInset: true,
         body: FutureBuilder(
-          future: getDriverDetails(snapshot.data[index]['id']),
+          future: getDriverDetails(snapshot.data[index]["id"]),
           builder: (context, datasnapshot) {
             return ListView.builder(
               itemCount: 1,
@@ -123,6 +123,7 @@ Widget _buildImage(size, snapshot, index) {
     height: 310,
     width: size.width,
     child: Image.network(
+        // 'https://fyp-easytravel.herokuapp.com${snapshot.data[index]["vehicleImage"]}',
         'http://192.168.100.67:8000${snapshot.data[index]["vehicleImage"]}',
         fit: BoxFit.fill),
   );

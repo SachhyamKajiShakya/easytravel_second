@@ -18,6 +18,7 @@ class _OTPState extends State<OTP> {
 
   _enterOtp(String otp, String phoneNumber) async {
     final http.Response response = await http.post(
+      // 'https://fyp-easytravel.herokuapp.com/api/otp/',
       'http://192.168.100.67:8000/api/otp/',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -62,45 +63,40 @@ class _OTPState extends State<OTP> {
           ),
         ),
         backgroundColor: Colors.white,
-        body: Padding(
+        body: Container(
           padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
-          child: Column(
+          child: ListView(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(child: buildSubHeader('Account Activation'))
-                ],
-              ),
+              Center(
+                  child:
+                      Container(child: buildSubHeader('Account Activation'))),
               SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Enter the 6 digit code send to this number',
-                    style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontSize: 18,
-                      color: Colors.black45,
-                    ),
+
+              Center(
+                child: Text(
+                  'Enter the 6 digit code send to this number',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 18,
+                    color: Colors.black45,
                   ),
-                ],
+                ),
               ),
+
               SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '$phone',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Roboto',
-                      fontSize: 18,
-                      color: Colors.black54,
-                    ),
-                  )
-                ],
+
+              Center(
+                child: Text(
+                  '$phone',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Roboto',
+                    fontSize: 18,
+                    color: Colors.black54,
+                  ),
+                ),
               ),
+
               SizedBox(height: 40),
               Form(
                 autovalidate: _autovalidate,
@@ -109,34 +105,29 @@ class _OTPState extends State<OTP> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      height: 45,
                       width: 320,
-                      decoration: boxDecoration,
                       child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        onTap: () {
-                          setState(() {
-                            _autovalidate = false;
-                          });
-                        },
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return '*Required';
-                          } else if (value.length < 6) {
-                            return 'OTP must be 6 digit long';
-                          }
-                          return null;
-                        },
-                        textAlign: TextAlign.center,
-                        cursorColor: Colors.black,
-                        controller: _otp,
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 20),
-                            hintText: 'Your 6 digit code',
-                            hintStyle: fieldtext),
-                      ),
+                          keyboardType: TextInputType.number,
+                          onTap: () {
+                            setState(() {
+                              _autovalidate = false;
+                            });
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return '*Required';
+                            } else if (value.contains(new RegExp(r'^[0-9]$')) ==
+                                false) {
+                              return 'must be numeric';
+                            } else if (value.length < 6) {
+                              return 'OTP must be 6 digit long';
+                            }
+                            return null;
+                          },
+                          cursorColor: cursorColor,
+                          controller: _otp,
+                          decoration: fieldsInputDecoration(
+                              'Your 6-digit OTP code', 'OTP')),
                     ),
                   ],
                 ),
