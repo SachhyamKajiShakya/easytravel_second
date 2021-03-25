@@ -47,28 +47,9 @@ class _BookLongTravelState extends State<BookLongTravel> {
   String now = DateFormat("yyyy-MM-dd").format(DateTime.now());
   DateTime systemDate = DateTime.now();
 
-  // date picker in flutter
-  _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2025),
-        helpText: 'Select your booking date',
-        builder: (context, child) {
-          return Theme(
-            data: ThemeData.dark(),
-            child: child,
-          );
-        });
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-        now = DateFormat("yyyy-MM-dd").format(selectedDate);
-        print(now);
-      });
-    }
-  }
+  // list values for dropdowns
+  var merediemList = ['am', 'pm'];
+  var provinceList = ['1', '2', '3', '4', '5', '6', '7'];
 
   // setting variables and function for form validation
   final _formkey = GlobalKey<FormState>();
@@ -218,7 +199,8 @@ class _BookLongTravelState extends State<BookLongTravel> {
                             buildTextFields(context, 'Street', 'Seti OP Margh',
                                 _onTap, street, hour, _street, 240),
                             SizedBox(width: 30),
-                            _provinceDropdown(_pickupProvince, 'Province', 100),
+                            _buildDropDown(province, 'Province', 100,
+                                provinceList, _pickupProvince),
                           ],
                         ),
                         SizedBox(height: 30),
@@ -233,7 +215,8 @@ class _BookLongTravelState extends State<BookLongTravel> {
                             buildTimeField(context, 'Minute', '00', _onTap,
                                 minute, ampm, _minute, 110),
                             SizedBox(width: 20),
-                            _buildTimeDropDown('ampm', 110)
+                            _buildDropDown(
+                                ampm, 'Merediem', 110, merediemList, _ampmValue)
                           ],
                         ),
                         SizedBox(height: 40),
@@ -279,8 +262,8 @@ class _BookLongTravelState extends State<BookLongTravel> {
                                 _destinationStreet,
                                 240),
                             SizedBox(width: 30),
-                            _provinceDropdown(
-                                _destinationProvince, 'Province', 100),
+                            _buildDropDown(destinationProvince, 'Province', 100,
+                                provinceList, _destinationProvince),
                           ],
                         ),
                         SizedBox(height: 40),
@@ -333,17 +316,40 @@ class _BookLongTravelState extends State<BookLongTravel> {
     );
   }
 
+  // date picker in flutter
+  _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2025),
+        helpText: 'Select your booking date',
+        builder: (context, child) {
+          return Theme(
+            data: ThemeData.dark(),
+            child: child,
+          );
+        });
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        now = DateFormat("yyyy-MM-dd").format(selectedDate);
+        print(now);
+      });
+    }
+  }
+
   // widget method to build cateogry drop down
-  Widget _buildTimeDropDown(String label, double size) {
+  Widget _buildDropDown(FocusNode node, String label, double size,
+      var requiredList, String dataValue) {
     return Container(
       width: size,
       child: DropdownButtonFormField(
           focusNode: ampm,
-          decoration: fieldsInputDecoration(null, 'Merediem'),
-          value: _ampmValue,
+          decoration: fieldsInputDecoration(null, label),
+          value: dataValue,
           style: fieldtext,
-          items: <String>['am', 'pm']
-              .map<DropdownMenuItem<String>>((String value) {
+          items: requiredList.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
                 value: value,
                 child: Text(
@@ -356,27 +362,7 @@ class _BookLongTravelState extends State<BookLongTravel> {
           }).toList(),
           onChanged: (value) {
             setState(() {
-              _ampmValue = value;
-            });
-          }),
-    );
-  }
-
-  Widget _provinceDropdown(String provinceValue, String label, double width) {
-    return Container(
-      width: width,
-      child: DropdownButtonFormField(
-          focusNode: province,
-          decoration: fieldsInputDecoration(null, 'Province'),
-          value: provinceValue,
-          style: fieldtext,
-          items: <String>['1', '2', '3', '4', '5', '6', '7']
-              .map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(value: value, child: Text(value));
-          }).toList(),
-          onChanged: (value) {
-            setState(() {
-              provinceValue = value;
+              dataValue = value;
             });
           }),
     );
@@ -391,7 +377,7 @@ class _BookLongTravelState extends State<BookLongTravel> {
         onTap: () {
           _selectDate(context);
         },
-        cursorColor: Color.fromRGBO(255, 230, 232, 1),
+        cursorColor: cursorColor,
         decoration: fieldsInputDecoration(now, 'Pickup Date'),
       ),
     );

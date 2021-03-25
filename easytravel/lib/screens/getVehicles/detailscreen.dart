@@ -25,7 +25,7 @@ class DetailScreenPage extends StatelessWidget {
               itemCount: 1,
               itemBuilder: (context, dataindex) {
                 if (datasnapshot.data == null) {
-                  return CircularProgressIndicator();
+                  return Center(child: CircularProgressIndicator());
                 } else {
                   return Column(
                     children: [

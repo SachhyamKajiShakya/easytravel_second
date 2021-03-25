@@ -1,47 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
-class ConfirmBookingPage extends StatefulWidget {
-  @override
-  _ConfirmBookingPageState createState() => _ConfirmBookingPageState();
-}
+class ConfirmBookingPage extends StatelessWidget {
+  final String bookingid;
 
-class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
-  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  String messageTitle = "title";
-  String notificationAlert = "alert";
-  String messagebody = 'message body';
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _firebaseMessaging.configure(
-      onMessage: (message) async {
-        setState(() {
-          messageTitle = message["notification"]["title"];
-          notificationAlert = "New Notification Alert";
-          messagebody = message["notification"]["data_message"];
-        });
-      },
-      onResume: (message) async {
-        setState(() {
-          messageTitle = message["notification"]["title"];
-          messagebody = message["notification"]["data_message"];
-          notificationAlert = "Application opened from Notification";
-        });
-      },
-    );
-  }
-
+  const ConfirmBookingPage({Key key, this.bookingid}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text(messageTitle), Text(messagebody)],
+        body: Container(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 30),
+          child: ListView(
+            children: [
+              Column(
+                children: [Text(bookingid)],
+              )
+            ],
           ),
         ),
       ),

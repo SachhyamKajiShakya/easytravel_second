@@ -13,10 +13,12 @@ import 'package:easy_travel/screens/userAuthentication/signup.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   runApp(MyApp());
 }
 
@@ -52,12 +54,38 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: OTP(),
+      home: MainPage(),
     );
   }
 }
 
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
+  @override
+  _MainPageState createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  @override
+  void initState() {
+    super.initState();
+    _notificationTrigger();
+  }
+
+  void _notificationTrigger() {
+    _firebaseMessaging.configure(onMessage: (message) async {
+      setState(() {
+        print(message);
+      });
+    }, onResume: (message) async {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ConfirmBookingPage(
+                  bookingid: message["data"]["booking_id"])));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

@@ -116,9 +116,6 @@ class _OTPState extends State<OTP> {
                           validator: (value) {
                             if (value.isEmpty) {
                               return '*Required';
-                            } else if (value.contains(new RegExp(r'^[0-9]$')) ==
-                                false) {
-                              return 'must be numeric';
                             } else if (value.length < 6) {
                               return 'OTP must be 6 digit long';
                             }

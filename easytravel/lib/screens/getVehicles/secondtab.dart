@@ -17,7 +17,7 @@ class _SecondTabPageState extends State<SecondTabPage> {
           future: getLongVehicles(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.data == null) {
-              return CircularProgressIndicator();
+              return Center(child: CircularProgressIndicator());
             } else {
               return GridView.builder(
                 itemCount: snapshot.data.length,

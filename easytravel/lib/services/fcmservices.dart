@@ -21,6 +21,7 @@ getDeviceToken() {
       ),
     );
     if (response.statusCode == 200) {
+      print(token);
       return response.body;
     } else {
       throw Exception('Failed to send token');

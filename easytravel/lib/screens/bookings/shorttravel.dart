@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'confirmbooking.dart';
 
 class BookShortTravel extends StatefulWidget {
   final AsyncSnapshot snapshot;
@@ -20,6 +21,8 @@ class BookShortTravel extends StatefulWidget {
 }
 
 class _BookShortTravelState extends State<BookShortTravel> {
+  void firebaseTrigger(BuildContext context) {}
+
   // focus nodes of pick up text fields
   FocusNode hour, minute, ampm, district, city, street;
   // focus node of destination text fields
@@ -107,18 +110,36 @@ class _BookShortTravelState extends State<BookShortTravel> {
         ),
       );
       if (response.statusCode == 200) {
-        print('success');
+        print('booking success');
+        _sendNotification();
       } else {
-        print('unsuccessful');
+        print('booking unsuccessful');
       }
     } catch (e) {
       print(e);
     }
   }
 
+  _sendNotification() async {
+    String token = await readContent();
+    final response = await http.post(
+      'http://192.168.100.67:8000/api/fcm/41',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Token $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      print('notification success');
+    } else {
+      print('notification not success');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    firebaseTrigger(context);
     hour = FocusNode();
     minute = FocusNode();
     ampm = FocusNode();
@@ -170,10 +191,7 @@ class _BookShortTravelState extends State<BookShortTravel> {
                 children: [
                   Center(
                     child: Text('Pickup Details:',
-                        style: TextStyle(
-                            fontSize: 18,
-                            letterSpacing: 1,
-                            color: Colors.black)),
+                        style: TextStyle(fontSize: 18, color: Colors.black)),
                   ),
                   SizedBox(height: 30),
                   Form(
@@ -223,10 +241,8 @@ class _BookShortTravelState extends State<BookShortTravel> {
                         SizedBox(height: 40),
 
                         Text('Destination Details:',
-                            style: TextStyle(
-                                fontSize: 18,
-                                letterSpacing: 1,
-                                color: Colors.black)),
+                            style:
+                                TextStyle(fontSize: 18, color: Colors.black)),
 
                         SizedBox(height: 30),
 
@@ -285,10 +301,7 @@ class _BookShortTravelState extends State<BookShortTravel> {
                                     _destinationDistrict.text,
                                     _destinationCity.text,
                                     _destinationStreet.text);
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => PaymentGateway()));
+                                _sendNotification();
                               }
                             },
                             child: buildButton('Request Booking', 250),

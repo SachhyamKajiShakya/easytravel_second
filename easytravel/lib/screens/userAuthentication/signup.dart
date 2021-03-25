@@ -67,6 +67,7 @@ class _SignupPageState extends State<SignupPage> {
   @override
   void initState() {
     super.initState();
+
     emailNode = FocusNode();
     usernameNode = FocusNode();
     pwNode = FocusNode();
@@ -117,9 +118,6 @@ class _SignupPageState extends State<SignupPage> {
                     buildTextFields(context, 'Email', 'your email address',
                         _onTap, emailNode, phoneNode, _emailController, 370),
                     SizedBox(height: 30),
-                    contactField(context, 'Contact', 'your contact number',
-                        _onTap, phoneNode, usernameNode, null, 370),
-                    SizedBox(height: 30),
                     buildTextFields(context, 'Username', 'your username',
                         _onTap, usernameNode, pwNode, _usernameController, 370),
                     SizedBox(height: 30),
@@ -134,6 +132,24 @@ class _SignupPageState extends State<SignupPage> {
                         null,
                         _confirmpwController,
                         370),
+                    SizedBox(height: 40),
+                    FlatButton(
+                      onPressed: () {
+                        if (_formkey.currentState.validate()) {
+                          print(widget.phoneNumber);
+                          _createUser(
+                              _emailController.text,
+                              _usernameController.text,
+                              _passwordController.text,
+                              _confirmpwController.text,
+                              _nameController.text,
+                              widget.phoneNumber);
+                        } else {
+                          _autovalidate = true;
+                        }
+                      },
+                      child: buildButton('Sign Up', 250),
+                    ),
                   ],
                 ),
               ),
@@ -180,7 +196,7 @@ class _SignupPageState extends State<SignupPage> {
         },
         focusNode: node,
         controller: controller,
-        cursorColor: Color.fromRGBO(255, 230, 232, 1),
+        cursorColor: cursorColor,
         obscureText: isPassword ? (showPassword ? true : false) : false,
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
@@ -240,7 +256,7 @@ class _SignupPageState extends State<SignupPage> {
         },
         focusNode: node,
         controller: controller,
-        cursorColor: Color.fromRGBO(255, 230, 232, 1),
+        cursorColor: cursorColor,
         obscureText: isPassword ? (showConfirmpw ? true : false) : false,
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(

@@ -326,7 +326,6 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
   ) async {
     try {
       String token = await readContent();
-      print(token);
       String vehicleFileName = vehicleImage.path.split('/').last;
       String bluebookFileName = bluebookImage.path.split('/').last;
 
