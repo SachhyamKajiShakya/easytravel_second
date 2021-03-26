@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../navbar.dart';
+
 class BookLongTravel extends StatefulWidget {
   final AsyncSnapshot snapshot;
   final AsyncSnapshot datasnapshot;
@@ -138,12 +140,29 @@ class _BookLongTravelState extends State<BookLongTravel> {
       );
 
       if (response.statusCode == 200) {
-        print('success');
+        _sendNotification();
       } else {
         print('unsuccessful');
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  _sendNotification() async {
+    String token = await readContent();
+    final response = await http.post(
+      'http://192.168.100.67:8000/api/fcm/${widget.snapshot.data[widget.index]["id"]}',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Token $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => NavBarPage()));
+    } else {
+      print('notification not success');
     }
   }
 

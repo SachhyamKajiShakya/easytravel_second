@@ -1,12 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:easy_travel/constants.dart';
 import 'package:easy_travel/services/getbooking.dart';
-import 'package:easy_travel/services/notification.dart';
-import 'package:flutter/material.dart';
 
-class ConfirmBookingPage extends StatelessWidget {
+class ConfirmLongBooking extends StatelessWidget {
   final String bookingid;
 
-  const ConfirmBookingPage({Key key, this.bookingid}) : super(key: key);
+  const ConfirmLongBooking({Key key, this.bookingid}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -68,17 +67,28 @@ class ConfirmBookingPage extends StatelessWidget {
                             SizedBox(height: 20),
                             _buildData(
                                 'Pickup Location:',
-                                snapshot.data["pick_up_district"] +
+                                snapshot.data["pick_up_province"] +
+                                    ',' +
+                                    snapshot.data["pick_up_district"] +
+                                    ' ' +
                                     snapshot.data["pick_up_city"] +
+                                    ' ' +
                                     snapshot.data["pick_up_street"],
                                 snapshot),
                             SizedBox(height: 20),
                             _buildData(
                                 'Destination Location:',
-                                snapshot.data["destination_district"] +
+                                snapshot.data["destination_province"] +
+                                    ',' +
+                                    snapshot.data["destination_district"] +
+                                    ' ' +
                                     snapshot.data["destination_city"] +
+                                    ' ' +
                                     snapshot.data["destination_street"],
                                 snapshot),
+                            SizedBox(height: 20),
+                            _buildData('Booked For',
+                                snapshot.data["number_of_days"], snapshot),
                           ],
                         ),
                       ),
@@ -87,14 +97,10 @@ class ConfirmBookingPage extends StatelessWidget {
                         children: [
                           FlatButton(
                             child: buildButton('Confirm', 150),
-                            onPressed: () {
-                              sendConfirmnotification(bookingid);
-                            },
+                            onPressed: null,
                           ),
                           FlatButton(
-                            onPressed: () {
-                              sendCancelnotification(bookingid);
-                            },
+                            onPressed: null,
                             child: buildButton('Cancel', 150),
                           ),
                         ],

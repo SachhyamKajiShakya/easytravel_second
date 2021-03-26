@@ -1,4 +1,5 @@
 import 'package:easy_travel/screens/bookings/confirmbooking.dart';
+import 'package:easy_travel/screens/bookings/confirmlongbooking.dart';
 import 'package:easy_travel/screens/bookings/longtravel.dart';
 import 'package:easy_travel/screens/bookings/payment.dart';
 import 'package:easy_travel/screens/bookings/shorttravel.dart';
@@ -75,15 +76,23 @@ class _MainPageState extends State<MainPage> {
   }
 
   void _notificationTrigger() {
-    _firebaseMessaging.configure(onMessage: (message) async {
-      print(message["data"]["booking_id"]);
-    }, onResume: (message) async {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ConfirmBookingPage(
-                  bookingid: message["data"]["booking_id"])));
-    });
+    _firebaseMessaging.configure(
+        onMessage: (message) async {},
+        onResume: (message) async {
+          if (message["data"]["category"] == 'Short Travel') {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ConfirmBookingPage(
+                        bookingid: message["data"]["booking_id"])));
+          } else if (message["data"]["category"] == 'Long Travel') {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ConfirmLongBooking(
+                        bookingid: message["data"]["booking_id"])));
+          }
+        });
   }
 
   @override

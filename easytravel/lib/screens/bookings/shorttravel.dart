@@ -1,5 +1,6 @@
 import 'package:easy_travel/constants.dart';
 import 'package:easy_travel/screens/bookings/payment.dart';
+import 'package:easy_travel/screens/navbar.dart';
 import 'package:easy_travel/services/tokenstorage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -123,14 +124,15 @@ class _BookShortTravelState extends State<BookShortTravel> {
   _sendNotification() async {
     String token = await readContent();
     final response = await http.post(
-      'http://192.168.100.67:8000/api/fcm/41',
+      'http://192.168.100.67:8000/api/fcm/${widget.snapshot.data[widget.index]["id"]}',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Token $token',
       },
     );
     if (response.statusCode == 200) {
-      print('notification success');
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => NavBarPage()));
     } else {
       print('notification not success');
     }
