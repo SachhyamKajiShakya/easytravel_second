@@ -74,7 +74,7 @@ class _MainPageState extends State<MainPage> {
 
   void _notificationTrigger() {
     _firebaseMessaging.configure(onMessage: (message) async {
-      print(message);
+      print(message["data"]["booking_id"]);
     }, onResume: (message) async {
       Navigator.push(
           context,
