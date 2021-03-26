@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../../main.dart';
+
 class PhoneNumberPage extends StatefulWidget {
   @override
   _PhoneNumberPageState createState() => _PhoneNumberPageState();
@@ -51,6 +53,13 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back_outlined,
+                  size: 22, color: Colors.black),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MainPage()));
+              }),
           centerTitle: true,
           title: Text(
             'Phone Verification',

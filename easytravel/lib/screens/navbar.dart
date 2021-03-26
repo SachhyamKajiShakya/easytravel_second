@@ -46,9 +46,7 @@ class _NavBarPageState extends State<NavBarPage> {
                     width: 45,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: _currentIndex == 0
-                            ? Colors.redAccent
-                            : Colors.white),
+                        color: _currentIndex == 0 ? Colors.blue : Colors.white),
                     child: Icon(Icons.home)),
                 label: '',
               ),
@@ -58,9 +56,7 @@ class _NavBarPageState extends State<NavBarPage> {
                     width: 45,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: _currentIndex == 1
-                            ? Colors.redAccent
-                            : Colors.white),
+                        color: _currentIndex == 1 ? Colors.blue : Colors.white),
                     child: Icon(Icons.car_rental)),
                 label: '',
               ),
@@ -70,9 +66,7 @@ class _NavBarPageState extends State<NavBarPage> {
                     width: 45,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: _currentIndex == 2
-                            ? Colors.redAccent
-                            : Colors.white),
+                        color: _currentIndex == 2 ? Colors.blue : Colors.white),
                     child: Icon(Icons.person)),
                 label: '',
               ),

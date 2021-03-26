@@ -114,20 +114,46 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(height: 50),
-                      buildTextFields(context, 'Name', 'Rohit Sharma', _onTap,
+                      buildTextFields(context, 'Name', 'your name', _onTap,
                           namenode, usernamenode, _nameController, 370),
                       SizedBox(height: 30),
-                      buildTextFields(context, 'Username', 'Rohit', _onTap,
-                          usernamenode, contactnode, _usernameController, 370),
+                      buildTextFields(
+                          context,
+                          'Username',
+                          'your username',
+                          _onTap,
+                          usernamenode,
+                          contactnode,
+                          _usernameController,
+                          370),
                       SizedBox(height: 30),
-                      contactField(context, 'Contact', '9867356722', _onTap,
-                          contactnode, passwordnode, _contactController, 370),
+                      contactField(
+                          context,
+                          'Contact',
+                          'your contact number',
+                          _onTap,
+                          contactnode,
+                          passwordnode,
+                          _contactController,
+                          370),
                       SizedBox(height: 30),
-                      _passwordField('Password', '********', true, passwordnode,
-                          confirmpwnode, _pwController, 370),
+                      _passwordField(
+                          'Password',
+                          'enter your new password',
+                          true,
+                          passwordnode,
+                          confirmpwnode,
+                          _pwController,
+                          370),
                       SizedBox(height: 30),
-                      confirmpwField('Confirm Password', '********', true,
-                          confirmpwnode, null, _confirmpwController, 370),
+                      confirmpwField(
+                          'Confirm Password',
+                          're-enter your new password',
+                          true,
+                          confirmpwnode,
+                          null,
+                          _confirmpwController,
+                          370),
                     ],
                   ),
                 ),
@@ -195,6 +221,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
               borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
           disabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+          errorBorder:
+              OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
           suffixIcon: isPassword
               ? IconButton(
                   icon: Icon(Icons.remove_red_eye, color: Colors.blueGrey),
@@ -255,6 +283,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
               borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
           disabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+          errorBorder:
+              OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
           suffixIcon: isPassword
               ? IconButton(
                   icon: Icon(Icons.remove_red_eye, color: Colors.blueGrey),

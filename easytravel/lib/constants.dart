@@ -51,7 +51,7 @@ const headerIcon = Icon(
 const textSpan = TextStyle(
   fontFamily: 'Roboto',
   fontSize: 17,
-  color: Colors.red,
+  color: Colors.lightBlue,
 );
 
 // text style for label text
@@ -109,7 +109,7 @@ Widget buildButton(String text, double width) {
     width: width,
     height: 45,
     decoration: BoxDecoration(
-      color: Colors.redAccent,
+      color: Colors.blue,
       borderRadius: BorderRadius.circular(8),
     ),
     child: Center(

@@ -119,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         child: buildButton('Sign in', 250),
                       ),
-                      SizedBox(height: 30),
+                      SizedBox(height: 20),
                       FlatButton(
                         onPressed: () {
                           Navigator.push(

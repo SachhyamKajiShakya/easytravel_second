@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   unselectedLabelColor: Colors.black,
                   indicatorSize: TabBarIndicatorSize.label,
                   indicator: BoxDecoration(
-                    color: Colors.redAccent,
+                    color: Colors.blue,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   tabs: [

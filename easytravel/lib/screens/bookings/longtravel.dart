@@ -287,7 +287,11 @@ class _BookLongTravelState extends State<BookLongTravel> {
                                   _pickupProvince,
                                   _days.text,
                                   now,
-                                  _hour.text + _minute.text + _ampmValue,
+                                  _hour.text +
+                                      ':' +
+                                      _minute.text +
+                                      ': ' +
+                                      _ampmValue,
                                   _district.text,
                                   _city.text,
                                   _street.text,

@@ -1,4 +1,5 @@
 import 'package:easy_travel/constants.dart';
+import 'package:easy_travel/main.dart';
 import 'package:easy_travel/screens/userAuthentication/signup.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -53,7 +54,8 @@ class _OTPState extends State<OTP> {
               icon: Icon(Icons.arrow_back_outlined,
                   size: 22, color: Colors.black),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MainPage()));
               }),
           centerTitle: true,
           title: Text(
