@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ConfirmBookingPage extends StatelessWidget {
-  final String bookingid;
+  final int bookingid;
 
   const ConfirmBookingPage({Key key, this.bookingid}) : super(key: key);
   @override
@@ -14,7 +14,7 @@ class ConfirmBookingPage extends StatelessWidget {
           child: ListView(
             children: [
               Column(
-                children: [Text(bookingid)],
+                children: [Text('bookingid')],
               )
             ],
           ),

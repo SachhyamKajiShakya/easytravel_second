@@ -40,7 +40,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
     if (response.statusCode == 200) {
-      getDeviceToken();
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => VehicleRegistrationPage()));
       String token = jsonDecode(response.body)['token'].toString();
@@ -208,6 +207,8 @@ class _LoginPageState extends State<LoginPage> {
               borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
           disabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+          errorBorder:
+              OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
           suffixIcon: isPassword
               ? IconButton(
                   icon: Icon(Icons.remove_red_eye, color: Colors.blueGrey),
