@@ -1,9 +1,7 @@
 import 'package:easy_travel/constants.dart';
 import 'package:easy_travel/screens/userAuthentication/otp.dart';
+import 'package:easy_travel/services/api.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-
 import '../../main.dart';
 
 class PhoneNumberPage extends StatefulWidget {
@@ -19,31 +17,6 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
     setState(() {
       _autovalidate = false;
     });
-  }
-
-  _enterPhone(String phone) async {
-    final http.Response response = await http.post(
-      // 'https://fyp-easytravel.herokuapp.com/api/phoneNumber/',
-      'http://192.168.100.67:8000/api/phoneNumber/',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(
-        <String, String>{
-          'phone': phone,
-        },
-      ),
-    );
-    if (response.statusCode == 200) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => OTP(
-                    phoneNumber: phone,
-                  )));
-    } else {
-      throw Exception('Process Failed');
-    }
   }
 
   @override
@@ -114,14 +87,14 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
                   FlatButton(
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => OTP(
-                                      phoneNumber:
-                                          '+977' + _phoneController.text,
-                                    )));
-                        // _enterPhone('+977' + _phoneController.text);
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => OTP(
+                        //               phoneNumber:
+                        //                   '+977' + _phoneController.text,
+                        //             )));
+                        enterPhone('+977' + _phoneController.text, context);
                       } else {
                         setState(() {
                           _autovalidate = true;

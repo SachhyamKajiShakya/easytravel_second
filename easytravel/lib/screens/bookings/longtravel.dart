@@ -1,12 +1,8 @@
 import 'package:easy_travel/screens/bookings/payment.dart';
-import 'package:easy_travel/services/tokenstorage.dart';
+import 'package:easy_travel/services/api.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_travel/constants.dart';
 import 'package:intl/intl.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-
-import '../navbar.dart';
 
 class BookLongTravel extends StatefulWidget {
   final AsyncSnapshot snapshot;
@@ -96,74 +92,6 @@ class _BookLongTravelState extends State<BookLongTravel> {
     destinationStreet.dispose();
     destinationProvince.dispose();
     super.dispose();
-  }
-
-// api for booking request
-  _makeLongBookings(
-      String province,
-      String days,
-      String date,
-      String time,
-      String district,
-      String city,
-      String street,
-      String destinationProvince,
-      String destinationDestrict,
-      String destinationCity,
-      String destinationStreet) async {
-    try {
-      String token = await readContent();
-      print(widget.snapshot.data[widget.index]["id"]);
-      final http.Response response = await http.post(
-        // 'http://fyp-easytravel.herokuapp.com/api/longbooking/${widget.snapshot.data[widget.index]["id"]}/${widget.datasnapshot.data[widget.dataindex]["id"]}/',
-        'http://192.168.100.67:8000/api/longbooking/${widget.snapshot.data[widget.index]["id"]}/${widget.datasnapshot.data[widget.dataindex]["id"]}/',
-
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Token $token',
-        },
-        body: jsonEncode(
-          <String, String>{
-            'pick_up_province': province,
-            'number_of_days': days,
-            'pick_up_date': date,
-            'pick_up_time': time,
-            'pick_up_district': district,
-            'pick_up_city': city,
-            'pick_up_street': street,
-            'destination_province': destinationProvince,
-            'destination_district': destinationDestrict,
-            'destination_city': destinationCity,
-            'destination_street': destinationStreet,
-          },
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        _sendNotification();
-      } else {
-        print('unsuccessful');
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  _sendNotification() async {
-    String token = await readContent();
-    final response = await http.post(
-      'http://192.168.100.67:8000/api/fcm/${widget.snapshot.data[widget.index]["id"]}',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Token $token',
-      },
-    );
-    if (response.statusCode == 200) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => NavBarPage()));
-    } else {
-      print('notification not success');
-    }
   }
 
   @override
@@ -297,28 +225,28 @@ class _BookLongTravelState extends State<BookLongTravel> {
                           child: FlatButton(
                             onPressed: () {
                               if (_formkey.currentState.validate()) {
-                                // if (selectedDate.isAfter(systemDate)) {
-                                //   print('success');
-                                // } else {
-                                //   print('not success');
-                                // }
-                                _makeLongBookings(
-                                  _pickupProvince,
-                                  _days.text,
-                                  now,
-                                  _hour.text +
-                                      ':' +
-                                      _minute.text +
-                                      ': ' +
-                                      _ampmValue,
-                                  _district.text,
-                                  _city.text,
-                                  _street.text,
-                                  _destinationProvince,
-                                  _destinationDistrict.text,
-                                  _destinationCity.text,
-                                  _destinationStreet.text,
-                                );
+                                makeLongBookings(
+                                    _pickupProvince,
+                                    _days.text,
+                                    now,
+                                    _hour.text +
+                                        ':' +
+                                        _minute.text +
+                                        ': ' +
+                                        _ampmValue,
+                                    _district.text,
+                                    _city.text,
+                                    _street.text,
+                                    _destinationProvince,
+                                    _destinationDistrict.text,
+                                    _destinationCity.text,
+                                    _destinationStreet.text,
+                                    widget.snapshot.data[widget.index]["id"]
+                                        .toString(),
+                                    widget.datasnapshot
+                                        .data[widget.dataindex]["id"]
+                                        .toString(),
+                                    context);
                               } else {
                                 setState(() {
                                   _autovalidate = true;

@@ -44,37 +44,39 @@ class ConfirmBookingPage extends StatelessWidget {
                             _buildData('Customer Name',
                                 snapshot.data["customer_name"], snapshot),
                             SizedBox(height: 20),
-                            _buildData('Customer Contact:',
+                            _buildData('Customer Contact',
                                 snapshot.data["customer_contact"], snapshot),
                             SizedBox(height: 20),
-                            _buildData('Driver Name:',
+                            _buildData('Driver Name',
                                 snapshot.data["driver_name"], snapshot),
                             SizedBox(height: 20),
-                            _buildData('Driver Contact:',
+                            _buildData('Driver Contact',
                                 snapshot.data["driver_contact"], snapshot),
                             SizedBox(height: 20),
                             _buildData(
-                                'Vehicle:',
+                                'Vehicle',
                                 snapshot.data["vehicle_brand"] +
                                     ' ' +
                                     snapshot.data["vehicle_model"],
                                 snapshot),
                             SizedBox(height: 20),
-                            _buildData('Pickup Date:',
+                            _buildData('Pickup Date',
                                 snapshot.data["pick_up_date"], snapshot),
                             SizedBox(height: 20),
-                            _buildData('Pickup Time:',
+                            _buildData('Pickup Time',
                                 snapshot.data["pick_up_time"], snapshot),
                             SizedBox(height: 20),
                             _buildData(
-                                'Pickup Location:',
+                                'Pickup Location',
                                 snapshot.data["pick_up_district"] +
+                                    ' ' +
                                     snapshot.data["pick_up_city"] +
+                                    ' ' +
                                     snapshot.data["pick_up_street"],
                                 snapshot),
                             SizedBox(height: 20),
                             _buildData(
-                                'Destination Location:',
+                                'Destination Location',
                                 snapshot.data["destination_district"] +
                                     snapshot.data["destination_city"] +
                                     snapshot.data["destination_street"],
@@ -88,12 +90,12 @@ class ConfirmBookingPage extends StatelessWidget {
                           FlatButton(
                             child: buildButton('Confirm', 150),
                             onPressed: () {
-                              sendConfirmnotification(bookingid);
+                              sendConfirmnotification(bookingid, context);
                             },
                           ),
                           FlatButton(
                             onPressed: () {
-                              sendCancelnotification(bookingid);
+                              sendCancelnotification(bookingid, context);
                             },
                             child: buildButton('Cancel', 150),
                           ),

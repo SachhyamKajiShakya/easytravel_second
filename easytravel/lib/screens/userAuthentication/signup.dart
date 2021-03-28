@@ -1,11 +1,6 @@
-import 'package:easy_travel/screens/userAuthentication/login.dart';
-import 'package:easy_travel/screens/registervehicles/registerVehicle.dart';
-import 'package:easy_travel/services/fcmservices.dart';
-import 'package:easy_travel/services/tokenStorage.dart';
+import 'package:easy_travel/services/api.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_travel/constants.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class SignupPage extends StatefulWidget {
   final String phoneNumber;
@@ -30,39 +25,6 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController _nameController = TextEditingController();
 
   String webToken;
-
-  // future method to create user
-  _createUser(String email, String username, String password, String password2,
-      String name, String phone) async {
-    final http.Response response = await http.post(
-      // 'https://fyp-easytravel.herokuapp.com/api/register/', //making http post call to api set through this url
-      'http://192.168.100.67:8000/api/register/',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(
-        //setting values to be added in the body
-        <String, String>{
-          'email': email,
-          'username': username,
-          'password': password,
-          'password2': password2,
-          'name': name,
-          'phone': phone,
-        },
-      ),
-    );
-    //if new user is created then navigate user to home page else throw exception
-    if (response.statusCode == 200) {
-      getDeviceToken();
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => VehicleRegistrationPage()));
-      String token = jsonDecode(response.body)['token'].toString();
-      writeContent(token);
-    } else {
-      throw Exception('Failed to laod');
-    }
-  }
 
   @override
   void initState() {
@@ -137,13 +99,14 @@ class _SignupPageState extends State<SignupPage> {
                       onPressed: () {
                         if (_formkey.currentState.validate()) {
                           print(widget.phoneNumber);
-                          _createUser(
+                          createUser(
                               _emailController.text,
                               _usernameController.text,
                               _passwordController.text,
                               _confirmpwController.text,
                               _nameController.text,
-                              widget.phoneNumber);
+                              widget.phoneNumber,
+                              context);
                         } else {
                           _autovalidate = true;
                         }

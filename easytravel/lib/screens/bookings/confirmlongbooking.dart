@@ -1,3 +1,4 @@
+import 'package:easy_travel/services/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_travel/constants.dart';
 import 'package:easy_travel/services/getbooking.dart';
@@ -43,31 +44,31 @@ class ConfirmLongBooking extends StatelessWidget {
                             _buildData('Customer Name',
                                 snapshot.data["customer_name"], snapshot),
                             SizedBox(height: 20),
-                            _buildData('Customer Contact:',
+                            _buildData('Customer Contact',
                                 snapshot.data["customer_contact"], snapshot),
                             SizedBox(height: 20),
-                            _buildData('Driver Name:',
+                            _buildData('Driver Name',
                                 snapshot.data["driver_name"], snapshot),
                             SizedBox(height: 20),
-                            _buildData('Driver Contact:',
+                            _buildData('Driver Contact',
                                 snapshot.data["driver_contact"], snapshot),
                             SizedBox(height: 20),
                             _buildData(
-                                'Vehicle:',
+                                'Vehicle',
                                 snapshot.data["vehicle_brand"] +
                                     ' ' +
                                     snapshot.data["vehicle_model"],
                                 snapshot),
                             SizedBox(height: 20),
-                            _buildData('Pickup Date:',
+                            _buildData('Pickup Date',
                                 snapshot.data["pick_up_date"], snapshot),
                             SizedBox(height: 20),
-                            _buildData('Pickup Time:',
+                            _buildData('Pickup Time',
                                 snapshot.data["pick_up_time"], snapshot),
                             SizedBox(height: 20),
                             _buildData(
-                                'Pickup Location:',
-                                snapshot.data["pick_up_province"] +
+                                'Pickup Location',
+                                snapshot.data["pick_up_province"].toString() +
                                     ',' +
                                     snapshot.data["pick_up_district"] +
                                     ' ' +
@@ -77,8 +78,9 @@ class ConfirmLongBooking extends StatelessWidget {
                                 snapshot),
                             SizedBox(height: 20),
                             _buildData(
-                                'Destination Location:',
-                                snapshot.data["destination_province"] +
+                                'Destination Location',
+                                snapshot.data["destination_province"]
+                                        .toString() +
                                     ',' +
                                     snapshot.data["destination_district"] +
                                     ' ' +
@@ -87,8 +89,11 @@ class ConfirmLongBooking extends StatelessWidget {
                                     snapshot.data["destination_street"],
                                 snapshot),
                             SizedBox(height: 20),
-                            _buildData('Booked For',
-                                snapshot.data["number_of_days"], snapshot),
+                            _buildData(
+                                'Booked For',
+                                snapshot.data["number_of_days"].toString() +
+                                    ' days',
+                                snapshot),
                           ],
                         ),
                       ),
@@ -96,15 +101,19 @@ class ConfirmLongBooking extends StatelessWidget {
                       Row(
                         children: [
                           FlatButton(
-                            child: buildButton('Confirm', 150),
-                            onPressed: null,
-                          ),
+                              child: buildButton('Confirm', 150),
+                              onPressed: () {
+                                sendConfirmnotification(bookingid, context);
+                              }),
                           FlatButton(
-                            onPressed: null,
+                            onPressed: () {
+                              sendCancelnotification(bookingid, context);
+                            },
                             child: buildButton('Cancel', 150),
                           ),
                         ],
                       ),
+                      SizedBox(height: 20)
                     ],
                   );
                 },

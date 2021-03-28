@@ -1,10 +1,9 @@
+import 'package:easy_travel/screens/navbar.dart';
 import 'package:easy_travel/services/tokenstorage.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-sendConfirmnotification(String id) async {
-  print(id);
+sendConfirmnotification(String id, context) async {
   String token = await readContent();
   final response = await http.post(
     'http://192.168.100.67:8000/api/confirmmessage/$id',
@@ -14,13 +13,14 @@ sendConfirmnotification(String id) async {
     },
   );
   if (response.statusCode == 200) {
-    print("sent notification");
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => NavBarPage()));
   } else {
     print('unsuccesfull');
   }
 }
 
-sendCancelnotification(String id) async {
+sendCancelnotification(String id, context) async {
   String token = await readContent();
   final response = await http.post(
     'http://192.168.100.67:8000/api/cancelmessage/$id',
@@ -30,7 +30,8 @@ sendCancelnotification(String id) async {
     },
   );
   if (response.statusCode == 200) {
-    print("sent notification");
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => NavBarPage()));
   } else {
     print('unsuccesfull');
   }

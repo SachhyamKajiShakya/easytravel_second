@@ -1,6 +1,7 @@
 import 'package:easy_travel/screens/password/resetpw.dart';
 import 'package:easy_travel/screens/userauthentication/signup.dart';
 import 'package:easy_travel/screens/registervehicles/registerVehicle.dart';
+import 'package:easy_travel/services/api.dart';
 import 'package:easy_travel/services/fcmservices.dart';
 import 'package:easy_travel/services/tokenstorage.dart';
 import 'package:flutter/material.dart';
@@ -24,36 +25,10 @@ class _LoginPageState extends State<LoginPage> {
 
   FocusNode usernameNode, pwNode;
 
-// future method to login user
-  Future<String> loginUser(String email, String password) async {
-    final http.Response response = await http.post(
-      // 'http://fyp-easytravel.herokuapp.com/api/login/',
-      'http://192.168.100.67:8000/api/login/',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(
-        <String, dynamic>{
-          'username': email,
-          'password': password,
-        },
-      ),
-    );
-    if (response.statusCode == 200) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => VehicleRegistrationPage()));
-      String token = jsonDecode(response.body)['token'].toString();
-      //print(token);
-      return token;
-    } else {
-      throw Exception('Failed to laod');
-    }
-  }
-
 // function to get logged in user token
   void getToken() async {
-    String userToken =
-        await loginUser(_usernameController.text, _passwordController.text);
+    String userToken = await loginUser(
+        _usernameController.text, _passwordController.text, context);
     writeContent(userToken);
     //print(userToken);
   }
@@ -165,8 +140,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-
-    // on tap function to set validation to false
   }
 
   // method to build the password text field

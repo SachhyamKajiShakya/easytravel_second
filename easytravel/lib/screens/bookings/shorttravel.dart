@@ -1,12 +1,8 @@
 import 'package:easy_travel/constants.dart';
-import 'package:easy_travel/screens/bookings/payment.dart';
-import 'package:easy_travel/screens/navbar.dart';
-import 'package:easy_travel/services/tokenstorage.dart';
+import 'package:easy_travel/services/api.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'confirmbooking.dart';
+import 'package:easy_travel/screens/bookings/payment.dart';
 
 class BookShortTravel extends StatefulWidget {
   final AsyncSnapshot snapshot;
@@ -78,70 +74,10 @@ class _BookShortTravelState extends State<BookShortTravel> {
     }
   }
 
-// api method to post booking details
-  _makeShortbookings(
-      String date,
-      String time,
-      String district,
-      String city,
-      String street,
-      String destinationDestrict,
-      String destinationCity,
-      String destinationStreet) async {
-    try {
-      token = await readContent();
-      final http.Response response = await http.post(
-        // 'http://fyp-easytravel.herokuapp.com/api/shortbooking/${widget.snapshot.data[widget.index]["id"]}/${widget.datasnapshot.data[widget.dataindex]["id"]}/',
-        'http://192.168.100.67:8000/api/shortbooking/${widget.snapshot.data[widget.index]["id"]}/${widget.datasnapshot.data[widget.dataindex]["id"]}/',
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Token $token',
-        },
-        body: jsonEncode(
-          <String, String>{
-            'pick_up_date': date,
-            'pick_up_time': time,
-            'pick_up_district': district,
-            'pick_up_city': city,
-            'pick_up_street': street,
-            'destination_district': destinationDestrict,
-            'destination_city': destinationCity,
-            'destination_street': destinationStreet,
-          },
-        ),
-      );
-      if (response.statusCode == 200) {
-        print('booking success');
-        _sendNotification();
-      } else {
-        print('booking unsuccessful');
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  _sendNotification() async {
-    String token = await readContent();
-    final response = await http.post(
-      'http://192.168.100.67:8000/api/fcm/${widget.snapshot.data[widget.index]["id"]}',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Token $token',
-      },
-    );
-    if (response.statusCode == 200) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => NavBarPage()));
-    } else {
-      print('notification not success');
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    firebaseTrigger(context);
+
     hour = FocusNode();
     minute = FocusNode();
     ampm = FocusNode();
@@ -294,20 +230,21 @@ class _BookShortTravelState extends State<BookShortTravel> {
                             // a button when pressed send request for booking
                             onPressed: () {
                               if (_formkey.currentState.validate()) {
-                                _makeShortbookings(
+                                makeShortbookings(
                                     now,
-                                    _hour.text +
-                                        ':' +
-                                        _minute.text +
-                                        ': ' +
-                                        _ampmValue,
+                                    _hour.text + _minute.text + _ampmValue,
                                     _district.text,
                                     _city.text,
                                     _street.text,
                                     _destinationDistrict.text,
                                     _destinationCity.text,
-                                    _destinationStreet.text);
-                                _sendNotification();
+                                    _destinationStreet.text,
+                                    widget.snapshot.data[widget.index]["id"]
+                                        .toString(),
+                                    widget.datasnapshot
+                                        .data[widget.dataindex]["id"]
+                                        .toString(),
+                                    context);
                               }
                             },
                             child: buildButton('Request Booking', 250),

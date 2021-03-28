@@ -1,6 +1,7 @@
 import 'package:easy_travel/constants.dart';
 import 'package:easy_travel/main.dart';
 import 'package:easy_travel/screens/userAuthentication/signup.dart';
+import 'package:easy_travel/services/api.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -16,29 +17,6 @@ class OTP extends StatefulWidget {
 class _OTPState extends State<OTP> {
   final _formkey = GlobalKey<FormState>();
   bool _autovalidate = false;
-
-  _enterOtp(String otp, String phoneNumber) async {
-    final http.Response response = await http.post(
-      // 'https://fyp-easytravel.herokuapp.com/api/otp/',
-      'http://192.168.100.67:8000/api/otp/',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(
-        <String, String>{
-          'otp': otp,
-        },
-      ),
-    );
-    if (response.statusCode == 200) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => SignupPage(phoneNumber: phoneNumber)));
-    } else {
-      throw Exception('Process Failed');
-    }
-  }
 
   TextEditingController _otp = TextEditingController();
 
@@ -139,12 +117,12 @@ class _OTPState extends State<OTP> {
                   FlatButton(
                     onPressed: () {
                       if (_formkey.currentState.validate()) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SignupPage(
-                                    phoneNumber: widget.phoneNumber)));
-                        // _enterOtp(_otp.text, widget.phoneNumber);
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => SignupPage(
+                        //             phoneNumber: widget.phoneNumber)));
+                        enterOtp(_otp.text, widget.phoneNumber, context);
                       } else {
                         setState(() {
                           _autovalidate = true;

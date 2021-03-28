@@ -1,9 +1,7 @@
 import 'package:easy_travel/constants.dart';
-import 'package:easy_travel/screens/navbar.dart';
-import 'package:easy_travel/services/tokenstorage.dart';
+import 'package:easy_travel/services/api.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AssignDriver extends StatefulWidget {
@@ -17,7 +15,6 @@ class _AssignDriverState extends State<AssignDriver> {
   FocusNode nameNode, addressNode, contactNode; //defining field nodes
 
   File _licenseImage; //file type variable to get the selected license image
-  Dio _dio = new Dio(); //creating an instance of Dio package
   bool _autovalidate = false; //a boolean value to set valdation of form
 
   // method to get vehicle image from gallery
@@ -123,11 +120,12 @@ class _AssignDriverState extends State<AssignDriver> {
                 FlatButton(
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
-                      _uploadDriverData(
+                      uploadDriverData(
                         _nameController.text,
                         _contactController.text,
                         _addressController.text,
                         _licenseImage,
+                        context,
                       );
                     } else {
                       setState(() {
@@ -143,40 +141,5 @@ class _AssignDriverState extends State<AssignDriver> {
         ),
       ),
     );
-  }
-
-  //api to upload data
-  _uploadDriverData(
-    String driverName,
-    String driverContact,
-    String driverAddress,
-    File licenseImage,
-  ) async {
-    try {
-      String token = await readContent();
-      String licenseFileName = licenseImage.path.split('/').last;
-      FormData formData = new FormData.fromMap({
-        'driverName': driverName,
-        'driverAddress': driverAddress,
-        'driverContact': driverContact,
-        'licenseImage': await MultipartFile.fromFile(licenseImage.path,
-            filename: licenseFileName)
-      });
-      final response = await _dio.post(
-          // 'https://fyp-easytravel.herokuapp.com/api/driver/',
-          'http://192.168.100.67:8000/api/driver/',
-          data: formData,
-          options: Options(
-              contentType: 'multipart/form-data',
-              headers: {'Authorization': 'Token $token'}));
-      if (response.statusCode == 200) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => NavBarPage()));
-      } else {
-        print('error uploading file');
-      }
-    } catch (e) {
-      print(e);
-    }
   }
 }

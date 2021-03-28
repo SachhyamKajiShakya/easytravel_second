@@ -1,12 +1,9 @@
-import 'package:easy_travel/screens/getVehicles/homepage.dart';
 import 'package:easy_travel/screens/navbar.dart';
-import 'package:easy_travel/screens/registervehicles/assigndriver.dart';
-import 'package:easy_travel/services/tokenstorage.dart';
+import 'package:easy_travel/services/api.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_travel/constants.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:dio/dio.dart';
 
 class VehicleRegistrationPage extends StatefulWidget {
   @override
@@ -19,7 +16,6 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
   File _image, _vehicleImg;
 
 // creating instance of dio package
-  Dio _dio = Dio();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -198,7 +194,7 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
                         child: buildButton('Register Vehicle', 250),
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
-                            _uploadVehicleData(
+                            uploadVehicleData(
                                 _brandController.text,
                                 _modelController.text,
                                 _licenseController.text,
@@ -207,7 +203,8 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
                                 _descriptionController.text,
                                 int.parse(_priceController.text),
                                 _vehicleImg,
-                                _image);
+                                _image,
+                                context);
                           } else {
                             setState(() {
                               _autovalidate = true;
@@ -310,54 +307,5 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
             fieldsInputDecoration('Details about vehicle', 'Description'),
       ),
     );
-  }
-
-  //api to upload data
-  _uploadVehicleData(
-    String brand,
-    String model,
-    String licenseNumber,
-    String category,
-    String service,
-    String description,
-    int price,
-    File vehicleImage,
-    File bluebookImage,
-  ) async {
-    try {
-      String token = await readContent();
-      String vehicleFileName = vehicleImage.path.split('/').last;
-      String bluebookFileName = bluebookImage.path.split('/').last;
-
-      FormData formData = FormData.fromMap({
-        'brand': brand,
-        'model': model,
-        'licenseNumber': licenseNumber,
-        'category': category,
-        'service': service,
-        'description': description,
-        'price': price,
-        'vehicleImage': await MultipartFile.fromFile(vehicleImage.path,
-            filename: vehicleFileName),
-        'bluebookImage': await MultipartFile.fromFile(bluebookImage.path,
-            filename: bluebookFileName),
-      });
-
-      final response = await _dio.post(
-          // 'https://fyp-easytravel.herokuapp.com/api/vehicle/',
-          'http://192.168.100.67:8000/api/vehicle/',
-          data: formData,
-          options: Options(
-              contentType: 'multipart/form-data',
-              headers: {'Authorization': 'Token $token'}));
-      if (response.statusCode == 200) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => AssignDriver()));
-      } else {
-        print('error file uploading to server');
-      }
-    } catch (e) {
-      print(e + 'error file uploading to server');
-    }
   }
 }

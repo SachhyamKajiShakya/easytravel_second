@@ -123,7 +123,6 @@ Widget _buildImage(size, snapshot, index) {
     height: 310,
     width: size.width,
     child: Image.network(
-        // 'https://fyp-easytravel.herokuapp.com${snapshot.data[index]["vehicleImage"]}',
         'http://192.168.100.67:8000${snapshot.data[index]["vehicleImage"]}',
         fit: BoxFit.fill),
   );
@@ -233,7 +232,7 @@ Widget _buildBookingButton(snapshot, index, context, datasnapshot, dataindex) {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => BookShortTravel(
+                    builder: (context) => BookLongTravel(
                         snapshot: snapshot,
                         datasnapshot: datasnapshot,
                         index: index,
