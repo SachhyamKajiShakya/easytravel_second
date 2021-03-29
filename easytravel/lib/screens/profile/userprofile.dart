@@ -1,39 +1,191 @@
+import 'dart:ui';
+import 'package:easy_travel/screens/profile/bookingDetails.dart';
+import 'package:easy_travel/screens/profile/futureBooking.dart';
+import 'package:easy_travel/services/api.dart';
+import 'package:easy_travel/services/getbooking.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_travel/constants.dart';
 
 class UserProfile extends StatefulWidget {
   @override
   _UserProfileState createState() => _UserProfileState();
 }
 
-class _UserProfileState extends State<UserProfile> {
+class _UserProfileState extends State<UserProfile>
+    with SingleTickerProviderStateMixin {
+  TabController _tabController;
+  String userName;
+  String userEmail;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _tabController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Colors.white,
+          iconTheme: IconThemeData(color: Colors.black),
           elevation: 0,
-          leading: IconButton(
-              icon: Icon(Icons.arrow_back_outlined,
-                  size: 22, color: Colors.black),
-              onPressed: () {
-                Navigator.pop(context);
-              }),
-          centerTitle: true,
-          title: Text(
-            'User Profile',
-            style: TextStyle(
-                color: Colors.black, fontFamily: 'Roboto', fontSize: 20),
-          ),
         ),
-        backgroundColor: Colors.white,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [],
-          ),
-        ),
+        body: FutureBuilder(
+            future: getUserData(),
+            builder: (context, snapshot) {
+              if (snapshot.data == null) {
+                return Center(child: CircularProgressIndicator());
+              }
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                child: Column(
+                  children: [
+                    buildAvatar(),
+                    SizedBox(height: 30),
+                    buildSubHeader(snapshot.data["name"]),
+                    SizedBox(height: 30),
+                    Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25)),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: TabBar(
+                          controller: _tabController,
+                          labelPadding: EdgeInsets.all(5),
+                          indicator: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.blue,
+                          ),
+                          labelColor: Colors.white,
+                          labelStyle: TextStyle(fontSize: 16),
+                          unselectedLabelColor: Color.fromRGBO(80, 80, 80, 1),
+                          unselectedLabelStyle: TextStyle(fontSize: 14),
+                          tabs: [
+                            Tab(
+                              text: 'Booking History',
+                            ),
+                            Tab(
+                              text: 'Future Bookings',
+                            ),
+                            Tab(
+                              text: 'Posted Vehicles',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          buildBookingHistory(),
+                          buildFutureBookings(),
+                          buildPostedVehicles(),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+        drawer: buildDrawer(context),
       ),
+    );
+  }
+
+  Widget buildBookingHistory() {
+    return FutureBuilder(
+      future: getPastBookings(),
+      builder: (context, snapshot) {
+        if (snapshot.data == null) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          return ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              return buildUserBodyCard(
+                  snapshot,
+                  index,
+                  context,
+                  () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BookingDetails(
+                                snapshot: snapshot,
+                                index: index,
+                              ))));
+            },
+          );
+        }
+      },
+    );
+  }
+
+  Widget buildFutureBookings() {
+    return FutureBuilder(
+      future: getFutureBookings(),
+      builder: (context, snapshot) {
+        if (snapshot.data == null) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          return ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              return buildUserBodyCard(
+                  snapshot,
+                  index,
+                  context,
+                  () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FutureBooking())));
+            },
+          );
+        }
+      },
+    );
+  }
+
+  Widget buildPostedVehicles() {
+    return FutureBuilder(
+      future: getPostedVehicles(),
+      builder: (context, snapshot) {
+        if (snapshot.data == null) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          return ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              return buildPostedVehiclesBodyCard(
+                  snapshot,
+                  index,
+                  context,
+                  () => Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => null)));
+            },
+          );
+        }
+      },
     );
   }
 }

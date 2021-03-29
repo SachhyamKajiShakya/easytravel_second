@@ -3,8 +3,6 @@ import 'package:easy_travel/main.dart';
 import 'package:easy_travel/screens/userAuthentication/signup.dart';
 import 'package:easy_travel/services/api.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class OTP extends StatefulWidget {
   final String phoneNumber;
@@ -117,12 +115,12 @@ class _OTPState extends State<OTP> {
                   FlatButton(
                     onPressed: () {
                       if (_formkey.currentState.validate()) {
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => SignupPage(
-                        //             phoneNumber: widget.phoneNumber)));
-                        enterOtp(_otp.text, widget.phoneNumber, context);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SignupPage(
+                                    phoneNumber: widget.phoneNumber)));
+                        // enterOtp(_otp.text, widget.phoneNumber, context);
                       } else {
                         setState(() {
                           _autovalidate = true;

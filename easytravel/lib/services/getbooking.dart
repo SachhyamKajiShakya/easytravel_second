@@ -17,3 +17,51 @@ getBooking(String id) async {
     throw Exception('Failed to load');
   }
 }
+
+getPastBookings() async {
+  String token = await readContent();
+  final response = await http.get(
+    'http://192.168.100.67:8000/api/pastbookings',
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Token $token',
+    },
+  );
+  if (response.statusCode == 200) {
+    return json.decode(response.body);
+  } else {
+    throw Exception('Failed to load');
+  }
+}
+
+getFutureBookings() async {
+  String token = await readContent();
+  final response = await http.get(
+    'http://192.168.100.67:8000/api/futurebookings',
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Token $token',
+    },
+  );
+  if (response.statusCode == 200) {
+    return json.decode(response.body);
+  } else {
+    throw Exception('Failed to load');
+  }
+}
+
+getPostedVehicles() async {
+  String token = await readContent();
+  final response = await http.get(
+    'http://192.168.100.67:8000/api/postedvehicles',
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Token $token',
+    },
+  );
+  if (response.statusCode == 200) {
+    return json.decode(response.body);
+  } else {
+    throw Exception('Failed to load');
+  }
+}

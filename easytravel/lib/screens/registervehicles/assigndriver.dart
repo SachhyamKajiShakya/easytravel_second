@@ -98,14 +98,28 @@ class _AssignDriverState extends State<AssignDriver> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      buildTextFields(context, 'Name', 'Rohit Sharma', _onTap,
-                          nameNode, addressNode, _nameController, 370),
+                      buildTextFields(context, 'Name', 'Name of the driver',
+                          _onTap, nameNode, addressNode, _nameController, 370),
                       SizedBox(height: 30),
-                      buildTextFields(context, 'Address', 'Baneshwor', _onTap,
-                          addressNode, contactNode, _addressController, 370),
+                      buildTextFields(
+                          context,
+                          'Address',
+                          'Address of the driver',
+                          _onTap,
+                          addressNode,
+                          contactNode,
+                          _addressController,
+                          370),
                       SizedBox(height: 30),
-                      contactField(context, 'Contact', '9876123091', _onTap,
-                          contactNode, null, _contactController, 370)
+                      contactField(
+                          context,
+                          'Contact',
+                          'Contact number of the driver',
+                          _onTap,
+                          contactNode,
+                          null,
+                          _contactController,
+                          370)
                     ],
                   ),
                 ),

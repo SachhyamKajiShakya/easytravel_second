@@ -30,7 +30,7 @@ class _NavBarPageState extends State<NavBarPage> {
       child: Scaffold(
         body: _children[_currentIndex],
         bottomNavigationBar: BottomNavigationBar(
-            iconSize: 26,
+            iconSize: 30,
             backgroundColor: Color.fromRGBO(254, 254, 254, 1),
             onTap: onBarTapped,
             currentIndex: _currentIndex,

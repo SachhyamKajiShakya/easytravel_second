@@ -316,3 +316,17 @@ uploadDriverData(
     print(e);
   }
 }
+
+getUserData() async {
+  String token = await readContent();
+  final response = await http.get('http://192.168.100.67:8000/api/getuserdata',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Token $token',
+      });
+  if (response.statusCode == 200) {
+    return json.decode(response.body);
+  } else {
+    return Exception();
+  }
+}

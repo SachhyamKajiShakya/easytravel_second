@@ -68,8 +68,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     MaterialPageRoute(builder: (context) => UserProfile()));
               }),
         ),
+        drawer: buildDrawer(context),
         body: Container(
-          padding: EdgeInsets.only(left: 20, top: 15, right: 20),
+          padding: EdgeInsets.only(left: 20, top: 5, right: 20),
           child: GestureDetector(
             onTap: () {
               FocusScope.of(context).unfocus();
@@ -79,34 +80,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 Center(
                   child: buildSubHeader('Edit Profile'),
                 ),
-                SizedBox(height: 35),
-                Center(
-                  child: Stack(
-                    children: [
-                      Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 2,
-                            color: Colors.white,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                                spreadRadius: 2,
-                                blurRadius: 10,
-                                color: Colors.black.withOpacity(0.1),
-                                offset: Offset(0, 10))
-                          ],
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage('images/avatar.png')),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                SizedBox(height: 30),
+                buildAvatar(),
                 Form(
                   autovalidate: _autovalidate,
                   key: _formKey,

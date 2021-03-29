@@ -33,21 +33,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               preferredSize: Size(100, 80),
               child: Container(
                 height: 36,
-                margin: EdgeInsets.only(top: 15, bottom: 10),
+                margin:
+                    EdgeInsets.only(top: 15, bottom: 10, left: 10, right: 10),
                 child: TabBar(
                   labelColor: Colors.white,
-                  //adding tabs in the app bar
+                  labelStyle: TextStyle(fontSize: 18),
+                  unselectedLabelStyle: TextStyle(fontSize: 16),
                   indicatorPadding: EdgeInsets.symmetric(horizontal: 10),
                   unselectedLabelColor: Colors.black,
-                  indicatorSize: TabBarIndicatorSize.label,
                   indicator: BoxDecoration(
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   tabs: [
                     //seeting the tabs
-                    Tab(child: _buildTab('Short Travel')),
-                    Tab(child: _buildTab('Long Travel')),
+                    Tab(text: 'Short Travel'),
+                    Tab(text: 'Long Travel'),
                   ],
                 ),
               ),
@@ -67,13 +68,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-// widget method to build tab items
-  Widget _buildTab(String text) {
-    return Container(
-        child: Align(
-      alignment: Alignment.center,
-      child:
-          Text('$text', style: TextStyle(fontSize: 16, fontFamily: 'Roboto')),
-    ));
-  }
+// // widget method to build tab items
+//   Widget _buildTab(String text) {
+//     return Container(
+//         child: Align(
+//       alignment: Alignment.center,
+//       child:
+//           Text('$text', style: TextStyle(fontSize: 16, fontFamily: 'Roboto')),
+//     ));
+//   }
+// }
 }

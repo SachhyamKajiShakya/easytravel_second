@@ -87,14 +87,14 @@ class _PhoneNumberPageState extends State<PhoneNumberPage> {
                   FlatButton(
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => OTP(
-                        //               phoneNumber:
-                        //                   '+977' + _phoneController.text,
-                        //             )));
-                        enterPhone('+977' + _phoneController.text, context);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OTP(
+                                      phoneNumber:
+                                          '+977' + _phoneController.text,
+                                    )));
+                        // enterPhone('+977' + _phoneController.text, context);
                       } else {
                         setState(() {
                           _autovalidate = true;

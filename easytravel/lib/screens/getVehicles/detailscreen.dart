@@ -38,10 +38,14 @@ class DetailScreenPage extends StatelessWidget {
                               Row(
                                 children: [
                                   Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white60,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5)),
+                                    ),
                                     margin: EdgeInsets.only(left: 10, top: 10),
                                     height: 40,
                                     width: 40,
-                                    color: Colors.white60,
                                     child: IconButton(
                                         icon: Icon(Icons.arrow_back_outlined,
                                             size: 24, color: Colors.black),
@@ -55,43 +59,38 @@ class DetailScreenPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Stack(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(top: 10),
-                            height: size.height * 0.55,
-                            width: size.width,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(70)),
-                            ),
+                      Container(
+                        height: size.height * 0.55,
+                        width: size.width,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(70),
+                              topRight: Radius.circular(70)),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 20, left: 20, right: 20),
+                          child: Column(
+                            children: [
+                              _buildFirstRow(snapshot, index, context),
+                              SizedBox(height: 25),
+                              _buildSecondRow(context),
+                              SizedBox(height: 10),
+                              _buildThirdRow(snapshot, index, context, size),
+                              SizedBox(height: 25),
+                              _buildFourthRow(datasnapshot, dataindex, context),
+                              SizedBox(height: 25),
+                              _buildFifthRow(context),
+                              SizedBox(height: 10),
+                              _buildSixthRow(
+                                  snapshot, dataindex, context, size),
+                              SizedBox(height: 50),
+                              _buildBookingButton(snapshot, index, context,
+                                  datasnapshot, dataindex),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 30, left: 20, right: 20),
-                            child: Column(
-                              children: [
-                                _buildFirstRow(snapshot, index, context),
-                                SizedBox(height: 25),
-                                _buildSecondRow(context),
-                                SizedBox(height: 10),
-                                _buildThirdRow(snapshot, index, context, size),
-                                SizedBox(height: 25),
-                                _buildFourthRow(
-                                    datasnapshot, dataindex, context),
-                                SizedBox(height: 25),
-                                _buildFifthRow(context),
-                                SizedBox(height: 10),
-                                _buildSixthRow(
-                                    snapshot, dataindex, context, size),
-                                SizedBox(height: 40),
-                                _buildBookingButton(snapshot, index, context,
-                                    datasnapshot, dataindex),
-                              ],
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ],
                   );
@@ -130,14 +129,10 @@ Widget _buildImage(size, snapshot, index) {
 
 // function to build brand model and price
 Widget _buildFirstRow(snapshot, index, context) {
-  print(snapshot.data[index]['category']);
   return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
     Text(snapshot.data[index]["brand"] + ' ' + snapshot.data[index]["model"],
         style: Theme.of(context).textTheme.headline1),
-    Text(
-        snapshot.data[index]["category"] == 'Short Travel'
-            ? 'Rs ' + snapshot.data[index]["price"].toString() + '/km'
-            : 'Rs ' + snapshot.data[index]["price"].toString() + '/day',
+    Text('Rs ' + snapshot.data[index]["price"].toString() + '/day',
         style: TextStyle(
             fontFamily: 'Roboto',
             fontSize: 20,

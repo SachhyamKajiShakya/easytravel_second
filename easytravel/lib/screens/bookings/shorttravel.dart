@@ -142,10 +142,17 @@ class _BookShortTravelState extends State<BookShortTravel> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            buildTextFields(context, 'District', 'Kathmandu',
-                                _onTap, district, city, _district, 170),
+                            buildTextFields(
+                                context,
+                                'District',
+                                'Name of the district',
+                                _onTap,
+                                district,
+                                city,
+                                _district,
+                                170),
                             SizedBox(width: 30),
-                            buildTextFields(context, 'City', 'Koteshwor',
+                            buildTextFields(context, 'City', 'Name of the city',
                                 _onTap, city, street, _city, 170),
                           ],
                         ),
@@ -153,7 +160,7 @@ class _BookShortTravelState extends State<BookShortTravel> {
                         SizedBox(height: 30),
 
                         // method called to set field for pick up street
-                        buildTextFields(context, 'Street', 'Seti OP Margh',
+                        buildTextFields(context, 'Street', 'Name of the street',
                             _onTap, street, hour, _street, 370),
 
                         SizedBox(height: 30),
@@ -191,7 +198,7 @@ class _BookShortTravelState extends State<BookShortTravel> {
                             buildTextFields(
                                 context,
                                 'District',
-                                'Kathmandu',
+                                'Name of the district',
                                 _onTap,
                                 destinationDistrict,
                                 destinationCity,
@@ -201,7 +208,7 @@ class _BookShortTravelState extends State<BookShortTravel> {
                             buildTextFields(
                                 context,
                                 'City',
-                                'Kalanki',
+                                'Name of the city',
                                 _onTap,
                                 destinationCity,
                                 destinationStreet,
@@ -216,7 +223,7 @@ class _BookShortTravelState extends State<BookShortTravel> {
                         buildTextFields(
                             context,
                             'Street',
-                            'Om Petrol Pump Road',
+                            'Name of the street',
                             _onTap,
                             destinationStreet,
                             null,

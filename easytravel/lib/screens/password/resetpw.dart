@@ -57,6 +57,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
           disabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+          errorBorder:
+              OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
           suffixIcon: isPassword
               ? IconButton(
                   icon: Icon(Icons.remove_red_eye, color: Colors.blueGrey),
@@ -117,6 +119,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
           disabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
+          errorBorder:
+              OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
           suffixIcon: isPassword
               ? IconButton(
                   icon: Icon(Icons.remove_red_eye, color: Colors.blueGrey),
@@ -167,6 +171,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     MaterialPageRoute(builder: (context) => UserProfile()));
               }),
         ),
+        drawer: buildDrawer(context),
         body: Container(
           child: GestureDetector(
             onTap: () {

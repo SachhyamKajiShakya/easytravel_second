@@ -3,6 +3,7 @@ import 'package:easy_travel/services/tokenstorage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+// function that calls api end point to send confirmed notification
 sendConfirmnotification(String id, context) async {
   String token = await readContent();
   final response = await http.post(
@@ -20,6 +21,7 @@ sendConfirmnotification(String id, context) async {
   }
 }
 
+// function that calls api end point to send cancelled notification
 sendCancelnotification(String id, context) async {
   String token = await readContent();
   final response = await http.post(

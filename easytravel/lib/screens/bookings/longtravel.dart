@@ -132,10 +132,17 @@ class _BookLongTravelState extends State<BookLongTravel> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            buildTextFields(context, 'District', 'Kathmandu',
-                                _onTap, district, city, _district, 170),
+                            buildTextFields(
+                                context,
+                                'District',
+                                'Name of the district',
+                                _onTap,
+                                district,
+                                city,
+                                _district,
+                                170),
                             SizedBox(width: 30),
-                            buildTextFields(context, 'City', 'Koteshwor',
+                            buildTextFields(context, 'City', 'Name of the city',
                                 _onTap, city, street, _city, 170),
                           ],
                         ),
@@ -143,8 +150,15 @@ class _BookLongTravelState extends State<BookLongTravel> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            buildTextFields(context, 'Street', 'Seti OP Margh',
-                                _onTap, street, hour, _street, 240),
+                            buildTextFields(
+                                context,
+                                'Street',
+                                'Name of the street',
+                                _onTap,
+                                street,
+                                hour,
+                                _street,
+                                240),
                             SizedBox(width: 30),
                             _buildDropDown(province, 'Province', 100,
                                 provinceList, _pickupProvince),
@@ -177,7 +191,7 @@ class _BookLongTravelState extends State<BookLongTravel> {
                             buildTextFields(
                                 context,
                                 'District',
-                                'Kathmandu',
+                                'Name of the district',
                                 _onTap,
                                 destinationDistrict,
                                 destinationCity,
@@ -187,7 +201,7 @@ class _BookLongTravelState extends State<BookLongTravel> {
                             buildTextFields(
                                 context,
                                 'City',
-                                'Koteshwor',
+                                'Name of the city',
                                 _onTap,
                                 destinationCity,
                                 destinationStreet,
@@ -202,7 +216,7 @@ class _BookLongTravelState extends State<BookLongTravel> {
                             buildTextFields(
                                 context,
                                 'Street',
-                                'Seti OP Margh',
+                                'Name of the street',
                                 _onTap,
                                 destinationStreet,
                                 destinationProvince,

@@ -97,7 +97,7 @@ class ConfirmBookingPage extends StatelessWidget {
                             onPressed: () {
                               sendCancelnotification(bookingid, context);
                             },
-                            child: buildButton('Cancel', 150),
+                            child: buildButton('Deny', 150),
                           ),
                         ],
                       ),
@@ -112,6 +112,7 @@ class ConfirmBookingPage extends StatelessWidget {
     );
   }
 
+  // a widget function to build rows of content
   Widget _buildData(String title, String body, AsyncSnapshot snapshot) {
     return Column(
       children: [
