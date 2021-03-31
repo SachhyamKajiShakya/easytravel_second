@@ -6,7 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
 getDeviceToken() {
-  _firebaseMessaging.getToken().then((token) async {
+  _firebaseMessaging.getToken().then((devicetoken) async {
     String userToken = await readContent();
     http.Response response = await http.post(
       'http://192.168.100.67:8000/api/storedevicetoken/',
@@ -16,12 +16,11 @@ getDeviceToken() {
       },
       body: jsonEncode(
         <String, String>{
-          'device_token': token,
+          'device_token': devicetoken,
         },
       ),
     );
     if (response.statusCode == 200) {
-      print(token);
       return response.body;
     } else {
       throw Exception('Failed to send token');

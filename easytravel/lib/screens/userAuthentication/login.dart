@@ -30,7 +30,6 @@ class _LoginPageState extends State<LoginPage> {
     String userToken = await loginUser(
         _usernameController.text, _passwordController.text, context);
     writeContent(userToken);
-    //print(userToken);
   }
 
   _onTap() {

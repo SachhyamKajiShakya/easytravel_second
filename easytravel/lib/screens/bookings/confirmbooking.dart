@@ -12,26 +12,29 @@ class ConfirmBookingPage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(250, 250, 250, 1),
+          backgroundColor: Colors.white,
           elevation: 0,
           centerTitle: true,
           title: buildSubHeader('Requested Booking'),
         ),
-        backgroundColor: Color.fromRGBO(250, 250, 250, 1),
+        backgroundColor: Colors.white,
         body: Container(
           padding: EdgeInsets.only(left: 20, right: 20, top: 20),
           child: FutureBuilder(
             future: getBooking(bookingid),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.data == null) {
+                return Center(child: CircularProgressIndicator());
+              }
               return ListView.builder(
+                scrollDirection: Axis.horizontal,
                 itemCount: 1,
                 itemBuilder: (context, index) {
-                  print(snapshot.data);
                   return Column(
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Color.fromRGBO(219, 247, 255, 1),
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(10),
                               topRight: Radius.circular(10),

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 // function that calls api end point to send confirmed notification
 sendConfirmnotification(String id, context) async {
+  print(id);
   String token = await readContent();
   final response = await http.post(
     'http://192.168.100.67:8000/api/confirmmessage/$id',

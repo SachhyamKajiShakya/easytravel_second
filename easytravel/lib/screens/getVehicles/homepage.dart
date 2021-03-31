@@ -67,15 +67,4 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
     );
   }
-
-// // widget method to build tab items
-//   Widget _buildTab(String text) {
-//     return Container(
-//         child: Align(
-//       alignment: Alignment.center,
-//       child:
-//           Text('$text', style: TextStyle(fontSize: 16, fontFamily: 'Roboto')),
-//     ));
-//   }
-// }
 }

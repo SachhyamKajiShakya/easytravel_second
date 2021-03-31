@@ -1,9 +1,11 @@
 import 'dart:ui';
 import 'package:easy_travel/screens/bookings/confirmbooking.dart';
 import 'package:easy_travel/screens/bookings/confirmlongbooking.dart';
+import 'package:easy_travel/screens/password/changepw.dart';
 import 'package:easy_travel/screens/password/resetpw.dart';
 import 'package:easy_travel/screens/profile/editprofile.dart';
 import 'package:easy_travel/screens/profile/userprofile.dart';
+import 'package:easy_travel/services/api.dart';
 import 'package:easy_travel/services/getbooking.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -387,6 +389,44 @@ Widget integerField(
   );
 }
 
+// build text field
+Widget buildEmailFields(
+  BuildContext context,
+  String label,
+  String hint,
+  Function function,
+  FocusNode node,
+  FocusNode nextNode,
+  TextEditingController controller,
+  double size,
+) {
+  return Container(
+    width: size,
+    child: TextFormField(
+      validator: (value) {
+        if (value.isEmpty) {
+          return '*required';
+        } else if (value.contains(new RegExp(
+                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")) ==
+            false) {
+          return 'invalid input';
+        } else {
+          return null;
+        }
+      },
+      onTap: function,
+      controller: controller,
+      focusNode: node,
+      onFieldSubmitted: (term) {
+        node.unfocus();
+        FocusScope.of(context).requestFocus(nextNode);
+      },
+      cursorColor: cursorColor,
+      decoration: fieldsInputDecoration(hint, label),
+    ),
+  );
+}
+
 Widget buildDrawer(BuildContext context) {
   return Drawer(
     child: Container(
@@ -472,11 +512,36 @@ Widget buildDrawer(BuildContext context) {
                         builder: (context) => ResetPasswordPage()));
               },
             ),
+            SizedBox(height: 5),
+            ListTile(
+              title: Row(
+                children: [
+                  Image(
+                    image: AssetImage('images/pin-code.png'),
+                    height: 25,
+                    width: 25,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 25),
+                    child: Text(
+                      'Change Password',
+                      style: (TextStyle(fontSize: 18)),
+                    ),
+                  )
+                ],
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ChangePassword()));
+              },
+            ),
             SizedBox(height: 40),
             ListTile(
               leading: FlatButton(
                 padding: EdgeInsets.zero,
-                onPressed: null,
+                onPressed: () {
+                  userLogout(context);
+                },
                 child: buildButton('Sign Out', 250),
               ),
               onTap: () {},
@@ -578,7 +643,7 @@ Widget buildPostedVehiclesBodyCard(
     AsyncSnapshot snapshot, index, BuildContext context, Function press) {
   print(snapshot.data[index]["vehicleImage"]);
   return Padding(
-    padding: const EdgeInsets.only(left: 5.0, top: 25, right: 5),
+    padding: const EdgeInsets.only(left: 5.0, top: 15, right: 5),
     child: GestureDetector(
       onTap: press,
       child: Card(

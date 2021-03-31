@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 getShortVehicles() async {
   String token = await readContent();
+  print(token);
   final response = await http.get(
     // 'https://fyp-easytravel.herokuapp.com/api/vehicle/short',
     'http://192.168.100.67:8000/api/vehicle/short',

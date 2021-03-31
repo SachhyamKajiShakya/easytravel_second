@@ -6,6 +6,7 @@ import 'package:easy_travel/screens/bookings/payment.dart';
 import 'package:easy_travel/screens/bookings/shorttravel.dart';
 import 'package:easy_travel/screens/getVehicles/homepage.dart';
 import 'package:easy_travel/screens/navbar.dart';
+import 'package:easy_travel/screens/password/changepw.dart';
 import 'package:easy_travel/screens/profile/editprofile.dart';
 import 'package:easy_travel/screens/registervehicles/assigndriver.dart';
 import 'package:easy_travel/screens/registervehicles/registervehicle.dart';
@@ -14,6 +15,7 @@ import 'package:easy_travel/screens/userAuthentication/otp.dart';
 import 'package:easy_travel/screens/userAuthentication/phoneNumber.dart';
 import 'package:easy_travel/screens/profile/userprofile.dart';
 import 'package:easy_travel/screens/userAuthentication/signup.dart';
+import 'package:easy_travel/services/tokenstorage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
@@ -27,6 +29,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -58,7 +61,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: UserProfile(),
+      home: MainPage(),
     );
   }
 }
@@ -77,23 +80,28 @@ class _MainPageState extends State<MainPage> {
   }
 
   void _notificationTrigger() {
-    _firebaseMessaging.configure(
-        onMessage: (message) async {},
-        onResume: (message) async {
-          if (message["data"]["category"] == 'Short Travel') {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ConfirmBookingPage(
-                        bookingid: message["data"]["booking_id"])));
-          } else if (message["data"]["category"] == 'Long Travel') {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ConfirmLongBooking(
-                        bookingid: message["data"]["booking_id"])));
-          }
-        });
+    _firebaseMessaging.configure(onMessage: (message) async {
+      print(message["data"]["booking_id"]);
+    }, onResume: (message) async {
+      print(message["data"]["booking_id"]);
+      if (message["data"]["category"] == 'Short Travel') {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ConfirmBookingPage(
+                      bookingid: message["data"]["booking_id"],
+                    )));
+      } else if (message["data"]["category"] == 'Long Travel') {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ConfirmLongBooking(
+                    bookingid: message["data"]["booking_id"])));
+      } else if (message["data"]["screen"] == "payment") {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => PaymentGateway()));
+      }
+    });
   }
 
   @override

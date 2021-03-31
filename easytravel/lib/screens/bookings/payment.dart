@@ -3,6 +3,7 @@ import 'package:easy_travel/constants.dart';
 import 'package:flutter_khalti/flutter_khalti.dart';
 
 class PaymentGateway extends StatelessWidget {
+  final String amount = '800';
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -16,47 +17,27 @@ class PaymentGateway extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text("Your total amount is: ",
-                      style: TextStyle(fontFamily: 'Cambria', fontSize: 28))
-                ],
-              ),
-              SizedBox(height: 35),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 45,
-                    width: 350,
-                    decoration: boxDecoration,
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      cursorColor: Colors.black,
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                          hintText: '800',
-                          hintStyle: fieldtext),
-                    ),
-                  ),
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 28,
+                          color: Colors.black))
                 ],
               ),
               SizedBox(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  FlatButton(
-                    onPressed: null,
-                    child: buildButton('Pay via cash', 150),
-                  ),
+                  Text('Rs ' + amount,
+                      style: TextStyle(fontSize: 25, fontFamily: 'Roboto')),
                 ],
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 60),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FlatButton(
                     onPressed: _payviaKhalti,
-                    child: buildButton('Pay via khalti', 150),
+                    child: buildButton('Pay via khalti', 250),
                   ),
                 ],
               ),

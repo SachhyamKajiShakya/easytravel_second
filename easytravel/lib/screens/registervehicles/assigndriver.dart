@@ -147,7 +147,7 @@ class _AssignDriverState extends State<AssignDriver> {
                       });
                     }
                   },
-                  child: buildButton('Assign Driver', 300),
+                  child: buildButton('Assign Driver', 250),
                 )
               ],
             ),

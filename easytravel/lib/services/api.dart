@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:easy_travel/screens/navbar.dart';
+import 'package:easy_travel/screens/profile/userprofile.dart';
 import 'package:easy_travel/screens/registervehicles/registerVehicle.dart';
+import 'package:easy_travel/screens/userAuthentication/login.dart';
 import 'package:easy_travel/screens/userAuthentication/otp.dart';
 import 'package:easy_travel/screens/userAuthentication/signup.dart';
 import 'package:easy_travel/services/tokenstorage.dart';
@@ -10,11 +12,12 @@ import 'package:http/http.dart' as http;
 import 'fcmservices.dart';
 import 'package:easy_travel/screens/registervehicles/assigndriver.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 // future method to login user
 Future<String> loginUser(String email, String password, context) async {
+  FirebaseMessaging _firebasemsg = FirebaseMessaging();
   final http.Response response = await http.post(
-    // 'http://fyp-easytravel.herokuapp.com/api/login/',
     'http://192.168.100.67:8000/api/login/',
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -30,7 +33,10 @@ Future<String> loginUser(String email, String password, context) async {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => VehicleRegistrationPage()));
     String token = jsonDecode(response.body)['token'].toString();
-    //print(token);
+    writeContent(token);
+    _firebasemsg.getToken().then((devicetoken) async {
+      print('device token: ' + devicetoken);
+    });
     return token;
   } else {
     throw Exception('Failed to laod');
@@ -41,7 +47,6 @@ Future<String> loginUser(String email, String password, context) async {
 createUser(String email, String username, String password, String password2,
     String name, String phone, context) async {
   final http.Response response = await http.post(
-    // 'https://fyp-easytravel.herokuapp.com/api/register/', //making http post call to api set through this url
     'http://192.168.100.67:8000/api/register/',
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -60,11 +65,11 @@ createUser(String email, String username, String password, String password2,
   );
   //if new user is created then navigate user to home page else throw exception
   if (response.statusCode == 200) {
-    getDeviceToken();
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => VehicleRegistrationPage()));
     String token = jsonDecode(response.body)['token'].toString();
     writeContent(token);
+    getDeviceToken();
   } else {
     throw Exception('Failed to laod');
   }
@@ -317,6 +322,7 @@ uploadDriverData(
   }
 }
 
+// get method to obtain details of the users
 getUserData() async {
   String token = await readContent();
   final response = await http.get('http://192.168.100.67:8000/api/getuserdata',
@@ -328,5 +334,104 @@ getUserData() async {
     return json.decode(response.body);
   } else {
     return Exception();
+  }
+}
+
+// function to update user password
+updatePassword(
+    String oldpassword, String newpassword, BuildContext context) async {
+  String token = await readContent();
+  final response = await http.put(
+    'http://192.168.100.67:8000/api/updatepassword',
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Token $token',
+    },
+    body: json.encode(
+      <String, String>{
+        "oldpassword": oldpassword,
+        "newpassword": newpassword,
+      },
+    ),
+  );
+  if (response.statusCode == 200) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => UserProfile()));
+  } else {
+    return Exception();
+  }
+}
+
+// function for signing out of user
+userLogout(BuildContext context) async {
+  String token = await readContent();
+  final response = await http
+      .post('http://192.168.100.67:8000/api/logout/', headers: <String, String>{
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Authorization': 'Token $token',
+  });
+  if (response.statusCode == 200) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => LoginPage()));
+  } else {
+    print("error signing out");
+  }
+}
+
+// function to update user information
+updateUserData(String name, String email, String username, String contact,
+    BuildContext context) async {
+  String token = await readContent();
+  final response = await http.put(
+    'http://192.168.100.67:8000/api/updateuser/',
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Token $token',
+    },
+    body: json.encode(<String, String>{
+      "name": name,
+      "email": email,
+      "username": username,
+      "phone": contact,
+    }),
+  );
+  if (response.statusCode == 200) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Update Success'),
+            content: SingleChildScrollView(
+              child: Text('Your data was successfully updated.'),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Okay'),
+              ),
+            ],
+          );
+        });
+  } else {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Update Unsuccess'),
+            content: SingleChildScrollView(
+              child: Text('Your data was not updated.'),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Okay'),
+              ),
+            ],
+          );
+        });
   }
 }

@@ -1,8 +1,7 @@
 import 'package:easy_travel/constants.dart';
 import 'package:easy_travel/screens/profile/userprofile.dart';
-import 'package:easy_travel/services/tokenstorage.dart';
+import 'package:easy_travel/services/api.dart';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 
 class EditProfilePage extends StatefulWidget {
   @override
@@ -10,19 +9,14 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  Dio dio = new Dio(); //creating instance of Dio package
-  bool showPassword = false; //boolean variable for obscuring text
-  bool showConfirmpw = false; //boolean variable for obscuring text
-
   // creating focus nodes for fields
-  FocusNode namenode, usernamenode, contactnode, passwordnode, confirmpwnode;
+  FocusNode namenode, usernamenode, contactnode, emailNode;
 
 // text editing controller for fields
   TextEditingController _nameController = TextEditingController();
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _contactController = TextEditingController();
-  TextEditingController _pwController = TextEditingController();
-  TextEditingController _confirmpwController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
 
   @override
   void initState() {
@@ -30,8 +24,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     namenode = FocusNode();
     usernamenode = FocusNode();
     contactnode = FocusNode();
-    passwordnode = FocusNode();
-    confirmpwnode = FocusNode();
   }
 
   @override
@@ -39,8 +31,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     namenode.dispose();
     usernamenode.dispose();
     contactnode.dispose();
-    passwordnode.dispose();
-    confirmpwnode.dispose();
     super.dispose();
   }
 
@@ -69,224 +59,222 @@ class _EditProfilePageState extends State<EditProfilePage> {
               }),
         ),
         drawer: buildDrawer(context),
-        body: Container(
-          padding: EdgeInsets.only(left: 20, top: 5, right: 20),
-          child: GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-            },
-            child: ListView(
-              children: [
-                Center(
-                  child: buildSubHeader('Edit Profile'),
-                ),
-                SizedBox(height: 30),
-                buildAvatar(),
-                Form(
-                  autovalidate: _autovalidate,
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: FutureBuilder(
+              future: getUserData(),
+              builder: (context, snapshot) {
+                if (snapshot.data == null) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                return Container(
+                  padding: EdgeInsets.only(left: 20, top: 5, right: 20),
+                  child: ListView(
                     children: [
+                      Center(
+                        child: buildSubHeader('Edit Profile'),
+                      ),
+                      SizedBox(height: 30),
+                      buildAvatar(),
+                      Form(
+                        autovalidate: _autovalidate,
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(height: 60),
+                            _buildTextFields(
+                                context,
+                                'Name',
+                                snapshot.data['name'],
+                                _onTap,
+                                namenode,
+                                usernamenode,
+                                _nameController,
+                                370),
+                            SizedBox(height: 35),
+                            _buildTextFields(
+                                context,
+                                'Username',
+                                snapshot.data['username'],
+                                _onTap,
+                                usernamenode,
+                                contactnode,
+                                _usernameController,
+                                370),
+                            SizedBox(height: 35),
+                            _buildEmailFields(
+                                context,
+                                'Email',
+                                snapshot.data['email'],
+                                _onTap,
+                                emailNode,
+                                contactnode,
+                                _emailController,
+                                370),
+                            SizedBox(height: 35),
+                            _contactField(
+                                context,
+                                'Contact',
+                                snapshot.data['phone'],
+                                _onTap,
+                                contactnode,
+                                null,
+                                _contactController,
+                                370),
+                          ],
+                        ),
+                      ),
                       SizedBox(height: 50),
-                      buildTextFields(context, 'Name', 'your name', _onTap,
-                          namenode, usernamenode, _nameController, 370),
-                      SizedBox(height: 30),
-                      buildTextFields(
-                          context,
-                          'Username',
-                          'your username',
-                          _onTap,
-                          usernamenode,
-                          contactnode,
-                          _usernameController,
-                          370),
-                      SizedBox(height: 30),
-                      contactField(
-                          context,
-                          'Contact',
-                          'your contact number',
-                          _onTap,
-                          contactnode,
-                          passwordnode,
-                          _contactController,
-                          370),
-                      SizedBox(height: 30),
-                      _passwordField(
-                          'Password',
-                          'enter your new password',
-                          true,
-                          passwordnode,
-                          confirmpwnode,
-                          _pwController,
-                          370),
-                      SizedBox(height: 30),
-                      confirmpwField(
-                          'Confirm Password',
-                          're-enter your new password',
-                          true,
-                          confirmpwnode,
-                          null,
-                          _confirmpwController,
-                          370),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FlatButton(
+                            child: buildButton('Save', 200),
+                            onPressed: () {
+                              if (_formKey.currentState.validate()) {
+                                updateUserData(
+                                    _nameController.text == null
+                                        ? snapshot.data['name']
+                                        : _nameController.text,
+                                    _emailController.text == null
+                                        ? snapshot.data['email']
+                                        : _emailController.text,
+                                    _usernameController.text == null
+                                        ? snapshot.data['username']
+                                        : _usernameController.text,
+                                    _contactController.text == null
+                                        ? snapshot.data['phone']
+                                        : _contactController.text,
+                                    context);
+                                _nameController.clear();
+                                _emailController.clear();
+                                _usernameController.clear();
+                                _contactController.clear();
+                              } else {
+                                setState(() {
+                                  _autovalidate = true;
+                                });
+                              }
+                            },
+                          )
+                        ],
+                      ),
                     ],
                   ),
-                ),
-                SizedBox(height: 50),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FlatButton(
-                      child: buildButton('Save', 200),
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          print('success');
-                        } else {
-                          setState(() {
-                            _autovalidate = true;
-                          });
-                        }
-                      },
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
+                );
+              }),
         ),
       ),
     );
   }
 
-// method to build the text fields
-  Widget _passwordField(
-      String label,
-      String hint,
-      bool isPassword,
-      FocusNode node,
-      FocusNode nextNode,
-      TextEditingController controller,
-      double width) {
+  // build text field
+  Widget _buildTextFields(
+    BuildContext context,
+    String label,
+    String hint,
+    Function function,
+    FocusNode node,
+    FocusNode nextNode,
+    TextEditingController controller,
+    double size,
+  ) {
     return Container(
-      width: width,
+      width: size,
       child: TextFormField(
-        onTap: () {
-          setState(() {
-            _autovalidate = false;
-          });
-        },
         validator: (value) {
-          if (value.isEmpty) {
-            return '*required';
-          } else if (value.length < 8) {
-            return 'password must have 8 characters';
-          } else if (value.contains(new RegExp(r'^[a-zA-Z0-9]+$')) == false) {
-            return 'invalid input';
-          }
-          return null;
-        },
-        focusNode: node,
-        controller: controller,
-        cursorColor: Color.fromRGBO(255, 230, 232, 1),
-        obscureText: isPassword ? (showPassword ? true : false) : false,
-        decoration: InputDecoration(
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-          disabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-          errorBorder:
-              OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
-          suffixIcon: isPassword
-              ? IconButton(
-                  icon: Icon(Icons.remove_red_eye, color: Colors.blueGrey),
-                  onPressed: () {
-                    setState(() {
-                      showPassword = !showPassword;
-                    });
-                  },
-                )
-              : null,
-          contentPadding: EdgeInsets.only(bottom: 3, left: 15, top: 3),
-          labelText: label,
-          labelStyle: labelstyle,
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintText: hint,
-          hintStyle: hintstyle,
-        ),
-      ),
-    );
-  }
-
-  // method to build the text fields
-  Widget confirmpwField(
-      String label,
-      String hint,
-      bool isPassword,
-      FocusNode node,
-      FocusNode nextNode,
-      TextEditingController controller,
-      double width) {
-    return Container(
-      width: width,
-      child: TextFormField(
-        onTap: () {
-          setState(() {
-            _autovalidate = false;
-          });
-        },
-        validator: (value) {
-          if (value.isEmpty) {
-            return '*required';
-          } else if (value.length < 8) {
-            return 'must have atleast 8 characters';
-          } else if (value != _pwController.text) {
-            return 'passwords do not match';
+          if (value.isEmpty == false &&
+              value.contains(new RegExp(r'[a-zA-z]')) == false) {
+            return 'only contains alphabets';
           } else {
             return null;
           }
         },
-        focusNode: node,
+        onTap: function,
         controller: controller,
-        cursorColor: Color.fromRGBO(255, 230, 232, 1),
-        obscureText: isPassword ? (showConfirmpw ? true : false) : false,
-        decoration: InputDecoration(
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-          disabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
-          errorBorder:
-              OutlineInputBorder(borderSide: BorderSide(color: Colors.red)),
-          suffixIcon: isPassword
-              ? IconButton(
-                  icon: Icon(Icons.remove_red_eye, color: Colors.blueGrey),
-                  onPressed: () {
-                    setState(() {
-                      showConfirmpw = !showConfirmpw;
-                    });
-                  },
-                )
-              : null,
-          contentPadding: EdgeInsets.only(bottom: 3, left: 8, top: 3),
-          labelText: label,
-          labelStyle: labelstyle,
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          hintText: hint,
-          hintStyle: hintstyle,
-        ),
+        focusNode: node,
+        onFieldSubmitted: (term) {
+          node.unfocus();
+          FocusScope.of(context).requestFocus(nextNode);
+        },
+        cursorColor: cursorColor,
+        decoration: fieldsInputDecoration(hint, label),
       ),
     );
   }
 
-  // _uploadChanges(String name, String username, String contact, String password,
-  //     String confirmPassword) async {
-  //   try {
-  //     String token = await readContent();
-  //   } catch (e) {
+// text field for contact number
+  Widget _contactField(
+      BuildContext context,
+      String label,
+      String hint,
+      Function function,
+      FocusNode node,
+      FocusNode nextNode,
+      TextEditingController controller,
+      double size) {
+    return Container(
+      width: size,
+      child: TextFormField(
+          keyboardType: TextInputType.number,
+          onTap: function,
+          controller: controller,
+          focusNode: node,
+          validator: (value) {
+            if (value.isEmpty == false &&
+                value.contains(RegExp(r'[a-zA-z-_!@#]'))) {
+              return 'invalid input';
+            } else if (value.isEmpty == false && value.length < 10) {
+              return 'must be of 10 digits';
+            }
+            return null;
+          },
+          onFieldSubmitted: (term) {
+            node.unfocus();
+            FocusScope.of(context).requestFocus(nextNode);
+          },
+          cursorColor: cursorColor,
+          decoration: fieldsInputDecoration(hint, label)),
+    );
+  }
 
-  //   }
-  // }
+// build text field
+  Widget _buildEmailFields(
+    BuildContext context,
+    String label,
+    String hint,
+    Function function,
+    FocusNode node,
+    FocusNode nextNode,
+    TextEditingController controller,
+    double size,
+  ) {
+    return Container(
+      width: size,
+      child: TextFormField(
+        validator: (value) {
+          if (value.isEmpty == false &&
+              value.contains(new RegExp(
+                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")) ==
+                  false) {
+            return 'invalid input';
+          } else {
+            return null;
+          }
+        },
+        onTap: function,
+        controller: controller,
+        focusNode: node,
+        onFieldSubmitted: (term) {
+          node.unfocus();
+          FocusScope.of(context).requestFocus(nextNode);
+        },
+        cursorColor: cursorColor,
+        decoration: fieldsInputDecoration(hint, label),
+      ),
+    );
+  }
 }

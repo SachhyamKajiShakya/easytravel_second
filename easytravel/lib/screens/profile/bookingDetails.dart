@@ -15,9 +15,9 @@ class _BookingDetailsState extends State<BookingDetails> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color.fromRGBO(230, 230, 230, 1),
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(230, 230, 230, 1),
+          backgroundColor: Colors.white,
           elevation: 0,
           centerTitle: true,
           title: buildSubHeader('Booking Details'),
@@ -26,7 +26,7 @@ class _BookingDetailsState extends State<BookingDetails> {
           Container(
             margin: EdgeInsets.only(left: 20, right: 20, bottom: 30, top: 30),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Color.fromRGBO(245, 253, 255, 1),
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             padding: EdgeInsets.all(20),
@@ -55,35 +55,63 @@ class _BookingDetailsState extends State<BookingDetails> {
                   SizedBox(height: 20),
                   _buildData(
                       'Pickup Location',
-                      widget.snapshot.data[widget.index]["pick_up_province"]
-                              .toString() +
-                          ',' +
-                          widget.snapshot.data[widget.index]
-                              ["pick_up_district"] +
-                          ' ' +
-                          widget.snapshot.data[widget.index]["pick_up_city"] +
-                          ' ' +
-                          widget.snapshot.data[widget.index]["pick_up_street"]),
+                      widget.snapshot.data[widget.index]["pick_up_province"] ==
+                              null
+                          ? widget.snapshot.data[widget.index]
+                                  ["pick_up_district"] +
+                              ', ' +
+                              widget.snapshot.data[widget.index]
+                                  ["pick_up_city"] +
+                              ', ' +
+                              widget.snapshot.data[widget.index]
+                                  ["pick_up_street"]
+                          : widget.snapshot
+                                  .data[widget.index]["pick_up_province"]
+                                  .toString() +
+                              ', ' +
+                              widget.snapshot.data[widget.index]
+                                  ["pick_up_district"] +
+                              ', ' +
+                              widget.snapshot.data[widget.index]
+                                  ["pick_up_city"] +
+                              ', ' +
+                              widget.snapshot.data[widget.index]
+                                  ["pick_up_street"]),
                   SizedBox(height: 20),
                   _buildData(
                       'Destination Location',
-                      widget.snapshot.data[widget.index]["destination_province"]
-                              .toString() +
-                          ',' +
-                          widget.snapshot.data[widget.index]
-                              ["destination_district"] +
-                          ' ' +
-                          widget.snapshot.data[widget.index]
-                              ["destination_city"] +
-                          ' ' +
-                          widget.snapshot.data[widget.index]
-                              ["destination_street"]),
+                      widget.snapshot.data[widget.index]
+                                  ["destination_province"] ==
+                              null
+                          ? widget.snapshot.data[widget.index]
+                                  ["destination_district"] +
+                              ', ' +
+                              widget.snapshot.data[widget.index]
+                                  ["destination_city"] +
+                              ', ' +
+                              widget.snapshot.data[widget.index]
+                                  ["destination_street"]
+                          : widget.snapshot
+                                  .data[widget.index]["destination_province"]
+                                  .toString() +
+                              ', ' +
+                              widget.snapshot.data[widget.index]
+                                  ["destination_district"] +
+                              ', ' +
+                              widget.snapshot.data[widget.index]
+                                  ["destination_city"] +
+                              ', ' +
+                              widget.snapshot.data[widget.index]
+                                  ["destination_street"]),
                   SizedBox(height: 20),
                   _buildData(
                       'Booked For',
-                      widget.snapshot.data[widget.index]["number_of_days"]
-                              .toString() +
-                          ' days'),
+                      widget.snapshot.data[widget.index]["number_of_days"] ==
+                              null
+                          ? '1 day'
+                          : widget.snapshot.data[widget.index]["number_of_days"]
+                                  .toString() +
+                              ' days')
                 ],
               ),
             ),
