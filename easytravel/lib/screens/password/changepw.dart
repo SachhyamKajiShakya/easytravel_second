@@ -1,6 +1,7 @@
 import 'package:easy_travel/constants.dart';
-import 'package:easy_travel/screens/profile/userprofile.dart';
+import 'package:easy_travel/screens/navbar.dart';
 import 'package:easy_travel/services/api.dart';
+import 'package:easy_travel/services/updateapi.dart';
 import 'package:flutter/material.dart';
 
 class ChangePassword extends StatefulWidget {
@@ -50,7 +51,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   size: 22, color: Colors.black),
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => UserProfile()));
+                    MaterialPageRoute(builder: (context) => NavBarPage()));
               }),
         ),
         body: Container(
