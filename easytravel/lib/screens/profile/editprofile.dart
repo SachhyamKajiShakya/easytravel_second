@@ -1,7 +1,10 @@
 import 'package:easy_travel/constants.dart';
-import 'package:easy_travel/screens/profile/userprofile.dart';
+import 'package:easy_travel/screens/navbar.dart';
 import 'package:easy_travel/services/api.dart';
+import 'package:easy_travel/services/updateapi.dart';
 import 'package:flutter/material.dart';
+
+import '../profilewidgets.dart';
 
 class EditProfilePage extends StatefulWidget {
   @override
@@ -55,10 +58,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   size: 22, color: Colors.black),
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => UserProfile()));
+                    MaterialPageRoute(builder: (context) => NavBarPage()));
               }),
         ),
-        drawer: buildDrawer(context),
         body: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
@@ -136,16 +138,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             onPressed: () {
                               if (_formKey.currentState.validate()) {
                                 updateUserData(
-                                    _nameController.text == null
+                                    _nameController.text.isEmpty
                                         ? snapshot.data['name']
                                         : _nameController.text,
-                                    _emailController.text == null
+                                    _emailController.text.isEmpty
                                         ? snapshot.data['email']
                                         : _emailController.text,
-                                    _usernameController.text == null
+                                    _usernameController.text.isEmpty
                                         ? snapshot.data['username']
                                         : _usernameController.text,
-                                    _contactController.text == null
+                                    _contactController.text.isEmpty
                                         ? snapshot.data['phone']
                                         : _contactController.text,
                                     context);

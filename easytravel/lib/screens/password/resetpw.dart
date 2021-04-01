@@ -1,6 +1,8 @@
-import 'package:easy_travel/screens/profile/userprofile.dart';
+import 'package:easy_travel/screens/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_travel/constants.dart';
+import '../../constants.dart';
+import '../profilewidgets.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   @override
@@ -168,7 +170,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   size: 22, color: Colors.black),
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => UserProfile()));
+                    MaterialPageRoute(builder: (context) => NavBarPage()));
               }),
         ),
         drawer: buildDrawer(context),

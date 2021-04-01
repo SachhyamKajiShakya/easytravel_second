@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:easy_travel/screens/navbar.dart';
-import 'package:easy_travel/screens/profile/userprofile.dart';
+import 'package:easy_travel/screens/profilewidgets.dart';
 import 'package:easy_travel/screens/registervehicles/registerVehicle.dart';
 import 'package:easy_travel/screens/userAuthentication/login.dart';
 import 'package:easy_travel/screens/userAuthentication/otp.dart';
@@ -39,7 +39,7 @@ Future<String> loginUser(String email, String password, context) async {
     });
     return token;
   } else {
-    throw Exception('Failed to laod');
+    buildFailDialogBox(context, 'Error', 'Invalid username or password');
   }
 }
 
@@ -338,29 +338,6 @@ getUserData() async {
 }
 
 // function to update user password
-updatePassword(
-    String oldpassword, String newpassword, BuildContext context) async {
-  String token = await readContent();
-  final response = await http.put(
-    'http://192.168.100.67:8000/api/updatepassword',
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': 'Token $token',
-    },
-    body: json.encode(
-      <String, String>{
-        "oldpassword": oldpassword,
-        "newpassword": newpassword,
-      },
-    ),
-  );
-  if (response.statusCode == 200) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => UserProfile()));
-  } else {
-    return Exception();
-  }
-}
 
 // function for signing out of user
 userLogout(BuildContext context) async {
@@ -375,63 +352,5 @@ userLogout(BuildContext context) async {
         context, MaterialPageRoute(builder: (context) => LoginPage()));
   } else {
     print("error signing out");
-  }
-}
-
-// function to update user information
-updateUserData(String name, String email, String username, String contact,
-    BuildContext context) async {
-  String token = await readContent();
-  final response = await http.put(
-    'http://192.168.100.67:8000/api/updateuser/',
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': 'Token $token',
-    },
-    body: json.encode(<String, String>{
-      "name": name,
-      "email": email,
-      "username": username,
-      "phone": contact,
-    }),
-  );
-  if (response.statusCode == 200) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Update Success'),
-            content: SingleChildScrollView(
-              child: Text('Your data was successfully updated.'),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('Okay'),
-              ),
-            ],
-          );
-        });
-  } else {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Update Unsuccess'),
-            content: SingleChildScrollView(
-              child: Text('Your data was not updated.'),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('Okay'),
-              ),
-            ],
-          );
-        });
   }
 }

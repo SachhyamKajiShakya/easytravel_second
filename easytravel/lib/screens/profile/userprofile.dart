@@ -1,10 +1,13 @@
 import 'dart:ui';
 import 'package:easy_travel/screens/profile/bookingDetails.dart';
+import 'package:easy_travel/screens/profile/editVehicle.dart';
 import 'package:easy_travel/screens/profile/futureBooking.dart';
 import 'package:easy_travel/services/api.dart';
 import 'package:easy_travel/services/getbooking.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_travel/constants.dart';
+
+import '../profilewidgets.dart';
 
 class UserProfile extends StatefulWidget {
   @override
@@ -181,7 +184,12 @@ class _UserProfileState extends State<UserProfile>
                   index,
                   context,
                   () => Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => null)));
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditVehicle(
+                                snapshot: snapshot,
+                                index: index,
+                              ))));
             },
           );
         }
