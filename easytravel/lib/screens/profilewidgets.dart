@@ -1,10 +1,16 @@
 import 'package:easy_travel/screens/navbar.dart';
 import 'package:easy_travel/screens/password/changepw.dart';
 import 'package:easy_travel/screens/password/resetpw.dart';
+import 'package:easy_travel/screens/profile/editVehicle.dart';
 import 'package:easy_travel/screens/profile/editprofile.dart';
 import 'package:easy_travel/services/api.dart';
+import 'package:easy_travel/services/updateapi.dart';
 import 'package:flutter/material.dart';
+import 'package:focused_menu/focused_menu.dart';
+import 'package:focused_menu/modals.dart';
 import '../constants.dart';
+
+List<String> actions = <String>['Edit', 'Delete'];
 
 // widget method to build drawer for profile
 Widget buildDrawer(BuildContext context) {
@@ -198,12 +204,38 @@ Widget buildUserBodyCard(
 
 // widget function to build the card bodies
 Widget buildPostedVehiclesBodyCard(
-    AsyncSnapshot snapshot, index, BuildContext context, Function press) {
+    AsyncSnapshot snapshot, index, BuildContext context) {
   print(snapshot.data[index]["vehicleImage"]);
   return Padding(
     padding: const EdgeInsets.only(left: 5.0, top: 15, right: 5),
-    child: GestureDetector(
-      onTap: press,
+    child: FocusedMenuHolder(
+      blurSize: 1,
+      blurBackgroundColor: Colors.black,
+      onPressed: () {},
+      menuItems: <FocusedMenuItem>[
+        FocusedMenuItem(
+            title: Text('Edit'),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => EditVehicle(
+                            snapshot: snapshot,
+                            index: index,
+                          )));
+            },
+            trailingIcon: Icon(Icons.edit)),
+        FocusedMenuItem(
+            title: Text(
+              'Delete',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              deleteVehicle(snapshot.data[index]["id"], context);
+            },
+            backgroundColor: Colors.redAccent,
+            trailingIcon: Icon(Icons.delete, color: Colors.white))
+      ],
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         elevation: 2,

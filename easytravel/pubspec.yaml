@@ -38,6 +38,7 @@ dependencies:
   intl: ^0.16.1
   firebase_messaging: ^6.0.16
   firebase_core: ^0.7.0
+  focused_menu: ^1.0.0
   
 
 dev_dependencies:

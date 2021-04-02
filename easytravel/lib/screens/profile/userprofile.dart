@@ -180,16 +180,10 @@ class _UserProfileState extends State<UserProfile>
             itemCount: snapshot.data.length,
             itemBuilder: (context, index) {
               return buildPostedVehiclesBodyCard(
-                  snapshot,
-                  index,
-                  context,
-                  () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => EditVehicle(
-                                snapshot: snapshot,
-                                index: index,
-                              ))));
+                snapshot,
+                index,
+                context,
+              );
             },
           );
         }

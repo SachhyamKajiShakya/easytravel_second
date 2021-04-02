@@ -3,7 +3,6 @@ import 'package:easy_travel/screens/navbar.dart';
 import 'package:easy_travel/services/api.dart';
 import 'package:easy_travel/services/updateapi.dart';
 import 'package:flutter/material.dart';
-
 import '../profilewidgets.dart';
 
 class EditProfilePage extends StatefulWidget {

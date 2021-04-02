@@ -1,12 +1,8 @@
 import 'package:easy_travel/screens/password/resetpw.dart';
 import 'package:easy_travel/screens/userauthentication/signup.dart';
-import 'package:easy_travel/screens/registervehicles/registerVehicle.dart';
 import 'package:easy_travel/services/api.dart';
-import 'package:easy_travel/services/fcmservices.dart';
 import 'package:easy_travel/services/tokenstorage.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:easy_travel/constants.dart';
 
 class LoginPage extends StatefulWidget {

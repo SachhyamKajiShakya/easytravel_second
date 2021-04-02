@@ -121,3 +121,19 @@ updateDriverDetails(String driverName, String driverAddress,
     buildFailDialogBox(context, 'Error', 'Your data was not updated');
   }
 }
+
+deleteVehicle(int vehicleid, BuildContext context) async {
+  String token = await readContent();
+  final response = await http.delete(
+    'http://192.168.100.67:8000/api/managevehicles/$vehicleid',
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Token $token',
+    },
+  );
+  if (response.statusCode == 200) {
+    buildSuccessDialogBox(context, 'Delete Success', 'The vehicle was delete.');
+  } else {
+    buildFailDialogBox(context, 'Fail', 'The vehicle was not deleted.');
+  }
+}

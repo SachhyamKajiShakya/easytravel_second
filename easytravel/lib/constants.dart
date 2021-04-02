@@ -1,12 +1,4 @@
 import 'dart:ui';
-import 'package:easy_travel/screens/bookings/confirmbooking.dart';
-import 'package:easy_travel/screens/bookings/confirmlongbooking.dart';
-import 'package:easy_travel/screens/password/changepw.dart';
-import 'package:easy_travel/screens/password/resetpw.dart';
-import 'package:easy_travel/screens/profile/editprofile.dart';
-import 'package:easy_travel/screens/profile/userprofile.dart';
-import 'package:easy_travel/services/api.dart';
-import 'package:easy_travel/services/getbooking.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
@@ -75,7 +67,7 @@ TextStyle labelstyle = TextStyle(
 // text style for hint text
 TextStyle hintstyle = TextStyle(
   fontSize: 16,
-  color: Color.fromRGBO(150, 150, 150, 1),
+  color: Colors.blueGrey,
 );
 
 // input decoration for text fields
