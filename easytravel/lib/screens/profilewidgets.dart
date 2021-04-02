@@ -3,6 +3,8 @@ import 'package:easy_travel/screens/password/changepw.dart';
 import 'package:easy_travel/screens/password/resetpw.dart';
 import 'package:easy_travel/screens/profile/editVehicle.dart';
 import 'package:easy_travel/screens/profile/editprofile.dart';
+import 'package:easy_travel/screens/profile/futureBooking.dart';
+import 'package:easy_travel/screens/profile/longFutureBookings.dart';
 import 'package:easy_travel/services/api.dart';
 import 'package:easy_travel/services/updateapi.dart';
 import 'package:flutter/material.dart';
@@ -203,9 +205,97 @@ Widget buildUserBodyCard(
 }
 
 // widget function to build the card bodies
+Widget buildFutureBookingBodyCard(
+    AsyncSnapshot snapshot, index, BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.only(left: 5.0, top: 15, right: 5),
+    child: FocusedMenuHolder(
+      blurSize: 1,
+      blurBackgroundColor: Colors.black,
+      onPressed: () {},
+      menuItems: <FocusedMenuItem>[
+        FocusedMenuItem(
+            title: Text('Edit'),
+            onPressed: () {
+              snapshot.data[index]["number_of_days"] == null
+                  ? Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FutureBooking(
+                                snapshot: snapshot,
+                                index: index,
+                              )))
+                  : Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => LongFutureBooking(
+                                snapshot: snapshot,
+                                index: index,
+                              )));
+            },
+            trailingIcon: Icon(Icons.edit)),
+        FocusedMenuItem(
+            title: Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              cancelBooking(snapshot.data[index]["id"], context);
+            },
+            backgroundColor: Colors.redAccent,
+            trailingIcon: Icon(Icons.cancel, color: Colors.white))
+      ],
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        elevation: 2,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 120,
+              width: 160,
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10)),
+                child: Image.network(
+                  '${snapshot.data[index]["image"]}',
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.only(top: 8, right: 15, left: 15, bottom: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                      snapshot.data[index]["vehicle_brand"] +
+                          '  ' +
+                          snapshot.data[index]["vehicle_model"],
+                      style: Theme.of(context).textTheme.headline3),
+                  SizedBox(height: 5),
+                  Text('Booking Date:  ' + snapshot.data[index]["pick_up_date"],
+                      style: Theme.of(context).textTheme.headline2),
+                  SizedBox(height: 5),
+                  Text(
+                      'Booking Time:  ' +
+                          snapshot.data[index]["pick_up_time"].toString(),
+                      style: Theme.of(context).textTheme.headline2),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+// widget function to build the card bodies
 Widget buildPostedVehiclesBodyCard(
     AsyncSnapshot snapshot, index, BuildContext context) {
-  print(snapshot.data[index]["vehicleImage"]);
   return Padding(
     padding: const EdgeInsets.only(left: 5.0, top: 15, right: 5),
     child: FocusedMenuHolder(
@@ -373,8 +463,7 @@ Future buildSuccessDialogBox(context, String title, String body) {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => NavBarPage()));
+              Navigator.pop(context);
             },
             child: Text('Okay'),
           ),

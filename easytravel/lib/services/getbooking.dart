@@ -2,6 +2,7 @@ import 'package:easy_travel/services/tokenstorage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+// get speific booking details
 getBooking(String id) async {
   String token = await readContent();
   final response = await http.get(
@@ -18,6 +19,7 @@ getBooking(String id) async {
   }
 }
 
+// get booking of user which has already been conducted
 getPastBookings() async {
   String token = await readContent();
   final response = await http.get(
@@ -34,6 +36,7 @@ getPastBookings() async {
   }
 }
 
+// get booking details of user which is yet to be conducted
 getFutureBookings() async {
   String token = await readContent();
   final response = await http.get(
@@ -50,6 +53,7 @@ getFutureBookings() async {
   }
 }
 
+// get details of vehicles which are registered by the user
 getPostedVehicles() async {
   String token = await readContent();
   final response = await http.get(

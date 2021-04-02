@@ -56,8 +56,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               icon: Icon(Icons.arrow_back_outlined,
                   size: 22, color: Colors.black),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => NavBarPage()));
+                Navigator.pop(context);
               }),
         ),
         body: GestureDetector(

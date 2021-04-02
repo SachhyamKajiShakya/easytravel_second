@@ -87,8 +87,7 @@ class _EditVehicleState extends State<EditVehicle> {
               icon: Icon(Icons.arrow_back_outlined,
                   size: 22, color: Colors.black),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => NavBarPage()));
+                Navigator.pop(context);
               }),
         ),
         body: FutureBuilder(
@@ -192,6 +191,11 @@ class _EditVehicleState extends State<EditVehicle> {
                       FlatButton(
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
+                            print(_categoryValue != null &&
+                                _categoryValue !=
+                                    widget.snapshot.data[widget.index]
+                                        ["category"]);
+                            print(_categoryValue);
                             updateVehicleDetials(
                               _brandController.text.isEmpty
                                   ? widget.snapshot.data[widget.index]["brand"]
@@ -203,16 +207,20 @@ class _EditVehicleState extends State<EditVehicle> {
                                   ? widget.snapshot.data[widget.index]
                                       ["licenseNumber"]
                                   : _licenseController.text,
-                              widget.snapshot.data[widget.index]["category"] ==
-                                      _categoryValue
-                                  ? widget.snapshot.data[widget.index]
-                                      ["category"]
-                                  : _categoryValue,
-                              widget.snapshot.data[widget.index]["service"] ==
-                                      _serviceValue
-                                  ? widget.snapshot.data[widget.index]
-                                      ["service"]
-                                  : _serviceValue,
+                              _categoryValue != null &&
+                                      _categoryValue !=
+                                          widget.snapshot.data[widget.index]
+                                              ["category"]
+                                  ? _categoryValue
+                                  : widget.snapshot.data[widget.index]
+                                      ["category"],
+                              _serviceValue != null &&
+                                      _categoryValue !=
+                                          widget.snapshot.data[widget.index]
+                                              ["service"]
+                                  ? _serviceValue
+                                  : widget.snapshot.data[widget.index]
+                                      ["service"],
                               _descriptionController.text.isEmpty
                                   ? widget.snapshot.data[widget.index]
                                       ["description"]

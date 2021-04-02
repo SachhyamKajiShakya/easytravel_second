@@ -1,4 +1,7 @@
+import 'package:easy_travel/screens/profilewidgets.dart';
+import 'package:easy_travel/services/updateapi.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../constants.dart';
 
@@ -12,6 +15,87 @@ class FutureBooking extends StatefulWidget {
 }
 
 class _FutureBookingState extends State<FutureBooking> {
+  DateTime selectedDate = DateTime.now();
+  String now;
+
+  // date picker in flutter
+  _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2025),
+        helpText: 'Select your booking date',
+        builder: (context, child) {
+          return Theme(
+            data: ThemeData.dark(),
+            child: child,
+          );
+        });
+    if (picked != null && picked != selectedDate) {
+      // compare if selected date is greater than current date
+      setState(() {
+        selectedDate = picked;
+        now = DateFormat("yyyy-MM-dd").format(selectedDate);
+      });
+    }
+  }
+
+  FocusNode _districtNode,
+      _cityNode,
+      _streetNode,
+      _destinationDistrictNode,
+      _destinationCityNode,
+      _dateNode,
+      _timeNode,
+      _destinationStreetNode;
+
+  TextEditingController _districtController = TextEditingController();
+  TextEditingController _cityController = TextEditingController();
+  TextEditingController _streetController = TextEditingController();
+  TextEditingController _destinationDistrictController =
+      TextEditingController();
+  TextEditingController _destinationCityController = TextEditingController();
+  TextEditingController _destinationStreetController = TextEditingController();
+  TextEditingController _dateController = TextEditingController();
+  TextEditingController _timeController = TextEditingController();
+
+  bool _autovalidate = false;
+  final _formkey = GlobalKey<FormState>();
+  _onTap() {
+    setState(() {
+      _autovalidate = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _districtNode = FocusNode();
+    _cityNode = FocusNode();
+    _streetNode = FocusNode();
+
+    _destinationDistrictNode = FocusNode();
+    _destinationCityNode = FocusNode();
+    _destinationStreetNode = FocusNode();
+    _dateNode = FocusNode();
+    _timeNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _dateNode.dispose();
+    _districtNode.dispose();
+    _cityNode.dispose();
+    _streetNode.dispose();
+
+    _destinationDistrictNode.dispose();
+    _destinationCityNode.dispose();
+    _destinationStreetNode.dispose();
+    _timeNode.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -20,142 +104,240 @@ class _FutureBookingState extends State<FutureBooking> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          centerTitle: true,
-          title: buildSubHeader('Booking Details'),
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back_outlined,
+                  size: 22, color: Colors.black),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
         ),
-        body: ListView(children: [
-          Container(
-            margin: EdgeInsets.only(left: 20, right: 20, bottom: 30, top: 30),
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(255, 248, 248, 1),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            padding: EdgeInsets.all(20),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildData('Driver Name',
-                      widget.snapshot.data[widget.index]["driver_name"]),
-                  SizedBox(height: 20),
-                  _buildData('Driver Contact',
-                      widget.snapshot.data[widget.index]["driver_contact"]),
-                  SizedBox(height: 20),
-                  _buildData(
-                      'Vehicle',
-                      widget.snapshot.data[widget.index]["vehicle_brand"] +
-                          ' ' +
-                          widget.snapshot.data[widget.index]["vehicle_model"]),
-                  SizedBox(height: 20),
-                  _buildData('Pickup Date',
-                      widget.snapshot.data[widget.index]["pick_up_date"]),
-                  SizedBox(height: 20),
-                  _buildData('Pickup Time',
-                      widget.snapshot.data[widget.index]["pick_up_time"]),
-                  SizedBox(height: 20),
-                  _buildData(
-                      'Pickup Location',
-                      widget.snapshot.data[widget.index]["pick_up_province"] ==
-                              null
-                          ? widget.snapshot.data[widget.index]
-                                  ["pick_up_district"] +
-                              ', ' +
-                              widget.snapshot.data[widget.index]
-                                  ["pick_up_city"] +
-                              ', ' +
-                              widget.snapshot.data[widget.index]
-                                  ["pick_up_street"]
-                          : widget.snapshot
-                                  .data[widget.index]["pick_up_province"]
-                                  .toString() +
-                              ', ' +
-                              widget.snapshot.data[widget.index]
-                                  ["pick_up_district"] +
-                              ', ' +
-                              widget.snapshot.data[widget.index]
-                                  ["pick_up_city"] +
-                              ', ' +
-                              widget.snapshot.data[widget.index]
-                                  ["pick_up_street"]),
-                  SizedBox(height: 20),
-                  _buildData(
-                      'Destination Location',
-                      widget.snapshot.data[widget.index]
-                                  ["destination_province"] ==
-                              null
-                          ? widget.snapshot.data[widget.index]
-                                  ["destination_district"] +
-                              ', ' +
-                              widget.snapshot.data[widget.index]
-                                  ["destination_city"] +
-                              ', ' +
-                              widget.snapshot.data[widget.index]
-                                  ["destination_street"]
-                          : widget.snapshot
-                                  .data[widget.index]["destination_province"]
-                                  .toString() +
-                              ', ' +
-                              widget.snapshot.data[widget.index]
-                                  ["destination_district"] +
-                              ', ' +
-                              widget.snapshot.data[widget.index]
-                                  ["destination_city"] +
-                              ', ' +
-                              widget.snapshot.data[widget.index]
-                                  ["destination_street"]),
-                  SizedBox(height: 20),
-                  _buildData(
-                      'Booked For',
-                      widget.snapshot.data[widget.index]["number_of_days"] ==
-                              null
-                          ? '1 day'
-                          : widget.snapshot.data[widget.index]["number_of_days"]
-                                  .toString() +
-                              ' days')
-                ],
-              ),
+        body: GestureDetector(
+          onTap: () {
+            print(widget.snapshot.data[widget.index]["id"]);
+            FocusScope.of(context).unfocus();
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: ListView(
+              children: [
+                Center(
+                  child: buildSubHeader('Edit Booking Details'),
+                ),
+                SizedBox(height: 40),
+                Form(
+                  key: _formkey,
+                  autovalidate: _autovalidate,
+                  child: Column(
+                    children: [
+                      buildProfileTextFields(
+                          context,
+                          'Pickup Disctrict',
+                          widget.snapshot.data[widget.index]
+                              ["pick_up_district"],
+                          _onTap,
+                          _districtNode,
+                          _cityNode,
+                          _districtController,
+                          370),
+                      SizedBox(height: 30),
+                      buildProfileTextFields(
+                          context,
+                          'Pickup City',
+                          widget.snapshot.data[widget.index]["pick_up_city"],
+                          _onTap,
+                          _cityNode,
+                          _streetNode,
+                          _cityController,
+                          370),
+                      SizedBox(height: 30),
+                      buildProfileTextFields(
+                          context,
+                          'Pickup Street',
+                          widget.snapshot.data[widget.index]["pick_up_street"],
+                          _onTap,
+                          _streetNode,
+                          _dateNode,
+                          _streetController,
+                          370),
+                      SizedBox(height: 30),
+                      _buildDateTextFields(
+                          context,
+                          'Pickup Date',
+                          now == null
+                              ? widget.snapshot.data[widget.index]
+                                  ["pick_up_date"]
+                              : now,
+                          _dateNode,
+                          _timeNode,
+                          _dateController,
+                          370),
+                      SizedBox(height: 30),
+                      _buildTimeTextFields(
+                          context,
+                          'Pickup Time',
+                          widget.snapshot.data[widget.index]["pick_up_time"],
+                          _timeNode,
+                          _destinationDistrictNode,
+                          _timeController,
+                          370),
+                      SizedBox(height: 30),
+                      buildProfileTextFields(
+                          context,
+                          'Desintation District',
+                          widget.snapshot.data[widget.index]
+                              ["destination_district"],
+                          _onTap,
+                          _destinationDistrictNode,
+                          _destinationCityNode,
+                          _destinationDistrictController,
+                          370),
+                      SizedBox(height: 30),
+                      buildProfileTextFields(
+                          context,
+                          'Desintation City',
+                          widget.snapshot.data[widget.index]
+                              ["destination_city"],
+                          _onTap,
+                          _destinationCityNode,
+                          _destinationStreetNode,
+                          _destinationCityController,
+                          370),
+                      SizedBox(height: 30),
+                      buildProfileTextFields(
+                          context,
+                          'Desintation Street',
+                          widget.snapshot.data[widget.index]
+                              ["destination_street"],
+                          _onTap,
+                          _destinationStreetNode,
+                          null,
+                          _destinationStreetController,
+                          370),
+                      SizedBox(height: 40),
+                      FlatButton(
+                        onPressed: () {
+                          if (_formkey.currentState.validate()) {
+                            print(now);
+                            updateShortBooking(
+                                widget.snapshot.data[widget.index]["id"],
+                                _districtController.text.isEmpty
+                                    ? widget.snapshot.data[widget.index]
+                                        ["pick_up_district"]
+                                    : _districtController.text,
+                                _cityController.text.isEmpty
+                                    ? widget.snapshot.data[widget.index]
+                                        ["pick_up_city"]
+                                    : _cityController.text,
+                                _streetController.text.isEmpty
+                                    ? widget.snapshot.data[widget.index]
+                                        ["pick_up_street"]
+                                    : _cityController.text,
+                                now != null &&
+                                        now !=
+                                            widget.snapshot.data[widget.index]
+                                                ["pick_up_date"]
+                                    ? now
+                                    : widget.snapshot.data[widget.index]
+                                        ["pick_up_date"],
+                                _timeController.text.isEmpty
+                                    ? widget.snapshot.data[widget.index]
+                                        ["pick_up_time"]
+                                    : _timeController.text,
+                                _destinationDistrictController.text.isEmpty
+                                    ? widget.snapshot.data[widget.index]
+                                        ["destination_district"]
+                                    : _destinationDistrictController.text,
+                                _destinationCityController.text.isEmpty
+                                    ? widget.snapshot.data[widget.index]
+                                        ["destination_city"]
+                                    : _destinationCityController.text,
+                                _destinationStreetController.text.isEmpty
+                                    ? widget.snapshot.data[widget.index]
+                                        ["destination_street"]
+                                    : _destinationStreetController.text,
+                                context);
+                          }
+                        },
+                        child: buildButton('Save Changes', 250),
+                      ),
+                      SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 20),
-          FlatButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: buildButton('Done', 200),
-          ),
-        ]),
+        ),
       ),
     );
   }
 
-  // a widget function to build rows of content
-  Widget _buildData(String title, String body) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(title,
-                style: TextStyle(
-                  color: Color.fromRGBO(160, 160, 160, 1),
-                  fontSize: 17,
-                  fontFamily: 'Roboto',
-                )),
-          ],
-        ),
-        SizedBox(height: 3),
-        Row(
-          children: [
-            Text(body,
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 18,
-                  color: Colors.black,
-                ))
-          ],
-        ),
-      ],
+  // build date text field for profile sections
+  Widget _buildDateTextFields(
+    BuildContext context,
+    String label,
+    String hint,
+    FocusNode node,
+    FocusNode nextNode,
+    TextEditingController controller,
+    double size,
+  ) {
+    return Container(
+      width: size,
+      child: TextFormField(
+        readOnly: true,
+        onTap: () {
+          _selectDate(context);
+        },
+        controller: controller,
+        focusNode: node,
+        onFieldSubmitted: (term) {
+          node.unfocus();
+          FocusScope.of(context).requestFocus(nextNode);
+        },
+        cursorColor: cursorColor,
+        decoration: fieldsInputDecoration(hint, label),
+      ),
+    );
+  }
+
+  // build time text field for profile sections
+  Widget _buildTimeTextFields(
+    BuildContext context,
+    String label,
+    String hint,
+    FocusNode node,
+    FocusNode nextNode,
+    TextEditingController controller,
+    double size,
+  ) {
+    return Container(
+      width: size,
+      child: TextFormField(
+        validator: (value) {
+          if (value.isEmpty == false &&
+              value.contains(
+                      new RegExp(r"^[0-9]{2}[:][0-9]{2}[' '][am|pm]+")) ==
+                  false) {
+            return 'invalid time format';
+          } else {
+            return null;
+          }
+        },
+        onTap: () {
+          setState(() {
+            _autovalidate = false;
+          });
+        },
+        controller: controller,
+        focusNode: node,
+        onFieldSubmitted: (term) {
+          node.unfocus();
+          FocusScope.of(context).requestFocus(nextNode);
+        },
+        cursorColor: cursorColor,
+        decoration: fieldsInputDecoration(hint, label),
+      ),
     );
   }
 }

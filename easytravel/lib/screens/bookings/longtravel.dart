@@ -307,7 +307,7 @@ class _BookLongTravelState extends State<BookLongTravel> {
     return Container(
       width: size,
       child: DropdownButtonFormField(
-          focusNode: ampm,
+          focusNode: node,
           decoration: fieldsInputDecoration(null, label),
           value: dataValue,
           style: fieldtext,

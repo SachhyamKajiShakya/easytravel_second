@@ -144,6 +144,7 @@ class _UserProfileState extends State<UserProfile>
     return FutureBuilder(
       future: getFutureBookings(),
       builder: (context, snapshot) {
+        // print(snapshot.data);
         if (snapshot.data == null) {
           return Center(child: CircularProgressIndicator());
         } else {
@@ -152,14 +153,11 @@ class _UserProfileState extends State<UserProfile>
             scrollDirection: Axis.vertical,
             itemCount: snapshot.data.length,
             itemBuilder: (context, index) {
-              return buildUserBodyCard(
-                  snapshot,
-                  index,
-                  context,
-                  () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => FutureBooking())));
+              return buildFutureBookingBodyCard(
+                snapshot,
+                index,
+                context,
+              );
             },
           );
         }

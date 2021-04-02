@@ -116,12 +116,13 @@ updateDriverDetails(String driverName, String driverAddress,
   );
   if (response.statusCode == 200) {
     buildSuccessDialogBox(
-        context, 'Update Success', 'Your data was successfully updated');
+        context, 'Update Success', 'Your driver data was successfully updated');
   } else {
-    buildFailDialogBox(context, 'Error', 'Your data was not updated');
+    buildFailDialogBox(context, 'Error', 'Your driver data was not updated');
   }
 }
 
+// function that call api to delete specific vehicle
 deleteVehicle(int vehicleid, BuildContext context) async {
   String token = await readContent();
   final response = await http.delete(
@@ -135,5 +136,105 @@ deleteVehicle(int vehicleid, BuildContext context) async {
     buildSuccessDialogBox(context, 'Delete Success', 'The vehicle was delete.');
   } else {
     buildFailDialogBox(context, 'Fail', 'The vehicle was not deleted.');
+  }
+}
+
+// function that calls api to cancel a confirmed booking
+cancelBooking(int bookingid, BuildContext context) async {
+  String token = await readContent();
+  final response = await http.post(
+    'http://192.168.100.67:8000/api/cancelbooking/$bookingid',
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Token $token',
+    },
+  );
+  if (response.statusCode == 200) {
+    buildSuccessDialogBox(
+        context, 'Booking Cancelled', 'The booking has been cancelled');
+  } else {
+    buildFailDialogBox(context, 'Failed', 'Failed to cancel the booking');
+  }
+}
+
+// function that calls api to update short booking
+updateShortBooking(
+    int bookingid,
+    String district,
+    String city,
+    String street,
+    String date,
+    String time,
+    String destinationDistrict,
+    String destinationCity,
+    String destinationStreet,
+    BuildContext context) async {
+  String token = await readContent();
+  final response = await http.put(
+    'http://192.168.100.67:8000/api/updateshortbookings/$bookingid',
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Token $token',
+    },
+    body: json.encode(<String, String>{
+      "pick_up_district": district,
+      "pick_up_city": city,
+      "pick_up_street": street,
+      "pick_up_date": date,
+      "pick_up_time": time,
+      "destination_district": destinationDistrict,
+      "destination_city": destinationCity,
+      "destination_street": destinationStreet,
+    }),
+  );
+  if (response.statusCode == 200) {
+    buildSuccessDialogBox(
+        context, 'Booking Updated', 'The booking has been updated');
+  } else {
+    buildFailDialogBox(context, 'Failed', 'Failed to update the booking');
+  }
+}
+
+// funciton that calls api to update long bookings
+updateLongBooking(
+    int bookingid,
+    String pickupProvince,
+    String pickupDistrict,
+    String pickupCity,
+    String pickupStreet,
+    String date,
+    String time,
+    String destinationProvince,
+    String destinationDistrict,
+    String destinationCity,
+    String destinationStreet,
+    int days,
+    BuildContext context) async {
+  String token = await readContent();
+  final response = await http.put(
+    'http://192.168.100.67:8000/api/updatelongbookings/$bookingid',
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Token $token',
+    },
+    body: json.encode(<String, dynamic>{
+      "pick_up_province": pickupProvince,
+      "pick_up_district": pickupDistrict,
+      "pick_up_city": pickupCity,
+      "pick_up_street": pickupStreet,
+      "pick_up_date": date,
+      "pick_up_time": time,
+      "destination_province": destinationProvince,
+      "destination_district": destinationDistrict,
+      "destination_city": destinationCity,
+      "destination_street": destinationStreet,
+      "number_of_days": days,
+    }),
+  );
+  if (response.statusCode == 200) {
+    buildSuccessDialogBox(
+        context, 'Booking Updated', 'The booking has been updated');
+  } else {
+    buildFailDialogBox(context, 'Failed', 'Failed to update the booking');
   }
 }
