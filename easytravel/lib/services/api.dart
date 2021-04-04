@@ -18,6 +18,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 Future<String> loginUser(String email, String password, context) async {
   FirebaseMessaging _firebasemsg = FirebaseMessaging();
   final http.Response response = await http.post(
+    // 'http://192.168.100.67:8000/api/login/',
     'http://192.168.100.67:8000/api/login/',
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -34,9 +35,8 @@ Future<String> loginUser(String email, String password, context) async {
         MaterialPageRoute(builder: (context) => VehicleRegistrationPage()));
     String token = jsonDecode(response.body)['token'].toString();
     writeContent(token);
-    _firebasemsg.getToken().then((devicetoken) async {
-      print('device token: ' + devicetoken);
-    });
+    _firebasemsg.deleteInstanceID();
+    updateDeviceToken();
     return token;
   } else {
     buildFailDialogBox(context, 'Error', 'Invalid username or password');
@@ -47,6 +47,7 @@ Future<String> loginUser(String email, String password, context) async {
 createUser(String email, String username, String password, String password2,
     String name, String phone, context) async {
   final http.Response response = await http.post(
+    //'http://192.168.100.67:8000/api/register/',
     'http://192.168.100.67:8000/api/register/',
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -95,6 +96,7 @@ makeLongBookings(
     String token = await readContent();
 
     String url =
+        //'http://192.168.100.67:8000/api/longbooking/$vehicleid/$driverid/';
         'http://192.168.100.67:8000/api/longbooking/$vehicleid/$driverid/';
 
     final response = await http.post(
@@ -133,6 +135,7 @@ makeLongBookings(
 _sendNotification(String vehicleid, context) async {
   String token = await readContent();
   final response = await http.post(
+    //'http://192.168.100.67:8000/api/fcm/$vehicleid',
     'http://192.168.100.67:8000/api/fcm/$vehicleid',
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',

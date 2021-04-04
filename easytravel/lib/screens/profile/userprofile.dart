@@ -23,7 +23,7 @@ class _UserProfileState extends State<UserProfile>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -66,6 +66,7 @@ class _UserProfileState extends State<UserProfile>
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: TabBar(
+                          isScrollable: true,
                           controller: _tabController,
                           labelPadding: EdgeInsets.all(5),
                           indicator: BoxDecoration(
@@ -86,6 +87,9 @@ class _UserProfileState extends State<UserProfile>
                             Tab(
                               text: 'Posted Vehicles',
                             ),
+                            Tab(
+                              text: 'Booking Request',
+                            )
                           ],
                         ),
                       ),
@@ -98,6 +102,7 @@ class _UserProfileState extends State<UserProfile>
                           buildBookingHistory(),
                           buildFutureBookings(),
                           buildPostedVehicles(),
+                          buildRequestedBookings(),
                         ],
                       ),
                     ),
@@ -182,6 +187,36 @@ class _UserProfileState extends State<UserProfile>
                 index,
                 context,
               );
+            },
+          );
+        }
+      },
+    );
+  }
+
+  Widget buildRequestedBookings() {
+    return FutureBuilder(
+      future: getRequestedBooking(),
+      builder: (context, snapshot) {
+        if (snapshot.data == null) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          return ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              return buildUserBodyCard(
+                  snapshot,
+                  index,
+                  context,
+                  () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BookingDetails(
+                                snapshot: snapshot,
+                                index: index,
+                              ))));
             },
           );
         }

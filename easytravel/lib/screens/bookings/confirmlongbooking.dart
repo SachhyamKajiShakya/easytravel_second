@@ -38,7 +38,7 @@ class ConfirmLongBooking extends StatelessWidget {
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          color: Color.fromRGBO(255, 248, 248, 1),
+                          color: Color.fromRGBO(245, 253, 255, 1),
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(10),
                               topRight: Radius.circular(10),

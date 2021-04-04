@@ -69,3 +69,19 @@ getPostedVehicles() async {
     throw Exception('Failed to load');
   }
 }
+
+getRequestedBooking() async {
+  String token = await readContent();
+  final response = await http.get(
+    'http://192.168.100.67:8000/api/postbookingrequest',
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Token $token',
+    },
+  );
+  if (response.statusCode == 200) {
+    return json.decode(response.body);
+  } else {
+    throw Exception();
+  }
+}
