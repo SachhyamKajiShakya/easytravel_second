@@ -58,25 +58,25 @@ class _BookingDetailsState extends State<BookingDetails> {
                       widget.snapshot.data[widget.index]["pick_up_province"] ==
                               null
                           ? widget.snapshot.data[widget.index]
-                                  ["pick_up_district"] +
-                              ', ' +
+                                  ["pick_up_street"] +
+                              ' ' +
+                              widget.snapshot.data[widget.index]
+                                  ["pick_up_city"] +
+                              ' - ' +
+                              widget.snapshot.data[widget.index]
+                                  ["pick_up_district"]
+                          : widget.snapshot.data[widget.index]
+                                  ["pick_up_street"] +
+                              ' ' +
                               widget.snapshot.data[widget.index]
                                   ["pick_up_city"] +
                               ', ' +
                               widget.snapshot.data[widget.index]
-                                  ["pick_up_street"]
-                          : widget.snapshot
+                                  ["pick_up_district"] +
+                              ' - ' +
+                              widget.snapshot
                                   .data[widget.index]["pick_up_province"]
-                                  .toString() +
-                              ', ' +
-                              widget.snapshot.data[widget.index]
-                                  ["pick_up_district"] +
-                              ', ' +
-                              widget.snapshot.data[widget.index]
-                                  ["pick_up_city"] +
-                              ', ' +
-                              widget.snapshot.data[widget.index]
-                                  ["pick_up_street"]),
+                                  .toString()),
                   SizedBox(height: 20),
                   _buildData(
                       'Destination Location',
@@ -84,25 +84,25 @@ class _BookingDetailsState extends State<BookingDetails> {
                                   ["destination_province"] ==
                               null
                           ? widget.snapshot.data[widget.index]
-                                  ["destination_district"] +
-                              ', ' +
+                                  ["destination_street"] +
+                              ' ' +
                               widget.snapshot.data[widget.index]
                                   ["destination_city"] +
                               ', ' +
                               widget.snapshot.data[widget.index]
                                   ["destination_street"]
-                          : widget.snapshot
-                                  .data[widget.index]["destination_province"]
-                                  .toString() +
-                              ', ' +
-                              widget.snapshot.data[widget.index]
-                                  ["destination_district"] +
-                              ', ' +
+                          : widget.snapshot.data[widget.index]
+                                  ["destination_street"] +
+                              ' ' +
                               widget.snapshot.data[widget.index]
                                   ["destination_city"] +
                               ', ' +
                               widget.snapshot.data[widget.index]
-                                  ["destination_street"]),
+                                  ["destination_district"] +
+                              ' - ' +
+                              widget.snapshot
+                                  .data[widget.index]["destination_province"]
+                                  .toString()),
                   SizedBox(height: 20),
                   _buildData(
                       'Booked For',

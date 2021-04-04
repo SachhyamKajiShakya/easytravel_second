@@ -1,4 +1,5 @@
 import 'package:easy_travel/constants.dart';
+import 'package:easy_travel/screens/profilewidgets.dart';
 import 'package:easy_travel/services/api.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -66,11 +67,15 @@ class _BookShortTravelState extends State<BookShortTravel> {
             child: child,
           );
         });
-    if (picked != null && picked != selectedDate) {
+    if (picked != null &&
+        picked != selectedDate &&
+        picked.compareTo(selectedDate) > 0) {
       setState(() {
         selectedDate = picked;
         now = DateFormat("yyyy-MM-dd").format(selectedDate);
       });
+    } else {
+      buildFailDialogBox(context, 'Invalid', 'Invalid date entry');
     }
   }
 

@@ -46,6 +46,7 @@ class ConfirmLongBooking extends StatelessWidget {
                         ),
                         padding: EdgeInsets.all(20),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             _buildData('Customer Name',
                                 snapshot.data["customer_name"], snapshot),
@@ -74,25 +75,26 @@ class ConfirmLongBooking extends StatelessWidget {
                             SizedBox(height: 20),
                             _buildData(
                                 'Pickup Location',
-                                snapshot.data["pick_up_province"].toString() +
-                                    ',' +
-                                    snapshot.data["pick_up_district"] +
+                                snapshot.data["pick_up_street"] +
                                     ' ' +
                                     snapshot.data["pick_up_city"] +
-                                    ' ' +
-                                    snapshot.data["pick_up_street"],
+                                    ', ' +
+                                    snapshot.data["pick_up_district"] +
+                                    ' - ' +
+                                    snapshot.data["pick_up_province"]
+                                        .toString(),
                                 snapshot),
                             SizedBox(height: 20),
                             _buildData(
                                 'Destination Location',
-                                snapshot.data["destination_province"]
-                                        .toString() +
-                                    ',' +
-                                    snapshot.data["destination_district"] +
+                                snapshot.data["destination_street"] +
                                     ' ' +
                                     snapshot.data["destination_city"] +
-                                    ' ' +
-                                    snapshot.data["destination_street"],
+                                    ', ' +
+                                    snapshot.data["destination_district"] +
+                                    ' - ' +
+                                    snapshot.data["destination_province"]
+                                        .toString(),
                                 snapshot),
                             SizedBox(height: 20),
                             _buildData(
@@ -119,6 +121,7 @@ class ConfirmLongBooking extends StatelessWidget {
                           ),
                         ],
                       ),
+                      SizedBox(height: 20),
                     ],
                   );
                 },
