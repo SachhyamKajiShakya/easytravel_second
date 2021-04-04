@@ -122,23 +122,28 @@ class _UserProfileState extends State<UserProfile>
         if (snapshot.data == null) {
           return Center(child: CircularProgressIndicator());
         } else {
-          return ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, index) {
-              return buildUserBodyCard(
-                  snapshot,
-                  index,
-                  context,
-                  () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => BookingDetails(
-                                snapshot: snapshot,
-                                index: index,
-                              ))));
+          return RefreshIndicator(
+            onRefresh: () {
+              return getPastBookings();
             },
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                return buildUserBodyCard(
+                    snapshot,
+                    index,
+                    context,
+                    () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BookingDetails(
+                                  snapshot: snapshot,
+                                  index: index,
+                                ))));
+              },
+            ),
           );
         }
       },
@@ -153,17 +158,22 @@ class _UserProfileState extends State<UserProfile>
         if (snapshot.data == null) {
           return Center(child: CircularProgressIndicator());
         } else {
-          return ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, index) {
-              return buildFutureBookingBodyCard(
-                snapshot,
-                index,
-                context,
-              );
+          return RefreshIndicator(
+            onRefresh: () {
+              return getFutureBookings();
             },
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                return buildFutureBookingBodyCard(
+                  snapshot,
+                  index,
+                  context,
+                );
+              },
+            ),
           );
         }
       },
@@ -177,17 +187,22 @@ class _UserProfileState extends State<UserProfile>
         if (snapshot.data == null) {
           return Center(child: CircularProgressIndicator());
         } else {
-          return ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, index) {
-              return buildPostedVehiclesBodyCard(
-                snapshot,
-                index,
-                context,
-              );
+          return RefreshIndicator(
+            onRefresh: () {
+              return getPostedVehicles();
             },
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                return buildPostedVehiclesBodyCard(
+                  snapshot,
+                  index,
+                  context,
+                );
+              },
+            ),
           );
         }
       },
@@ -201,23 +216,28 @@ class _UserProfileState extends State<UserProfile>
         if (snapshot.data == null) {
           return Center(child: CircularProgressIndicator());
         } else {
-          return ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, index) {
-              return buildUserBodyCard(
-                  snapshot,
-                  index,
-                  context,
-                  () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => BookingDetails(
-                                snapshot: snapshot,
-                                index: index,
-                              ))));
+          return RefreshIndicator(
+            onRefresh: () {
+              return getRequestedBooking();
             },
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                return buildUserBodyCard(
+                    snapshot,
+                    index,
+                    context,
+                    () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BookingDetails(
+                                  snapshot: snapshot,
+                                  index: index,
+                                ))));
+              },
+            ),
           );
         }
       },

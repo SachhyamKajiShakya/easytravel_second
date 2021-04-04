@@ -19,21 +19,26 @@ class _SecondTabPageState extends State<SecondTabPage> {
             if (snapshot.data == null) {
               return Center(child: CircularProgressIndicator());
             } else {
-              return GridView.builder(
-                itemCount: snapshot.data.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.8,
+              return RefreshIndicator(
+                onRefresh: () {
+                  return getLongVehicles();
+                },
+                child: GridView.builder(
+                  itemCount: snapshot.data.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.8,
+                  ),
+                  itemBuilder: (context, index) => buildBodyCard(
+                      snapshot,
+                      index,
+                      context,
+                      () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DetailScreenPage(
+                                  snapshot: snapshot, index: index)))),
                 ),
-                itemBuilder: (context, index) => buildBodyCard(
-                    snapshot,
-                    index,
-                    context,
-                    () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DetailScreenPage(
-                                snapshot: snapshot, index: index)))),
               );
             }
           }),

@@ -124,7 +124,8 @@ makeLongBookings(
     if (response.statusCode == 200) {
       _sendNotification(vehicleid, context);
     } else {
-      throw Exception();
+      buildFailDialogBox(context, 'Failed',
+          'The booking for this vehicle has already been placed for the given date and time.');
     }
   } catch (e) {
     print(e);
@@ -187,7 +188,8 @@ makeShortbookings(
     if (response.statusCode == 200) {
       _sendNotification(vehicleid, context);
     } else {
-      print('booking unsuccessful');
+      buildFailDialogBox(context, 'Failed',
+          'The booking for this vehicle has already been placed for the given date and time.');
     }
   } catch (e) {
     print(e);

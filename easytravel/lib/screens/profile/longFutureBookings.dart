@@ -36,12 +36,16 @@ class _LongFutureBookingState extends State<LongFutureBooking> {
             child: child,
           );
         });
-    if (picked != null && picked != selectedDate) {
+    if (picked != null &&
+        picked != selectedDate &&
+        picked.compareTo(selectedDate) > 0) {
       // compare if selected date is greater than current date
       setState(() {
         selectedDate = picked;
         now = DateFormat("yyyy-MM-dd").format(selectedDate);
       });
+    } else {
+      buildFailDialogBox(context, 'Invalid', 'Invalid date entry');
     }
   }
 
