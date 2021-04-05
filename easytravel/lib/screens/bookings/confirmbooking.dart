@@ -43,6 +43,7 @@ class ConfirmBookingPage extends StatelessWidget {
                         ),
                         padding: EdgeInsets.all(20),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             _buildData('Customer Name',
                                 snapshot.data["customer_name"], snapshot),

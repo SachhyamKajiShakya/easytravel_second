@@ -68,28 +68,30 @@ class _MainPageState extends State<MainPage> {
   }
 
   void _notificationTrigger() {
-    _firebaseMessaging.configure(onMessage: (message) async {
-      print(message["data"]["booking_id"]);
-    }, onResume: (message) async {
-      print(message["data"]["booking_id"]);
-      if (message["data"]["category"] == 'Short Travel') {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ConfirmBookingPage(
-                      bookingid: message["data"]["booking_id"],
-                    )));
-      } else if (message["data"]["category"] == 'Long Travel') {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ConfirmLongBooking(
-                    bookingid: message["data"]["booking_id"])));
-      } else if (message["data"]["screen"] == "payment") {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => PaymentGateway()));
-      }
-    });
+    _firebaseMessaging.configure(
+      onMessage: (message) async {
+        print(message);
+      },
+      onResume: (message) async {
+        if (message["data"]["category"] == 'Short Travel') {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ConfirmBookingPage(
+                        bookingid: message["data"]["booking_id"],
+                      )));
+        } else if (message["data"]["category"] == 'Long Travel') {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ConfirmLongBooking(
+                      bookingid: message["data"]["booking_id"])));
+        } else if (message["data"]["screen"] == "payment") {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => PaymentGateway()));
+        }
+      },
+    );
   }
 
   @override
