@@ -1,9 +1,12 @@
+import 'package:easy_travel/screens/profilewidgets.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_travel/constants.dart';
 import 'package:flutter_khalti/flutter_khalti.dart';
 
 class PaymentGateway extends StatelessWidget {
-  final String amount = '800';
+  final String amount;
+
+  const PaymentGateway({Key key, this.amount}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -36,7 +39,7 @@ class PaymentGateway extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FlatButton(
-                    onPressed: _payviaKhalti,
+                    onPressed: _payviaKhalti(context, amount),
                     child: buildButton('Pay via khalti', 250),
                   ),
                 ],
@@ -50,7 +53,7 @@ class PaymentGateway extends StatelessWidget {
 }
 
 // future method to build the khalti payment system
-_payviaKhalti() async {
+_payviaKhalti(BuildContext context, String amount) async {
   FlutterKhalti _flutterKhalti = FlutterKhalti.configure(
     publicKey: 'test_public_key_eff1b04846c54304a510d20a9a7d589a',
     urlSchemeIOS: 'KhaltiPayFlutterExampleSchema',
@@ -58,14 +61,15 @@ _payviaKhalti() async {
       KhaltiPaymentPreference.KHALTI,
     ],
   );
-  KhaltiProduct product =
-      KhaltiProduct(id: 'test', amount: 10000, name: 'Product');
+  KhaltiProduct product = KhaltiProduct(
+      id: 'test', amount: double.parse(amount) * 100, name: 'Product');
   _flutterKhalti.startPayment(
       product: product,
       onSuccess: (data) {
-        print('payment success');
+        buildSuccessDialogBox(
+            context, 'Payment Success', 'Your payment has been confirmed');
       },
       onFaliure: (error) {
-        print('payment unsuccessful' + '$error');
+        buildFailDialogBox(context, 'Payment Failed', 'Sorry! Payment failed');
       });
 }

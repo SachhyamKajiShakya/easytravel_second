@@ -23,9 +23,15 @@ Widget buildDrawer(BuildContext context) {
           children: [
             DrawerHeader(
               padding: EdgeInsets.zero,
-              child: Image(
-                image: AssetImage('images/Graphic Design.png'),
-                fit: BoxFit.fill,
+              child: Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('images/logo.png'),
+                    fit: BoxFit.contain,
+                  ),
+                ),
               ),
             ),
             SizedBox(height: 5),
@@ -194,6 +200,11 @@ Widget buildUserBodyCard(
                       'Booking Time:  ' +
                           snapshot.data[index]["pick_up_time"].toString(),
                       style: Theme.of(context).textTheme.headline2),
+                  SizedBox(height: 5),
+                  Text(
+                      'Amount:  Rs ' +
+                          snapshot.data[index]["total_amount"].toString(),
+                      style: Theme.of(context).textTheme.headline2),
                 ],
               ),
             ),
@@ -282,6 +293,11 @@ Widget buildFutureBookingBodyCard(
                   Text(
                       'Booking Time:  ' +
                           snapshot.data[index]["pick_up_time"].toString(),
+                      style: Theme.of(context).textTheme.headline2),
+                  SizedBox(height: 5),
+                  Text(
+                      'Amount:  Rs ' +
+                          snapshot.data[index]["total_amount"].toString(),
                       style: Theme.of(context).textTheme.headline2),
                 ],
               ),

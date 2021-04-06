@@ -111,7 +111,12 @@ class _BookingDetailsState extends State<BookingDetails> {
                           ? '1 day'
                           : widget.snapshot.data[widget.index]["number_of_days"]
                                   .toString() +
-                              ' days')
+                              ' days'),
+                  SizedBox(height: 20),
+                  _buildData(
+                      'Total Amount',
+                      widget.snapshot.data[widget.index]["total_amount"]
+                          .toString()),
                 ],
               ),
             ),

@@ -15,7 +15,7 @@ getBooking(String id) async {
   if (response.statusCode == 200) {
     return json.decode(response.body);
   } else {
-    throw Exception('Failed to load');
+    print('Failed to load');
   }
 }
 
@@ -32,7 +32,7 @@ getPastBookings() async {
   if (response.statusCode == 200) {
     return json.decode(response.body);
   } else {
-    throw Exception('Failed to load');
+    print('Failed to load');
   }
 }
 
@@ -49,7 +49,7 @@ getFutureBookings() async {
   if (response.statusCode == 200) {
     return json.decode(response.body);
   } else {
-    throw Exception('Failed to load');
+    print('Failed to load');
   }
 }
 
@@ -66,7 +66,7 @@ getPostedVehicles() async {
   if (response.statusCode == 200) {
     return json.decode(response.body);
   } else {
-    throw Exception('Failed to load');
+    print('Failed to load');
   }
 }
 
@@ -82,6 +82,6 @@ getRequestedBooking() async {
   if (response.statusCode == 200) {
     return json.decode(response.body);
   } else {
-    throw Exception();
+    print('Failed to load');
   }
 }

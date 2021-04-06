@@ -102,6 +102,11 @@ class ConfirmLongBooking extends StatelessWidget {
                                 snapshot.data["number_of_days"].toString() +
                                     ' days',
                                 snapshot),
+                            SizedBox(height: 20),
+                            _buildData(
+                                'Total Amount',
+                                snapshot.data["total_amount"].toString(),
+                                snapshot),
                           ],
                         ),
                       ),

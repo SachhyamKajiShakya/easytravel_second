@@ -34,7 +34,7 @@ class _FutureBookingState extends State<FutureBooking> {
         });
     if (picked != null &&
         picked != selectedDate &&
-        picked.compareTo(selectedDate) > 0) {
+        picked.compareTo(selectedDate) >= 0) {
       // compare if selected date is greater than current date
       setState(() {
         selectedDate = picked;

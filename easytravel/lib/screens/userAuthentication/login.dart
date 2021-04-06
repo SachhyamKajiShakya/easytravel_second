@@ -63,8 +63,20 @@ class _LoginPageState extends State<LoginPage> {
             },
             child: ListView(
               children: [
+                SizedBox(height: 10),
                 Center(child: buildSubHeader('Sign In')),
-                SizedBox(height: 60),
+                SizedBox(height: 50),
+                Container(
+                  height: 100,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('images/logo.png'),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 50),
                 Form(
                   key: _formKey,
                   autovalidate: _autovalidate,

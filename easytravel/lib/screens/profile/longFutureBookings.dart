@@ -38,7 +38,7 @@ class _LongFutureBookingState extends State<LongFutureBooking> {
         });
     if (picked != null &&
         picked != selectedDate &&
-        picked.compareTo(selectedDate) > 0) {
+        picked.compareTo(selectedDate) >= 0) {
       // compare if selected date is greater than current date
       setState(() {
         selectedDate = picked;
@@ -261,37 +261,48 @@ class _LongFutureBookingState extends State<LongFutureBooking> {
                               ["pick_up_province"]);
                           updateLongBooking(
                               widget.snapshot.data[widget.index]["id"],
-                              _pickupProvince != null &&
-                                      _pickupProvince !=
-                                          widget.snapshot.data[widget.index]["pick_up_province"]
-                                              .toString()
+                              _pickupProvince != null && _pickupProvince != widget.snapshot.data[widget.index]["pick_up_province"].toString()
                                   ? _pickupProvince
                                   : widget.snapshot
                                       .data[widget.index]["pick_up_province"]
                                       .toString(),
-                              widget.snapshot.data[widget.index]
-                                  ["pick_up_district"],
-                              widget.snapshot.data[widget.index]
-                                  ["pick_up_city"],
-                              widget.snapshot.data[widget.index]
-                                  ["pick_up_street"],
-                              widget.snapshot.data[widget.index]
-                                  ["pick_up_date"],
-                              widget.snapshot.data[widget.index]
-                                  ["pick_up_time"],
-                              _destinationProvince != null &&
-                                      _destinationProvince !=
-                                          widget
-                                              .snapshot
-                                              .data[widget.index]
-                                                  ["destination_province"]
-                                              .toString()
+                              _districtController.text.isEmpty
+                                  ? widget.snapshot.data[widget.index]
+                                      ["pick_up_district"]
+                                  : _districtController.text,
+                              _cityController.text.isEmpty
+                                  ? widget.snapshot.data[widget.index]
+                                      ["pick_up_city"]
+                                  : _cityController.text,
+                              _streetController.text.isEmpty
+                                  ? widget.snapshot.data[widget.index]
+                                      ["pick_up_street"]
+                                  : _streetController.text,
+                              now != null && now != widget.snapshot.data[widget.index]["pick_up_date"]
+                                  ? now
+                                  : widget.snapshot.data[widget.index]
+                                      ["pick_up_date"],
+                              _timeController.text.isEmpty
+                                  ? widget.snapshot.data[widget.index]
+                                      ["pick_up_time"]
+                                  : _timeController.text,
+                              _destinationProvince != null && _destinationProvince != widget.snapshot.data[widget.index]["destination_province"].toString()
                                   ? _destinationProvince
-                                  : widget.snapshot.data[widget.index]["destination_province"].toString(),
-                              widget.snapshot.data[widget.index]["destination_district"],
-                              widget.snapshot.data[widget.index]["destination_city"],
-                              widget.snapshot.data[widget.index]["destination_street"],
-                              widget.snapshot.data[widget.index]["number_of_days"],
+                                  : widget.snapshot.data[widget.index]["destination_province"]
+                                      .toString(),
+                              _destinationDistrictController.text.isEmpty
+                                  ? widget.snapshot.data[widget.index]
+                                      ["destination_district"]
+                                  : _destinationDistrictController.text,
+                              _destinationCityController.text.isEmpty
+                                  ? widget.snapshot.data[widget.index]
+                                      ["destination_city"]
+                                  : _destinationCityController.text,
+                              _destinationStreetController.text.isEmpty
+                                  ? widget.snapshot.data[widget.index]
+                                      ["destination_street"]
+                                  : _destinationStreetController.text,
+                              _daysController.text.isEmpty ? widget.snapshot.data[widget.index]["number_of_days"] : _daysController.text,
                               context);
                         }
                       },

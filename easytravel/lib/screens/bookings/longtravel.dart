@@ -259,6 +259,9 @@ class _BookLongTravelState extends State<BookLongTravel> {
                                     widget.datasnapshot
                                         .data[widget.dataindex]["id"]
                                         .toString(),
+                                    widget.snapshot.data[widget.index]
+                                            ['price'] *
+                                        int.parse(_days.text),
                                     context);
                               } else {
                                 setState(() {

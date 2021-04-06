@@ -87,8 +87,11 @@ class _MainPageState extends State<MainPage> {
                   builder: (context) => ConfirmLongBooking(
                       bookingid: message["data"]["booking_id"])));
         } else if (message["data"]["screen"] == "payment") {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => PaymentGateway()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      PaymentGateway(amount: message["data"]["amount"])));
         }
       },
     );

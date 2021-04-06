@@ -77,7 +77,7 @@ class _SignupPageState extends State<SignupPage> {
                     buildTextFields(context, 'Name', 'full name', _onTap,
                         nameNode, emailNode, _nameController, 370),
                     SizedBox(height: 30),
-                    buildTextFields(context, 'Email', 'your email address',
+                    buildEmailFields(context, 'Email', 'your email address',
                         _onTap, emailNode, phoneNode, _emailController, 370),
                     SizedBox(height: 30),
                     buildTextFields(context, 'Username', 'your username',

@@ -27,7 +27,6 @@ class ConfirmBookingPage extends StatelessWidget {
                 return Center(child: CircularProgressIndicator());
               }
               return ListView.builder(
-                scrollDirection: Axis.horizontal,
                 itemCount: 1,
                 itemBuilder: (context, index) {
                   return Column(
@@ -86,6 +85,11 @@ class ConfirmBookingPage extends StatelessWidget {
                                     snapshot.data["destination_city"] +
                                     ', ' +
                                     snapshot.data["destination_district"],
+                                snapshot),
+                            SizedBox(height: 20),
+                            _buildData(
+                                'Total Amount',
+                                snapshot.data["total_amount"].toString(),
                                 snapshot),
                           ],
                         ),

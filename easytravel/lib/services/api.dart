@@ -91,6 +91,7 @@ makeLongBookings(
     String destinationStreet,
     String vehicleid,
     String driverid,
+    int amount,
     context) async {
   try {
     String token = await readContent();
@@ -106,7 +107,7 @@ makeLongBookings(
         'Authorization': 'Token $token',
       },
       body: jsonEncode(
-        <String, String>{
+        <String, dynamic>{
           'pick_up_province': province,
           'number_of_days': days,
           'pick_up_date': date,
@@ -118,6 +119,7 @@ makeLongBookings(
           'destination_district': destinationDistrict,
           'destination_city': destinationCity,
           'destination_street': destinationStreet,
+          'total_amount': amount,
         },
       ),
     );
@@ -163,6 +165,7 @@ makeShortbookings(
     String destinationStreet,
     String vehicleid,
     String driverid,
+    int amount,
     context) async {
   try {
     String token = await readContent();
@@ -173,7 +176,7 @@ makeShortbookings(
         'Authorization': 'Token $token',
       },
       body: jsonEncode(
-        <String, String>{
+        <String, dynamic>{
           'pick_up_date': date,
           'pick_up_time': time,
           'pick_up_district': district,
@@ -182,6 +185,7 @@ makeShortbookings(
           'destination_district': destinationDestrict,
           'destination_city': destinationCity,
           'destination_street': destinationStreet,
+          'total_amount': amount,
         },
       ),
     );

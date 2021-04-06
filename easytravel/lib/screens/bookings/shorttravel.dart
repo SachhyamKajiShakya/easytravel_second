@@ -257,6 +257,7 @@ class _BookShortTravelState extends State<BookShortTravel> {
                                     widget.datasnapshot
                                         .data[widget.dataindex]["id"]
                                         .toString(),
+                                    widget.snapshot.data[widget.index]['price'],
                                     context);
                               }
                             },
