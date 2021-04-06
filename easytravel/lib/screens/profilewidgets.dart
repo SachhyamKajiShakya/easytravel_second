@@ -22,19 +22,17 @@ Widget buildDrawer(BuildContext context) {
         child: ListView(
           children: [
             DrawerHeader(
-              padding: EdgeInsets.zero,
+              padding: EdgeInsets.only(top: 60, left: 0),
               child: Container(
-                height: 100,
-                width: 100,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('images/logo.png'),
+                    image: AssetImage('images/companyname.png'),
                     fit: BoxFit.contain,
                   ),
                 ),
               ),
             ),
-            SizedBox(height: 5),
+            SizedBox(height: 10),
             ListTile(
               title: Row(
                 children: [
@@ -58,7 +56,7 @@ Widget buildDrawer(BuildContext context) {
                     MaterialPageRoute(builder: (context) => EditProfilePage()));
               },
             ),
-            SizedBox(height: 5),
+            SizedBox(height: 10),
             ListTile(
               title: Row(
                 children: [
@@ -83,7 +81,7 @@ Widget buildDrawer(BuildContext context) {
                         builder: (context) => ResetPasswordPage()));
               },
             ),
-            SizedBox(height: 5),
+            SizedBox(height: 10),
             ListTile(
               title: Row(
                 children: [
@@ -106,7 +104,7 @@ Widget buildDrawer(BuildContext context) {
                     MaterialPageRoute(builder: (context) => ChangePassword()));
               },
             ),
-            SizedBox(height: 40),
+            SizedBox(height: 50),
             ListTile(
               leading: FlatButton(
                 padding: EdgeInsets.zero,

@@ -63,15 +63,12 @@ class _LoginPageState extends State<LoginPage> {
             },
             child: ListView(
               children: [
-                SizedBox(height: 10),
-                Center(child: buildSubHeader('Sign In')),
-                SizedBox(height: 50),
                 Container(
                   height: 100,
                   width: 100,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('images/logo.png'),
+                      image: AssetImage('images/companyname.png'),
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -85,10 +82,10 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       buildTextFields(context, 'Username', 'username', _onTap,
                           usernameNode, pwNode, _usernameController, 370),
-                      SizedBox(height: 30),
+                      SizedBox(height: 40),
                       _passwordField('Password', '********', true, pwNode, null,
                           _passwordController, 370),
-                      SizedBox(height: 40),
+                      SizedBox(height: 60),
                       FlatButton(
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
@@ -179,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
         focusNode: node,
         controller: controller,
         cursorColor: cursorColor,
-        obscureText: isPassword ? (showPassword ? true : false) : false,
+        obscureText: isPassword ? (showPassword ? false : true) : false,
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),

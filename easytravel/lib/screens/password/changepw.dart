@@ -22,6 +22,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   bool _autovalidate = false;
   final _formkey = GlobalKey<FormState>();
   bool showPassword = false;
+  bool showNewPassword = false;
   bool showConfirmpw = false;
   @override
   void initState() {
@@ -138,7 +139,7 @@ class _ChangePasswordState extends State<ChangePassword> {
           FocusScope.of(context).requestFocus(_newpwNode);
         },
         cursorColor: cursorColor,
-        obscureText: showPassword ? true : false,
+        obscureText: showPassword ? false : true,
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
@@ -194,7 +195,7 @@ class _ChangePasswordState extends State<ChangePassword> {
           FocusScope.of(context).requestFocus(_confirmpwNode);
         },
         cursorColor: cursorColor,
-        obscureText: showPassword ? true : false,
+        obscureText: showNewPassword ? false : true,
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
@@ -208,7 +209,7 @@ class _ChangePasswordState extends State<ChangePassword> {
             icon: Icon(Icons.remove_red_eye, color: Colors.blueGrey),
             onPressed: () {
               setState(() {
-                showPassword = !showPassword;
+                showNewPassword = !showNewPassword;
               });
             },
           ),
@@ -251,7 +252,7 @@ class _ChangePasswordState extends State<ChangePassword> {
           FocusScope.of(context).requestFocus(null);
         },
         cursorColor: cursorColor,
-        obscureText: showConfirmpw ? true : false,
+        obscureText: showConfirmpw ? false : true,
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),

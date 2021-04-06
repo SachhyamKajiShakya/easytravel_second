@@ -50,8 +50,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         },
         focusNode: node,
         controller: controller,
-        cursorColor: Color.fromRGBO(255, 230, 232, 1),
-        obscureText: isPassword ? (showNewpw ? true : false) : false,
+        cursorColor: cursorColor,
+        obscureText: isPassword ? (showNewpw ? false : true) : false,
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
@@ -112,8 +112,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         },
         focusNode: node,
         controller: controller,
-        cursorColor: Color.fromRGBO(255, 230, 232, 1),
-        obscureText: isPassword ? (showConfirmpw ? true : false) : false,
+        cursorColor: cursorColor,
+        obscureText: isPassword ? (showConfirmpw ? false : true) : false,
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),
