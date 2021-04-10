@@ -46,8 +46,8 @@ Future<String> loginUser(String email, String password, context) async {
 }
 
 // future method to create user
-createUser(String email, String username, String password, String password2,
-    String name, String phone, context) async {
+createUser(String email, String username, String password, String name,
+    String phone, context) async {
   final http.Response response = await http.post(
     //'http://192.168.100.67:8000/api/register/',
     'http://192.168.100.67:8000/api/register/',
@@ -60,7 +60,6 @@ createUser(String email, String username, String password, String password2,
         'email': email,
         'username': username,
         'password': password,
-        'password2': password2,
         'name': name,
         'phone': phone,
       },
@@ -72,9 +71,9 @@ createUser(String email, String username, String password, String password2,
         MaterialPageRoute(builder: (context) => VehicleRegistrationPage()));
     String token = jsonDecode(response.body)['token'].toString();
     writeContent(token);
-    getDeviceToken();
+    getDeviceToken(context);
   } else {
-    throw Exception('Failed to laod');
+    buildDialogBox(context, 'Failed', 'User already exists', 'Okay');
   }
 }
 
@@ -208,6 +207,7 @@ makeShortbookings(
   }
 }
 
+// function for verifying user contact number
 enterOtp(String otp, String phoneNumber, BuildContext context) async {
   final http.Response response = await http.post(
     'http://192.168.100.67:8000/api/otp/',
@@ -230,6 +230,7 @@ enterOtp(String otp, String phoneNumber, BuildContext context) async {
   }
 }
 
+// function for verifying otp
 enterPhone(String phone, BuildContext context) async {
   final http.Response response = await http.post(
     'http://192.168.100.67:8000/api/phoneNumber/',
@@ -390,6 +391,7 @@ resetPassword(BuildContext context, String password) async {
   }
 }
 
+// function to verify otp
 verifyOtp(String otp, String phoneNumber, BuildContext context) async {
   final http.Response response = await http.post(
     'http://192.168.100.67:8000/api/otp/',
@@ -410,6 +412,7 @@ verifyOtp(String otp, String phoneNumber, BuildContext context) async {
   }
 }
 
+// function to veirfy phone number
 verifyPhone(String phone, BuildContext context) async {
   final http.Response response = await http.post(
     'http://192.168.100.67:8000/api/phoneNumber/',
