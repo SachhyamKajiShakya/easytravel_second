@@ -85,7 +85,7 @@ class DetailScreenPage extends StatelessWidget {
                               SizedBox(height: 10),
                               _buildSixthRow(
                                   snapshot, dataindex, context, size),
-                              SizedBox(height: 50),
+                              SizedBox(height: 40),
                               _buildBookingButton(snapshot, index, context,
                                   datasnapshot, dataindex),
                             ],

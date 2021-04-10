@@ -41,7 +41,7 @@ class _FutureBookingState extends State<FutureBooking> {
         now = DateFormat("yyyy-MM-dd").format(selectedDate);
       });
     } else {
-      buildFailDialogBox(context, 'Invalid', 'Invalid date entry');
+      buildDialogBox(context, 'Invalid', 'Invalid date entry.', 'Okay');
     }
   }
 

@@ -115,7 +115,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                   SizedBox(height: 20),
                   _buildData(
                       'Total Amount',
-                      widget.snapshot.data[widget.index]["total_amount"]
+                      widget.snapshot.data[widget.index]["vehicle_price"]
                           .toString()),
                 ],
               ),
@@ -128,6 +128,7 @@ class _BookingDetailsState extends State<BookingDetails> {
             },
             child: buildButton('Done', 200),
           ),
+          SizedBox(height: 20)
         ]),
       ),
     );

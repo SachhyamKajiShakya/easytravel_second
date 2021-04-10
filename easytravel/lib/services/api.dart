@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:easy_travel/screens/navbar.dart';
+import 'package:easy_travel/screens/password/resetpw.dart';
 import 'package:easy_travel/screens/profilewidgets.dart';
 import 'package:easy_travel/screens/registervehicles/registerVehicle.dart';
+import 'package:easy_travel/screens/userAuthentication/ResetPwOTP.dart';
 import 'package:easy_travel/screens/userAuthentication/login.dart';
 import 'package:easy_travel/screens/userAuthentication/otp.dart';
 import 'package:easy_travel/screens/userAuthentication/signup.dart';
@@ -39,7 +41,7 @@ Future<String> loginUser(String email, String password, context) async {
     updateDeviceToken();
     return token;
   } else {
-    buildFailDialogBox(context, 'Error', 'Invalid username or password');
+    buildDialogBox(context, 'Error', 'Invalid username or password', 'Okay');
   }
 }
 
@@ -126,8 +128,11 @@ makeLongBookings(
     if (response.statusCode == 200) {
       _sendNotification(vehicleid, context);
     } else {
-      buildFailDialogBox(context, 'Failed',
-          'The booking for this vehicle has already been placed for the given date and time.');
+      buildDialogBox(
+          context,
+          'Failed',
+          'The booking for this vehicle has already been placed for the given date and time.',
+          'Okay');
     }
   } catch (e) {
     print(e);
@@ -192,8 +197,11 @@ makeShortbookings(
     if (response.statusCode == 200) {
       _sendNotification(vehicleid, context);
     } else {
-      buildFailDialogBox(context, 'Failed',
-          'The booking for this vehicle has already been placed for the given date and time.');
+      buildDialogBox(
+          context,
+          'Failed',
+          'The booking for this vehicle has already been placed for the given date and time.',
+          'Okay');
     }
   } catch (e) {
     print(e);
@@ -202,7 +210,6 @@ makeShortbookings(
 
 enterOtp(String otp, String phoneNumber, BuildContext context) async {
   final http.Response response = await http.post(
-    // 'https://fyp-easytravel.herokuapp.com/api/otp/',
     'http://192.168.100.67:8000/api/otp/',
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -219,13 +226,12 @@ enterOtp(String otp, String phoneNumber, BuildContext context) async {
         MaterialPageRoute(
             builder: (context) => SignupPage(phoneNumber: phoneNumber)));
   } else {
-    throw Exception('Process Failed');
+    buildDialogBox(context, 'Failed', 'Failed to verify OTP.', 'Okay');
   }
 }
 
 enterPhone(String phone, BuildContext context) async {
   final http.Response response = await http.post(
-    // 'https://fyp-easytravel.herokuapp.com/api/phoneNumber/',
     'http://192.168.100.67:8000/api/phoneNumber/',
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -244,7 +250,7 @@ enterPhone(String phone, BuildContext context) async {
                   phoneNumber: phone,
                 )));
   } else {
-    throw Exception('Process Failed');
+    buildDialogBox(context, 'Failed', 'Failed to send OTP', 'Okay');
   }
 }
 
@@ -290,7 +296,7 @@ uploadVehicleData(
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => AssignDriver()));
     } else {
-      print('error file uploading to server');
+      buildDialogBox(context, 'Failed', 'Failed to add vehicle', 'Okay');
     }
   } catch (e) {
     print(e + 'error file uploading to server');
@@ -324,7 +330,7 @@ uploadDriverData(
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => NavBarPage()));
     } else {
-      print('error uploading file');
+      buildDialogBox(context, 'Fail', 'Failed to assign driver', 'Okay');
     }
   } catch (e) {
     print(e);
@@ -346,8 +352,6 @@ getUserData() async {
   }
 }
 
-// function to update user password
-
 // function for signing out of user
 userLogout(BuildContext context) async {
   String token = await readContent();
@@ -360,6 +364,72 @@ userLogout(BuildContext context) async {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => LoginPage()));
   } else {
-    print("error signing out");
+    buildDialogBox(context, 'Fail', 'Failed to sign out', 'Okay');
+  }
+}
+
+// reset password
+resetPassword(BuildContext context, String password) async {
+  String token = await readContent();
+  final response = await http.put(
+    'http://192.168.100.67:8000/api/resetpassword',
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Token $token',
+    },
+    body: json.encode(<String, String>{
+      'password': password,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => LoginPage()));
+  } else {
+    buildDialogBox(context, 'Fail', 'Failed to reset password', 'Okay');
+  }
+}
+
+verifyOtp(String otp, String phoneNumber, BuildContext context) async {
+  final http.Response response = await http.post(
+    'http://192.168.100.67:8000/api/otp/',
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(
+      <String, String>{
+        'otp': otp,
+      },
+    ),
+  );
+  if (response.statusCode == 200) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => ResetPasswordPage()));
+  } else {
+    buildDialogBox(context, 'Failed', 'Failed to verify OTP.', 'Okay');
+  }
+}
+
+verifyPhone(String phone, BuildContext context) async {
+  final http.Response response = await http.post(
+    'http://192.168.100.67:8000/api/phoneNumber/',
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(
+      <String, String>{
+        'phone': phone,
+      },
+    ),
+  );
+  if (response.statusCode == 200) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ResetOTP(
+                  phoneNumber: phone,
+                )));
+  } else {
+    buildDialogBox(context, 'Failed', 'Failed to send OTP', 'Okay');
   }
 }

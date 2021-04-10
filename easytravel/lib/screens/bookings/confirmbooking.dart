@@ -89,7 +89,8 @@ class ConfirmBookingPage extends StatelessWidget {
                             SizedBox(height: 20),
                             _buildData(
                                 'Total Amount',
-                                snapshot.data["total_amount"].toString(),
+                                'Rs ' +
+                                    snapshot.data["total_amount"].toString(),
                                 snapshot),
                           ],
                         ),

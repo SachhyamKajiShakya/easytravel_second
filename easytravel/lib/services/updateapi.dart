@@ -22,13 +22,11 @@ updatePassword(
     ),
   );
   if (response.statusCode == 200) {
-    buildSuccessDialogBox(
-      context,
-      'Update Success',
-      'Your data was succeessfulyl updated',
-    );
+    buildDialogBox(context, 'Update Success',
+        'Your data was succeessfulyl updated', 'Okay');
   } else {
-    buildFailDialogBox(context, 'Error', 'Your current password do not match');
+    buildDialogBox(
+        context, 'Error', 'Your current password do not match', 'Okay');
   }
 }
 
@@ -50,10 +48,10 @@ updateUserData(String name, String email, String username, String contact,
     }),
   );
   if (response.statusCode == 200) {
-    buildSuccessDialogBox(
-        context, 'Update Success', 'Your data was successfully updated');
+    buildDialogBox(context, 'Update Success',
+        'Your data was successfully updated.', 'Okay');
   } else {
-    buildFailDialogBox(context, 'Error', 'Your data was not uplaoded');
+    buildDialogBox(context, 'Error', 'Your data was not uplaoded.', 'Okay');
   }
 }
 
@@ -115,10 +113,11 @@ updateDriverDetails(String driverName, String driverAddress,
     }),
   );
   if (response.statusCode == 200) {
-    buildSuccessDialogBox(
-        context, 'Update Success', 'Your driver data was successfully updated');
+    buildDialogBox(context, 'Update Success',
+        'Your driver data was successfully updated.', 'Okay');
   } else {
-    buildFailDialogBox(context, 'Error', 'Your driver data was not updated');
+    buildDialogBox(
+        context, 'Error', 'Your driver data was not updated.', 'Okay');
   }
 }
 
@@ -133,9 +132,10 @@ deleteVehicle(int vehicleid, BuildContext context) async {
     },
   );
   if (response.statusCode == 200) {
-    buildSuccessDialogBox(context, 'Delete Success', 'The vehicle was delete.');
+    buildDialogBox(
+        context, 'Delete Success', 'The vehicle was delete.', 'Okay');
   } else {
-    buildFailDialogBox(context, 'Fail', 'The vehicle was not deleted.');
+    buildDialogBox(context, 'Fail', 'The vehicle was not deleted.', 'Okay');
   }
 }
 
@@ -150,10 +150,10 @@ cancelBooking(int bookingid, BuildContext context) async {
     },
   );
   if (response.statusCode == 200) {
-    buildSuccessDialogBox(
-        context, 'Booking Cancelled', 'The booking has been cancelled');
+    buildDialogBox(context, 'Booking Cancelled',
+        'The booking has been cancelled.', 'Okay');
   } else {
-    buildFailDialogBox(context, 'Failed', 'Failed to cancel the booking');
+    buildDialogBox(context, 'Failed', 'Failed to cancel the booking,', 'Okay');
   }
 }
 
@@ -188,10 +188,10 @@ updateShortBooking(
     }),
   );
   if (response.statusCode == 200) {
-    buildSuccessDialogBox(
-        context, 'Booking Updated', 'The booking has been updated');
+    buildDialogBox(
+        context, 'Booking Updated', 'The booking has been updated.', 'Okay');
   } else {
-    buildFailDialogBox(context, 'Failed', 'Failed to update the booking');
+    buildDialogBox(context, 'Failed', 'Failed to update the booking.', 'Okay');
   }
 }
 
@@ -232,9 +232,9 @@ updateLongBooking(
     }),
   );
   if (response.statusCode == 200) {
-    buildSuccessDialogBox(
-        context, 'Booking Updated', 'The booking has been updated');
+    buildDialogBox(
+        context, 'Booking Updated', 'The booking has been updated', 'Okay');
   } else {
-    buildFailDialogBox(context, 'Failed', 'Failed to update the booking');
+    buildDialogBox(context, 'Failed', 'Failed to update the booking', 'Okay');
   }
 }

@@ -465,7 +465,7 @@ Widget buildProfileIntegerField(
   );
 }
 
-Future buildSuccessDialogBox(context, String title, String body) {
+Future buildDialogBox(context, String title, String body, String buttonText) {
   return showDialog(
     context: context,
     builder: (context) {
@@ -479,31 +479,10 @@ Future buildSuccessDialogBox(context, String title, String body) {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('Okay'),
+            child: Text(buttonText),
           ),
         ],
       );
     },
   );
-}
-
-Future buildFailDialogBox(context, String title, String body) {
-  return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(title),
-          content: SingleChildScrollView(
-            child: Text(body),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('Okay'),
-            ),
-          ],
-        );
-      });
 }

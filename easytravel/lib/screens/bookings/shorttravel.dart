@@ -75,7 +75,7 @@ class _BookShortTravelState extends State<BookShortTravel> {
         now = DateFormat("yyyy-MM-dd").format(selectedDate);
       });
     } else {
-      buildFailDialogBox(context, 'Invalid', 'Invalid date entry');
+      buildDialogBox(context, 'Invalid', 'Invalid date entry.', 'Okay');
     }
   }
 

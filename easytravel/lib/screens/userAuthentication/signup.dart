@@ -222,7 +222,7 @@ class _SignupPageState extends State<SignupPage> {
         focusNode: node,
         controller: controller,
         cursorColor: cursorColor,
-        obscureText: isPassword ? (showConfirmpw ? true : false) : false,
+        obscureText: isPassword ? (showConfirmpw ? false : true) : false,
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Color.fromRGBO(210, 210, 210, 1))),

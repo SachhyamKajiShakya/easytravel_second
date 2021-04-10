@@ -66,10 +66,11 @@ _payviaKhalti(BuildContext context, String amount) async {
   _flutterKhalti.startPayment(
       product: product,
       onSuccess: (data) {
-        buildSuccessDialogBox(
-            context, 'Payment Success', 'Your payment has been confirmed');
+        buildDialogBox(context, 'Payment Success',
+            'Your payment has been confirmed.', 'Okay');
       },
       onFaliure: (error) {
-        buildFailDialogBox(context, 'Payment Failed', 'Sorry! Payment failed');
+        buildDialogBox(
+            context, 'Payment Failed', 'Sorry! Payment failed.', 'Okay');
       });
 }

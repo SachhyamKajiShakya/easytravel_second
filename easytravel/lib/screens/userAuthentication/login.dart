@@ -1,9 +1,11 @@
-import 'package:easy_travel/screens/password/resetpw.dart';
+import 'package:easy_travel/screens/userAuthentication/ResetPwOTP.dart';
 import 'package:easy_travel/screens/userauthentication/signup.dart';
 import 'package:easy_travel/services/api.dart';
 import 'package:easy_travel/services/tokenstorage.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_travel/constants.dart';
+
+import 'otp.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -13,10 +15,13 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  TextEditingController _phoneController = TextEditingController();
 
   String webToken;
   bool _autovalidate = false;
   final _formKey = GlobalKey<FormState>();
+  final _confirmFormKey = GlobalKey<FormState>();
+  bool _confirmValidate = false;
   bool showPassword = false;
 
   FocusNode usernameNode, pwNode;
@@ -101,10 +106,52 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: 20),
                       FlatButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ResetPasswordPage()));
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text('Confirm your contact number'),
+                                content: SingleChildScrollView(
+                                  child: Form(
+                                    key: _confirmFormKey,
+                                    child: Column(
+                                      children: [
+                                        TextFormField(
+                                            controller: _phoneController,
+                                            autovalidate: _confirmValidate,
+                                            validator: (value) {
+                                              if (value.isEmpty) {
+                                                return '*required';
+                                              } else if (value.length < 10) {
+                                                return 'Must be 10 digits long';
+                                              } else {
+                                                return null;
+                                              }
+                                            },
+                                            cursorColor: cursorColor,
+                                            keyboardType: TextInputType.number,
+                                            decoration: fieldsInputDecoration(
+                                                'your contact number', null)),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      if (_confirmFormKey.currentState
+                                          .validate()) {
+                                        verifyPhone(
+                                            '+977' + _phoneController.text,
+                                            context);
+                                      }
+                                    },
+                                    child: Text('Confirm'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         },
                         child: Text(
                           'Forgot password?',

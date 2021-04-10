@@ -1,6 +1,8 @@
 import 'package:easy_travel/screens/bookings/confirmbooking.dart';
 import 'package:easy_travel/screens/bookings/confirmlongbooking.dart';
 import 'package:easy_travel/screens/bookings/payment.dart';
+import 'package:easy_travel/screens/registervehicles/assigndriver.dart';
+import 'package:easy_travel/screens/registervehicles/registervehicle.dart';
 import 'package:easy_travel/screens/userAuthentication/login.dart';
 import 'package:easy_travel/screens/userAuthentication/phoneNumber.dart';
 import 'package:easy_travel/services/fcmservices.dart';

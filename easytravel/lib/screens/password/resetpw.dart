@@ -1,4 +1,5 @@
 import 'package:easy_travel/screens/navbar.dart';
+import 'package:easy_travel/services/api.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_travel/constants.dart';
 import '../../constants.dart';
@@ -202,7 +203,18 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           _confirmpwController,
                           370),
                       SizedBox(height: 50),
-                      buildButton('RESET PASSWORD', 300),
+                      FlatButton(
+                        onPressed: () {
+                          if (_formkey.currentState.validate()) {
+                            resetPassword(context, _newpwController.text);
+                          } else {
+                            setState(() {
+                              _autovalidate = true;
+                            });
+                          }
+                        },
+                        child: buildButton('RESET PASSWORD', 300),
+                      ),
                     ],
                   ),
                 ),

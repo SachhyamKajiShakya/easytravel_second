@@ -306,7 +306,7 @@ class _BookLongTravelState extends State<BookLongTravel> {
         print(now);
       });
     } else {
-      buildFailDialogBox(context, 'Invalid', 'Invalid date entry');
+      buildDialogBox(context, 'Invalid', 'Invalid date entry.', 'Okay');
     }
   }
 
