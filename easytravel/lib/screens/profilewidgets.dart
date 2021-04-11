@@ -1,6 +1,5 @@
 import 'package:easy_travel/screens/navbar.dart';
 import 'package:easy_travel/screens/password/changepw.dart';
-import 'package:easy_travel/screens/password/resetpw.dart';
 import 'package:easy_travel/screens/profile/editVehicle.dart';
 import 'package:easy_travel/screens/profile/editprofile.dart';
 import 'package:easy_travel/screens/profile/futureBooking.dart';
@@ -54,31 +53,6 @@ Widget buildDrawer(BuildContext context) {
                 Navigator.pop(context);
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => EditProfilePage()));
-              },
-            ),
-            SizedBox(height: 10),
-            ListTile(
-              title: Row(
-                children: [
-                  Image(
-                    image: AssetImage('images/rotation-lock.png'),
-                    height: 25,
-                    width: 25,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 25),
-                    child: Text(
-                      'Reset Password',
-                      style: (TextStyle(fontSize: 18)),
-                    ),
-                  )
-                ],
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ResetPasswordPage()));
               },
             ),
             SizedBox(height: 10),
