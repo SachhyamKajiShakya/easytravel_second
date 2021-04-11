@@ -1,11 +1,8 @@
-import 'package:easy_travel/screens/userAuthentication/ResetPwOTP.dart';
 import 'package:easy_travel/screens/userauthentication/signup.dart';
 import 'package:easy_travel/services/api.dart';
 import 'package:easy_travel/services/tokenstorage.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_travel/constants.dart';
-
-import 'otp.dart';
 
 class LoginPage extends StatefulWidget {
   @override

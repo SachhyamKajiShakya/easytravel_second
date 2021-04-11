@@ -3,7 +3,6 @@ import 'package:easy_travel/screens/profilewidgets.dart';
 import 'package:easy_travel/services/api.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:easy_travel/screens/bookings/payment.dart';
 
 class BookShortTravel extends StatefulWidget {
   final AsyncSnapshot snapshot;
@@ -274,7 +273,7 @@ class _BookShortTravelState extends State<BookShortTravel> {
     );
   }
 
-// widget functiono to build date field with calendar selection
+// widget function to build date field with calendar selection
   Widget _buildDateField(
       BuildContext context, String label, String hint, double size) {
     return Container(

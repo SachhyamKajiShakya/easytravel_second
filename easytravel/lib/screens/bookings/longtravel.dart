@@ -1,9 +1,7 @@
-import 'package:easy_travel/screens/bookings/payment.dart';
 import 'package:easy_travel/services/api.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_travel/constants.dart';
 import 'package:intl/intl.dart';
-
 import '../profilewidgets.dart';
 
 class BookLongTravel extends StatefulWidget {

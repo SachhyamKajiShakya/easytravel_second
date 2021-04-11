@@ -98,7 +98,6 @@ makeLongBookings(
     String token = await readContent();
 
     String url =
-        //'http://192.168.100.67:8000/api/longbooking/$vehicleid/$driverid/';
         'http://192.168.100.67:8000/api/longbooking/$vehicleid/$driverid/';
 
     final response = await http.post(
